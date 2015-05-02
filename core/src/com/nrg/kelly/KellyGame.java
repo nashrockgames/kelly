@@ -14,9 +14,7 @@ public class KellyGame extends Game {
     GameScreen screen;
 
     @Inject
-    public KellyGame(){
-
-    }
+    public KellyGame(){}
 
     @Override
     public void create() {

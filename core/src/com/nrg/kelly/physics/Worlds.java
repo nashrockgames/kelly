@@ -12,15 +12,17 @@ import com.nrg.kelly.Constants;
  */
 public class Worlds {
 
+    private static World world;
+
     private Worlds(){
 
     }
 
-    public static World createWorld() {
-        return new World(Constants.WORLD_GRAVITY, true);
+    public static void init(){
+        world = new World(Constants.WORLD_GRAVITY, true);
     }
 
-    public static Body createGround(World world) {
+    public static Body createGround() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(new Vector2(Constants.GROUND_X, Constants.GROUND_Y));
         Body body = world.createBody(bodyDef);
@@ -31,4 +33,20 @@ public class Worlds {
         return body;
     }
 
+    public static Body createRunner() {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(new Vector2(Constants.RUNNER_X, Constants.RUNNER_Y));
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(Constants.RUNNER_WIDTH / 2, Constants.RUNNER_HEIGHT / 2);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, Constants.RUNNER_DENSITY);
+        body.resetMassData();
+        shape.dispose();
+        return body;
+    }
+
+    public static World getWorld() {
+        return world;
+    }
 }

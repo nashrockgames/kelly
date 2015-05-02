@@ -3,6 +3,9 @@ package com.nrg.kelly.inject;
 import com.badlogic.gdx.ApplicationListener;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
+import com.nrg.kelly.events.CreateGameEvent;
+import com.nrg.kelly.events.Events;
+import com.nrg.kelly.physics.Worlds;
 
 /**
  * Created by Andrew on 2/05/2015.
@@ -13,10 +16,11 @@ public class DaggerAdapter implements ApplicationListener {
 
     @Override
     public void create() {
-
+        Worlds.init();
         final GameComponent gameComponent = DaggerGameComponent.builder().build();
         game = gameComponent.getKellyGame();
         game.create();
+        Events.get().post(new CreateGameEvent(game));
     }
 
     @Override
