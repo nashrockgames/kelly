@@ -7,8 +7,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.Constants;
 
-import javax.inject.Inject;
-
 /**
  * Created by Andrew on 26/04/2015.
  */

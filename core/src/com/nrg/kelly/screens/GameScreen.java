@@ -1,10 +1,10 @@
 package com.nrg.kelly.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.nrg.kelly.stages.GameStage;
+
 
 import javax.inject.Inject;
 
@@ -13,7 +13,8 @@ import javax.inject.Inject;
  */
 public class GameScreen implements Screen {
 
-    @Inject GameStage gameStage;
+    @Inject
+    GameStage gameStage;
 
     @Inject
     public GameScreen(){
@@ -28,10 +29,6 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        Graphics graphics = Gdx.graphics;
-        if(graphics==null){
-
-        }
         //Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
