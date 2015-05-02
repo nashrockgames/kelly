@@ -1,13 +1,13 @@
-package com.nrg.kelly.android;
+package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 
 /**
- * Created by Andrew on 30/04/2015.
+ * Created by Andrew on 2/05/2015.
  */
-public class AndroidDaggerAdapter implements ApplicationListener {
+public class DaggerAdapter implements ApplicationListener {
 
     private ApplicationListener game;
 
@@ -21,27 +21,26 @@ public class AndroidDaggerAdapter implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-
+        game.resize(width, height);
     }
 
     @Override
     public void render() {
-
+        game.render();
     }
 
     @Override
     public void pause() {
-
+        game.pause();
     }
 
     @Override
     public void resume() {
-
+        game.resume();
     }
 
     @Override
     public void dispose() {
-
+        game.dispose();
     }
-
 }

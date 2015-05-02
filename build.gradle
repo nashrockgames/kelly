@@ -8,9 +8,6 @@ buildscript {
     }
 }
 
-def generatedSources = "core/gen"
-def generatedOutputDir = file("$generatedSources")
-
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -57,6 +54,9 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
     }
 }
+
+def generatedSources = "core/gen"
+def generatedOutputDir = file("$generatedSources")
 
 project(":core") {
     apply plugin: "java"
