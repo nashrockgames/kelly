@@ -17,4 +17,5 @@ public class Config {
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
+
 }

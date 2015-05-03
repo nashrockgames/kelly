@@ -3,11 +3,13 @@ package com.nrg.kelly.stages;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.nrg.kelly.events.CreateGameEvent;
+import com.nrg.kelly.config.Config;
+import com.nrg.kelly.events.PostConstructGameEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.physics.Worlds;
+import com.nrg.kelly.physics.SceneFactory;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
+import com.nrg.kelly.stages.text.DebugText;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -26,6 +28,9 @@ public class GameStage extends Stage{
 
     @Inject
     GroundActor ground;
+
+    @Inject
+    Config gameConfig;
 
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
@@ -47,9 +52,12 @@ public class GameStage extends Stage{
     }
 
     @Subscribe
-    public void setupActors(CreateGameEvent createGameEvent){
+    public void setupActors(PostConstructGameEvent postConstructGameEvent){
         this.addActor(this.ground);
         this.addActor(this.runner);
+        if(gameConfig.getSettings().isDebug()) {
+            this.addActor(new DebugText());
+        }
     }
 
     @Override
@@ -60,18 +68,16 @@ public class GameStage extends Stage{
         accumulator += delta;
 
         while (accumulator >= delta) {
-            Worlds.getWorld().step(TIME_STEP, 6, 2);
+            SceneFactory.getWorld().step(TIME_STEP, 6, 2);
             accumulator -= TIME_STEP;
         }
-
-        //TODO: Implement interpolation
 
     }
 
     @Override
     public void draw() {
         super.draw();
-        renderer.render(Worlds.getWorld(), camera.combined);
+        renderer.render(SceneFactory.getWorld(), camera.combined);
     }
 
 }

@@ -6,23 +6,37 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.Constants;
+import com.nrg.kelly.config.Config;
+import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.PostConstructGameEvent;
+import com.nrg.kelly.events.PreConstructGameEvent;
+import com.squareup.otto.Subscribe;
 
 /**
  * Created by Andrew on 26/04/2015.
  */
-public class Worlds {
+public class SceneFactory {
 
     private static World world;
 
-    private Worlds(){
+    private static SceneFactory instance;
+
+    private SceneFactory(){
 
     }
 
-    public static void init(){
+    public static SceneFactory getInstance(){
+        if(instance==null) {
+            instance = new SceneFactory();
+        }
+        return instance;
+    }
+
+    public void init(){
         world = new World(Constants.WORLD_GRAVITY, true);
     }
 
-    public static Body createGround() {
+    public Body createGround(Config config) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(new Vector2(Constants.GROUND_X, Constants.GROUND_Y));
         Body body = world.createBody(bodyDef);
@@ -33,7 +47,7 @@ public class Worlds {
         return body;
     }
 
-    public static Body createRunner() {
+    public Body createRunner(Config config) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(Constants.RUNNER_X, Constants.RUNNER_Y));

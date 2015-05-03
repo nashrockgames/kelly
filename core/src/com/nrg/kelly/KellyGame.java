@@ -15,17 +15,12 @@ public class KellyGame extends Game {
     GameScreen screen;
 
     @Inject
-    Config config;
+    public KellyGame(){
 
-    @Inject
-    public KellyGame(){}
+    }
 
     @Override
     public void create() {
-        if(config.getSettings().isDebug()){
-            //create and add the debug text to the stage/ scren
-
-        }
         this.setScreen(screen);
     }
 }
