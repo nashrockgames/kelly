@@ -57,7 +57,7 @@ project(":android") {
     }
 }
 
-def generatedSources = "core/gen"
+def generatedSources = "C:\\dev\\kelly\\libgdx\\core\\gen"
 def generatedOutputDir = file("$generatedSources")
 
 project(":core") {
