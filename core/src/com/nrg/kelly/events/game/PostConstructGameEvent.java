@@ -1,4 +1,4 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;

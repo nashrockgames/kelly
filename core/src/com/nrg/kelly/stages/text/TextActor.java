@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.nrg.kelly.events.DisposeGameEvent;
+import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;
 import com.squareup.otto.Subscribe;
 

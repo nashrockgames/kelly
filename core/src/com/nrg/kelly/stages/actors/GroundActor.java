@@ -15,7 +15,7 @@ public class GroundActor extends GameActor {
 
     @Inject
     public GroundActor() {
-        setBody(SceneFactory.getInstance().createGround(config));
+        setBody(SceneFactory.getInstance().createGround());
     }
 
 }

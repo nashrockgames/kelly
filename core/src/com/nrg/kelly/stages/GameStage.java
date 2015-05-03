@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.nrg.kelly.config.Config;
-import com.nrg.kelly.events.PostConstructGameEvent;
+import com.nrg.kelly.events.game.PostConstructGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.SceneFactory;
 import com.nrg.kelly.stages.actors.GroundActor;

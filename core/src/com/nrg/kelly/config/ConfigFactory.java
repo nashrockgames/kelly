@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Json;
 /**
  * Created by Andrew on 3/05/2015.
  */
-public class GameConfig {
+public class ConfigFactory {
 
     private static Config config;
 
@@ -18,7 +18,6 @@ public class GameConfig {
     }
 
     private static Config loadConfig(){
-
         final Json json  = new Json();
         final FileHandle file = Gdx.files.internal("kelly.json");
         return json.fromJson(Config.class, file);

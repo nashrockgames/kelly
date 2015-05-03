@@ -3,10 +3,11 @@ package com.nrg.kelly.inject;
 import com.badlogic.gdx.ApplicationListener;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
-import com.nrg.kelly.events.PostConstructGameEvent;
-import com.nrg.kelly.events.DisposeGameEvent;
+import com.nrg.kelly.KellyGame;
+import com.nrg.kelly.events.game.PostConstructGameEvent;
+import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.PreConstructGameEvent;
+import com.nrg.kelly.events.game.PreConstructGameEvent;
 import com.nrg.kelly.physics.SceneFactory;
 
 /**
@@ -18,19 +19,19 @@ public class DaggerAdapter implements ApplicationListener {
 
     @Override
     public void create() {
-        initGlobalObjects();
+        constructNonInjectableObjects();
         Events.get().post(new PreConstructGameEvent());
-        constructObjects();
+        game = constructInjectableObjects();
+        game.create();
         Events.get().post(new PostConstructGameEvent(game));
     }
 
-    private void constructObjects() {
+    private KellyGame constructInjectableObjects() {
         final GameComponent gameComponent = DaggerGameComponent.builder().build();
-        game = gameComponent.getKellyGame();
-        game.create();
+        return gameComponent.getKellyGame();
     }
 
-    private void initGlobalObjects() {
+    private void constructNonInjectableObjects() {
 
         SceneFactory.getInstance().init();
 

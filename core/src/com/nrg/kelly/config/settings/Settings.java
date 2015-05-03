@@ -1,4 +1,4 @@
-package com.nrg.kelly.config;
+package com.nrg.kelly.config.settings;
 
 
 /**

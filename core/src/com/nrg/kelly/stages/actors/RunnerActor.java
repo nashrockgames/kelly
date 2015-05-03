@@ -15,7 +15,7 @@ public class RunnerActor extends GameActor {
 
     @Inject
     public RunnerActor() {
-        setBody(SceneFactory.getInstance().createRunner(config));
+        setBody(SceneFactory.getInstance().createRunner());
     }
 
 
