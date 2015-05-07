@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
+        gameStage.show();
     }
 
     @Override

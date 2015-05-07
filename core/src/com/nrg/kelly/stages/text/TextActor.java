@@ -1,23 +1,25 @@
 package com.nrg.kelly.stages.text;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;
-import com.squareup.otto.Subscribe;
+
 
 /**
  * Created by Andrew on 3/05/2015.
  */
 public abstract class TextActor extends Actor {
 
-    private SpriteBatch batch;
     private BitmapFont font;
-    public String text = ">";
+    public String text = "Here is some text";
 
     public TextActor(){
+        font = new BitmapFont(Gdx.files.internal("Gunsuh-Yellow-32.fnt"), false);
         Events.get().register(this);
     }
 
@@ -29,24 +31,9 @@ public abstract class TextActor extends Actor {
         this.text = text;
     }
 
-    public void create(){
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        font.setColor(Color.RED);
-    }
-
     @Subscribe
     public void dispose(DisposeGameEvent disposeGameEvent) {
-        batch.dispose();
         font.dispose();
-    }
-
-    public SpriteBatch getBatch() {
-        return batch;
-    }
-
-    public void setBatch(SpriteBatch batch) {
-        this.batch = batch;
     }
 
     public BitmapFont getFont() {

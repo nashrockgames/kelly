@@ -49,7 +49,6 @@ public class SceneFactory {
     }
 
     public Body createRunner() {
-
         final Runner runner = ConfigFactory.getConfig().getActors().getRunner();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;

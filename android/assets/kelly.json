@@ -1,25 +1,25 @@
 {
-	settings: {
-		debug: false,
-	}
-	actors:{
-		worldGravity: {
-			x: 0,
-			y: -10
+	"settings": {
+		"debug": true
+	},
+	"actors":{
+		"worldGravity": {
+			"x": 0,
+			"y": -10
 		},
-		ground: {
-			x: 0,
-			y: 0,
-			height: 2.0,
-			width: 50.0,
-			density: 0.0
+		"ground": {
+			"x": 0,
+			"y": 0,
+			"height": 2.0,
+			"width": 50.0,
+			"density": 0.0
 		},
-		runner: {
-			x: 2,
-			y: 2.0,
-			height: 2.0,
-			width: 1.0,
-			density: 0.5
+		"runner": {
+			"x": 2,
+			"y": 2.0,
+			"height": 2.0,
+			"width": 1.0,
+			"density": 0.5
 		}
 	}
 }

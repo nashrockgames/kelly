@@ -1,7 +1,6 @@
 package com.nrg.kelly.events;
 
 import com.google.common.eventbus.EventBus;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
