@@ -13,4 +13,8 @@ public abstract class GameActor extends Actor {
     public void setBody(Body body) {
         this.body = body;
     }
+
+    public Body getBody() {
+        return body;
+    }
 }

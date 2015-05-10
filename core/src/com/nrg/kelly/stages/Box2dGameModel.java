@@ -6,6 +6,7 @@ import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,21 +14,16 @@ import javax.inject.Inject;
 /**
  * Created by Andrew on 7/05/2015.
  */
-public class GameStageModel {
-
-    @Inject
-    RunnerActor runner;
-
-    @Inject
-    GroundActor ground;
+public class Box2dGameModel {
 
     private List<Actor> actors = new ArrayList<Actor>();
 
-    @Inject
-    public GameStageModel(){
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
+    }
 
-        actors.add(runner);
-        actors.add(ground);
+    @Inject
+    public Box2dGameModel(){
 
     }
 
@@ -35,13 +31,7 @@ public class GameStageModel {
         return actors;
     }
 
-    public RunnerActor getRunner() {
-        return runner;
-    }
 
-    public GroundActor getGround() {
-        return ground;
-    }
 
 
 }

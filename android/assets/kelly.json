@@ -19,7 +19,10 @@
 			"y": 2.0,
 			"height": 2.0,
 			"width": 1.0,
-			"density": 0.5
+			"density": 0.5,
+		  	"jumpImpulseX":0.0,
+		  	"jumpImpulseY":13.0,
+		  	"gravityScale":3.0
 		}
 	}
 }

@@ -2,23 +2,21 @@ package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.google.common.eventbus.Subscribe;
-import com.nrg.kelly.events.DrawGameStageEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.physics.SceneFactory;
+import com.nrg.kelly.physics.Box2dFactory;
 
 import javax.inject.Inject;
 
 /**
  * Created by Andrew on 7/05/2015.
  */
-public class GameStageView {
+public class Box2dGameStageView {
 
     private Camera camera;
     private Box2DDebugRenderer box2DDebugRenderer;
 
     @Inject
-    public GameStageView(){
+    public Box2dGameStageView(){
         Events.get().register(this);
     }
     public void setDebugRenderer(Box2DDebugRenderer box2DDebugRenderer) {
@@ -30,10 +28,8 @@ public class GameStageView {
         camera.update();
     }
 
-    @Subscribe
-    public void drawGameStage(final DrawGameStageEvent drawGameStageEvent){
-        this.box2DDebugRenderer.render(SceneFactory.getWorld(), camera.combined);
-
+    public void renderGameStage(){
+        this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
     }
 
     public void setCamera(Camera camera) {

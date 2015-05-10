@@ -1,7 +1,7 @@
 package com.nrg.kelly.stages.actors;
 
 import com.nrg.kelly.config.Config;
-import com.nrg.kelly.physics.SceneFactory;
+import com.nrg.kelly.physics.Box2dFactory;
 
 import javax.inject.Inject;
 
@@ -15,7 +15,7 @@ public class GroundActor extends GameActor {
 
     @Inject
     public GroundActor() {
-        setBody(SceneFactory.getInstance().createGround());
+        setBody(Box2dFactory.getInstance().createGround());
     }
 
 }

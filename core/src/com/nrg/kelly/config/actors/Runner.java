@@ -7,5 +7,31 @@ import com.nrg.kelly.config.actors.Actor;
  */
 public class Runner extends Actor {
 
+    private float jumpImpulseX;
+    private float jumpImpulseY;
+    private float gravityScale;
 
+    public float getJumpImpulseX() {
+        return jumpImpulseX;
+    }
+
+    public void setJumpImpulseX(float jumpImpulseX) {
+        this.jumpImpulseX = jumpImpulseX;
+    }
+
+    public float getJumpImpulseY() {
+        return jumpImpulseY;
+    }
+
+    public void setJumpImpulseY(float jumpImpulseY) {
+        this.jumpImpulseY = jumpImpulseY;
+    }
+
+    public float getGravityScale() {
+        return gravityScale;
+    }
+
+    public void setGravityScale(float gravityScale) {
+        this.gravityScale = gravityScale;
+    }
 }

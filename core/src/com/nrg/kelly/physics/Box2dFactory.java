@@ -1,11 +1,14 @@
 package com.nrg.kelly.physics;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.nrg.kelly.Constants;
+import com.nrg.kelly.DaggerGameComponent;
+import com.nrg.kelly.GameComponent;
+import com.nrg.kelly.config.Config;
 import com.nrg.kelly.config.ConfigFactory;
 import com.nrg.kelly.config.actors.Ground;
 import com.nrg.kelly.config.actors.Runner;
@@ -14,26 +17,37 @@ import com.nrg.kelly.config.actors.WorldGravity;
 /**
  * Created by Andrew on 26/04/2015.
  */
-public class SceneFactory {
+public class Box2dFactory {
 
     private static World world;
 
-    private static SceneFactory instance;
+    private static Box2dFactory instance;
 
-    private SceneFactory(){
+    public static Vector2 runnerJumpingLinearImpulse;
+
+    private Box2dFactory(){
 
     }
 
-    public static SceneFactory getInstance(){
+    public static Box2dFactory getInstance(){
         if(instance==null) {
-            instance = new SceneFactory();
+            final Config config = ConfigFactory.getConfig();
+            final Runner runner = config.getActors().getRunner();
+            runnerJumpingLinearImpulse = new Vector2(runner.getJumpImpulseX(),
+                    runner.getJumpImpulseY());
+            instance = new Box2dFactory();
         }
         return instance;
     }
 
-    public void init(){
-        final WorldGravity worldGravity = ConfigFactory.getConfig().getActors().getWorldGravity();
+    public ApplicationListener buildGame(){
+        final Config config = ConfigFactory.getConfig();
+        final WorldGravity worldGravity = config.getActors().getWorldGravity();
         world = new World(new Vector2(worldGravity.getX(), worldGravity.getY()), true);
+        final DaggerGameComponent.Builder builder = DaggerGameComponent.builder();
+        final GameComponent gameComponent = builder.build();
+        return gameComponent.getKellyGame();
+
     }
 
     public Body createGround() {
@@ -49,17 +63,23 @@ public class SceneFactory {
     }
 
     public Body createRunner() {
-        final Runner runner = ConfigFactory.getConfig().getActors().getRunner();
+        final Config CONFIG = ConfigFactory.getConfig();
+        final Runner runner = CONFIG.getActors().getRunner();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(runner.getX(), runner.getY()));
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(runner.getWidth() / 2, runner.getHeight() / 2);
         Body body = world.createBody(bodyDef);
+        body.setGravityScale(runner.getGravityScale());
         body.createFixture(shape, runner.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;
+    }
+
+    public Vector2 getRunnerLinerImpulse(){
+        return runnerJumpingLinearImpulse;
     }
 
     public static World getWorld() {

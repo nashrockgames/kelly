@@ -1,14 +1,11 @@
 package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.nrg.kelly.DaggerGameComponent;
-import com.nrg.kelly.GameComponent;
-import com.nrg.kelly.KellyGame;
 import com.nrg.kelly.events.game.PostConstructGameEvent;
 import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.PreConstructGameEvent;
-import com.nrg.kelly.physics.SceneFactory;
+import com.nrg.kelly.physics.Box2dFactory;
 
 /**
  * Created by Andrew on 2/05/2015.
@@ -19,24 +16,11 @@ public class DaggerAdapter implements ApplicationListener {
 
     @Override
     public void create() {
-        constructNonInjectableObjects();
+        game = Box2dFactory.getInstance().buildGame();
         Events.get().post(new PreConstructGameEvent());
-        game = constructInjectableObjects();
         game.create();
         Events.get().post(new PostConstructGameEvent(game));
     }
-
-    private KellyGame constructInjectableObjects() {
-        final GameComponent gameComponent = DaggerGameComponent.builder().build();
-        return gameComponent.getKellyGame();
-    }
-
-    private void constructNonInjectableObjects() {
-
-        SceneFactory.getInstance().init();
-
-    }
-
 
     @Override
     public void resize(int width, int height) {

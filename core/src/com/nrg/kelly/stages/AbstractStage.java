@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class AbstractStage extends Stage {
 
-    protected void addActors(List<Actor> actorsList){
+    public void addActors(final List<Actor> actorsList){
         for(Actor actor: actorsList){
             this.addActor(actor);
         }

@@ -3,7 +3,7 @@ package com.nrg.kelly.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.nrg.kelly.stages.GameStage;
+import com.nrg.kelly.stages.Box2dGameStage;
 
 
 import javax.inject.Inject;
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 public class GameScreen implements Screen {
 
     @Inject
-    GameStage gameStage;
+    Box2dGameStage box2dGameStage;
 
     @Inject
     public GameScreen(){
@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        gameStage.show();
+        box2dGameStage.show();
     }
 
     @Override
@@ -31,10 +31,9 @@ public class GameScreen implements Screen {
 
         //Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         //Update the stage
-        gameStage.draw();
-        gameStage.act(delta);
+        box2dGameStage.draw();
+        box2dGameStage.act(delta);
     }
 
 
