@@ -1,14 +1,18 @@
 package com.nrg.kelly.stages;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.eventbus.Subscribe;
-import com.nrg.kelly.config.Config;
+import com.nrg.kelly.events.BeginContactEvent;
+import com.nrg.kelly.events.RightSideScreenTouchedEvent;
 import com.nrg.kelly.events.game.PostConstructGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.actors.GroundActor;
-import com.nrg.kelly.stages.actors.RunnerActor;
-import com.nrg.kelly.stages.text.DebugText;
+
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ import javax.inject.Inject;
 /**
  * Created by Andrew on 26/04/2015.
  */
-public class Box2dGameStage extends AbstractStage {
+public class Box2dGameStage extends AbstractStage implements ContactListener {
 
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
@@ -31,7 +35,22 @@ public class Box2dGameStage extends AbstractStage {
     @Inject
     public Box2dGameStage() {
         Events.get().register(this);
+        Gdx.input.setInputProcessor(this);
+        Box2dFactory.getWorld().setContactListener(this);
     }
+
+    @Override
+    public boolean touchDown(int x, int y, int pointer, int button) {
+
+        box2dGameStageView.translateScreenToWorldCoordinates(x, y);
+
+        if (box2dGameStageView.rightSideTouched()) {
+            Events.get().post(new RightSideScreenTouchedEvent(x, y, pointer, button));
+        }
+
+        return super.touchDown(x, y, pointer, button);
+    }
+
 
     @Subscribe
     public void setupActors(PostConstructGameEvent postConstructGameEvent){
@@ -62,5 +81,26 @@ public class Box2dGameStage extends AbstractStage {
 
     public void show() {
         this.box2dGameStageView.setupCamera();
+        this.box2dGameStageView.setupTouchPoints();
+    }
+
+    @Override
+    public void beginContact(Contact contact) {
+        Events.get().post(new BeginContactEvent(contact));
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
     }
 }
