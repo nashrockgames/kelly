@@ -14,7 +14,7 @@ import javax.inject.Inject;
 public class GameScreen implements Screen {
 
     @Inject
-    Box2dGameStage box2dGameStage;
+    GameScreenView gameScreenView;
 
     @Inject
     public GameScreen(){
@@ -23,17 +23,15 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        box2dGameStage.show();
+        gameScreenView.show();
+
     }
 
     @Override
     public void render(float delta) {
 
-        //Clear the screen
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Update the stage
-        box2dGameStage.draw();
-        box2dGameStage.act(delta);
+        gameScreenView.render(delta);
+
     }
 
 

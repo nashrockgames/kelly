@@ -1,6 +1,8 @@
 package com.nrg.kelly.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -41,6 +43,7 @@ public class Box2dGameStageView {
     }
 
     public void renderGameStage(){
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
     }
 

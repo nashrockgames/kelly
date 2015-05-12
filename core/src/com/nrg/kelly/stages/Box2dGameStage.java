@@ -1,6 +1,7 @@
 package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -74,6 +75,9 @@ public class Box2dGameStage extends AbstractStage implements ContactListener {
 
     @Override
     public void draw() {
+
+        //Clear the screen
+        //Update the stage
         super.draw();
         box2dGameStageView.renderGameStage();
 

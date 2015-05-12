@@ -2,6 +2,16 @@
 	"settings": {
 		"debug": true
 	},
+	"menus":[
+	    {
+	    "id" : "main_menu",
+        "buttons":[{
+            "id": "main_menu_play"
+            },{
+            "id": "main_menu_quit"
+            }]
+	    }
+	],
 	"actors":{
 		"worldGravity": {
 			"x": 0,
