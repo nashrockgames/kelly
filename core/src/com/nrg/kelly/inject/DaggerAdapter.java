@@ -1,10 +1,11 @@
 package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.nrg.kelly.events.game.PostConstructGameEvent;
+import com.nrg.kelly.events.PreBuildGameModuleEvent;
+import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.game.PreConstructGameEvent;
+import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
 /**
@@ -16,10 +17,11 @@ public class DaggerAdapter implements ApplicationListener {
 
     @Override
     public void create() {
+        Events.get().post(new PreBuildGameModuleEvent());
         game = Box2dFactory.getInstance().buildGame();
-        Events.get().post(new PreConstructGameEvent());
+        Events.get().post(new PostBuildGameModuleEvent(game));
         game.create();
-        Events.get().post(new PostConstructGameEvent(game));
+        Events.get().post(new PostCreateGameEvent(game));
     }
 
     @Override

@@ -1,0 +1,1 @@
+java -cp gdx-tools-1.5.6.jar;gdx-1.5.6.jar com.badlogic.gdx.tools.hiero.Hiero

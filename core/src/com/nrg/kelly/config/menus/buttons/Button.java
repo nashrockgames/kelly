@@ -10,7 +10,6 @@ public class Button {
     public Button(){
 
     }
-
     public String getId() {
         return id;
     }

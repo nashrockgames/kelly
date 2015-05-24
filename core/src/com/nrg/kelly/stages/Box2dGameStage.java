@@ -1,7 +1,6 @@
 package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -10,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.events.BeginContactEvent;
 import com.nrg.kelly.events.RightSideScreenTouchedEvent;
-import com.nrg.kelly.events.game.PostConstructGameEvent;
+import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 
@@ -54,7 +53,7 @@ public class Box2dGameStage extends AbstractStage implements ContactListener {
 
 
     @Subscribe
-    public void setupActors(PostConstructGameEvent postConstructGameEvent){
+    public void setupActors(PostCreateGameEvent postCreateGameEvent){
         final List<Actor> actors = this.box2dGameModel.getActors();
         this.addActors(actors);
     }

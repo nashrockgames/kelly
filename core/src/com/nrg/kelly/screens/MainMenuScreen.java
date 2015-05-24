@@ -1,16 +1,12 @@
 package com.nrg.kelly.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.Config;
-import com.nrg.kelly.config.menus.Menu;
-import com.nrg.kelly.events.game.PostConstructGameEvent;
-
-import java.util.List;
-import java.util.function.Consumer;
+import com.nrg.kelly.events.ButtonClickedEvent;
+import com.nrg.kelly.events.Events;
 
 import javax.inject.Inject;
 
@@ -28,35 +24,33 @@ public class MainMenuScreen implements Screen{
 
     @Inject
     public MainMenuScreen(){
-
+        Events.get().register(this);
     }
 
     @Subscribe
-    public void setup(PostConstructGameEvent postConstructGameEvent){
+    public void buttonClicked(ButtonClickedEvent buttonClickedEvent){
 
-        final List<Menu> menus = config.getMenus();
-        final Iterable<Menu> mainMenu =
-                Iterables.filter(menus, new MenuIdFilter(Constants.MENU_IDS.MAIN));
+        final Constants.BUTTON_ID buttonId = buttonClickedEvent.getButtonId();
 
-        mainMenu.iterator().forEachRemaining(new Consumer<Menu>() {
-            @Override
-            public void accept(Menu menu) {
-                //TODO: add the buttons
-            }
-        });
-
+        switch(buttonId){
+            case MAIN_MENU_QUIT:
+                Gdx.app.exit();
+                break;
+            default:
+                break;
+        }
 
 
     }
 
     @Override
     public void show() {
-
+        mainMenuScreenView.show();
     }
 
     @Override
     public void render(float delta) {
-
+        this.mainMenuScreenView.render(delta);
     }
 
     @Override

@@ -1,0 +1,8 @@
+{
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "font": { "file": "Gunsuh-Yellow-32.fnt" },
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": { 
+        "default": { "up": "main_menu_button" , "down": "main_menu_button", "font": font, "pressedOffsetY": -4 }
+    }
+}

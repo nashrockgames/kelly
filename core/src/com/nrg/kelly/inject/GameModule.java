@@ -1,21 +1,17 @@
 package com.nrg.kelly.inject;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.config.Config;
 import com.nrg.kelly.config.ConfigFactory;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.Box2dGameStageView;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module(
         includes = {
-                GameModelModule.class,
-                GameViewModule.class
+                ModelModule.class,
+                ViewModule.class
         }
 )
 public class GameModule {

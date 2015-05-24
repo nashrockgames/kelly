@@ -3,14 +3,16 @@
 		"debug": true
 	},
 	"menus":[
-	    {
-	    "id" : "main_menu",
-        "buttons":[{
-            "id": "main_menu_play"
-            },{
-            "id": "main_menu_quit"
-            }]
-	    }
+         	    {
+         	    "id" : "main_menu",
+         	    "skin" : "main_menu_skin.json",
+         	    "atlas" : "main_menu_buttons.atlas"
+                 "buttons":[{
+                     "id": "main_menu_play",
+                     },{
+                     "id": "main_menu_quit"
+                     }]
+         	    }
 	],
 	"actors":{
 		"worldGravity": {

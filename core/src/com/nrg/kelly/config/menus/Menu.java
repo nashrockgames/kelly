@@ -10,8 +10,9 @@ import java.util.List;
 public class Menu {
 
     private String id;
-
     private List<Button> buttons;
+    private String skin;
+    private String atlas;
 
     public Menu(){
 
@@ -31,5 +32,20 @@ public class Menu {
 
     public void setButtons(List<Button> buttons) {
         this.buttons = buttons;
+    }
+
+    public String getSkin() {
+        return skin;
+    }
+    public void setSkin(String skin) {
+        this.skin = skin;
+    }
+
+    public String getAtlas() {
+        return atlas;
+    }
+
+    public void setAtlas(String atlas) {
+        this.atlas = atlas;
     }
 }

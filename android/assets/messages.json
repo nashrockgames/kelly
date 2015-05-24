@@ -1,0 +1,14 @@
+{
+	"menus":[
+	    {
+	    "id" : "main_menu",
+        "buttons":[{
+            "id":"main_menu_play",
+            "label": "Play"
+            },{
+            "id":"main_menu_quit",
+            "label": "Quit"
+            }]
+	    }
+	]
+}

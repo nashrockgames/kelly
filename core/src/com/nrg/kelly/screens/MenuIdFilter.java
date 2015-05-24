@@ -15,7 +15,7 @@ public class MenuIdFilter implements Predicate<Menu> {
         this.id = id;
     }
 
-    public MenuIdFilter(Constants.MENU_IDS main) {
+    public MenuIdFilter(Constants.MENU_ID main) {
         this(main.toString());
     }
 

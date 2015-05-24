@@ -3,6 +3,7 @@ package com.nrg.kelly;
 import com.badlogic.gdx.Game;
 import com.nrg.kelly.config.Config;
 import com.nrg.kelly.screens.GameScreen;
+import com.nrg.kelly.screens.MainMenuScreen;
 
 import javax.inject.Inject;
 
@@ -12,7 +13,7 @@ import javax.inject.Inject;
 public class KellyGame extends Game {
 
     @Inject
-    GameScreen screen;
+    MainMenuScreen screen;
 
     @Inject
     public KellyGame(){
@@ -21,7 +22,6 @@ public class KellyGame extends Game {
 
     @Override
     public void create() {
-
         this.setScreen(screen);
     }
 }

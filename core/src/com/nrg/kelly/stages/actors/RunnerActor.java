@@ -40,8 +40,6 @@ public class RunnerActor extends GameActor {
         if(bodyA==this.getBody() && bodyB.equals(groundActor.getBody())){
             this.landed();
         }
-
-
     }
 
     @Subscribe

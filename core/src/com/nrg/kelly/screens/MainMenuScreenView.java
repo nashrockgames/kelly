@@ -1,17 +1,13 @@
 package com.nrg.kelly.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.google.common.eventbus.Subscribe;
-import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.game.PostConstructGameEvent;
-import com.nrg.kelly.events.game.PreConstructGameEvent;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.google.common.base.Optional;
 
-import java.lang.ref.PhantomReference;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -20,27 +16,33 @@ import javax.inject.Inject;
  */
 public class MainMenuScreenView {
 
-    private BitmapFont bitmapFont;
-    private Pixmap pixmap;
+    @Inject
+    MainMenuScreenModel mainMenuScreenModel;
 
-    private final static String FONT_PATH = "Gunsuh-Yellow-32.fnt";
-    private Texture texture;
-    private Skin skin;
+    final Table table = new Table();
+
+    final Stage stage = new Stage();
 
     @Inject
     public MainMenuScreenView(){
 
     }
 
-    @Subscribe
-    public void initialise(PreConstructGameEvent postConstructGameEvent){
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        this.stage.draw();
+        this.stage.act(delta);
+    }
 
-        this.bitmapFont = new BitmapFont(Gdx.files.internal(FONT_PATH));
-        this.pixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        this.pixmap.setColor(Color.WHITE);
-        this.texture = new Texture(this.pixmap);
-        this.skin = new Skin();
-
+    public void show(){
+        final Map<String,TextButton> textButtons = mainMenuScreenModel.getTextButtons();
+        table.setWidth(Gdx.graphics.getWidth());
+        table.setHeight(Gdx.graphics.getHeight());
+        textButtons.forEach(new ButtonAddingConsumer(Optional.of(table)));
+        this.table.setFillParent(true);
+        this.stage.addActor(table);
+        Gdx.input.setInputProcessor(stage);
     }
 
 
