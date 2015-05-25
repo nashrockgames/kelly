@@ -4,10 +4,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.Config;
-import com.nrg.kelly.events.BeginContactEvent;
+import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.RightSideScreenTouchedEvent;
+import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.LeftSideScreenTouchUpEvent;
 
 import javax.inject.Inject;
 
@@ -37,19 +39,38 @@ public class RunnerActor extends GameActor {
         final Contact contact = beginContactEvent.getContact();
         final Body bodyA = contact.getFixtureA().getBody();
         final Body bodyB = contact.getFixtureB().getBody();
-        if(bodyA==this.getBody() && bodyB.equals(groundActor.getBody())){
+        if(bodyA.equals(this.getBody()) && bodyB.equals(groundActor.getBody())){
             this.landed();
         }
     }
 
     @Subscribe
-    public void jump(RightSideScreenTouchedEvent rightSideScreenTouchedEvent) {
+    public void jump(RightSideScreenTouchDownEvent rightSideScreenTouchDownEvent) {
 
         if (!jumping) {
             final Body body = getBody();
-            body.applyLinearImpulse(box2dFactory.getRunnerLinerImpulse(), body.getWorldCenter(), true);
+            body.applyLinearImpulse(box2dFactory.getRunnerLinerImpulse(),
+                    body.getWorldCenter(), true);
             jumping = true;
         }
+
+    }
+
+    @Subscribe
+    public void slide(LeftSideScreenTouchDownEvent leftSideScreenTouchDownEvent){
+
+        if(!jumping){
+            final Body body = getBody();
+            body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
+        }
+
+    }
+
+    @Subscribe
+    public void stopSliding(LeftSideScreenTouchUpEvent leftSideScreenTouchUpEvent){
+
+        final Body body = getBody();
+        body.setTransform(box2dFactory.getRunPosition(), 0f);
 
     }
 

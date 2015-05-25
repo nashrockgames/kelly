@@ -34,6 +34,8 @@
 			"density": 0.5,
 		  	"jumpImpulseX":0.0,
 		  	"jumpImpulseY":13.0,
+		  	"slideX":2.0,
+		  	"slideY":1.5,
 		  	"gravityScale":3.0
 		}
 	}

@@ -1,4 +1,4 @@
-package com.nrg.kelly.screens;
+package com.nrg.kelly.screens.menus.main;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import java.util.LinkedHashMap;

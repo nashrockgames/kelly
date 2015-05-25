@@ -1,7 +1,7 @@
 package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.nrg.kelly.events.PreBuildGameModuleEvent;
+import com.nrg.kelly.events.game.PreBuildGameModuleEvent;
 import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.game.DisposeGameEvent;
 import com.nrg.kelly.events.Events;

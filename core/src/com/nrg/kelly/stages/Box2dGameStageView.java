@@ -47,20 +47,19 @@ public class Box2dGameStageView {
         this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
     }
 
-    /**
-     * Helper function to get the actual coordinates in my world
-     * @param x
-     * @param y
-     */
-    public void translateScreenToWorldCoordinates(int x, int y) {
-        camera.unproject(touchPoint.set(x, y, 0));
+    public Vector3 translateScreenToWorldCoordinates(Vector3 touchPoint) {
+        return camera.unproject(touchPoint);
     }
 
-    public boolean rightSideTouched() {
+    public boolean rightSideTouched(Vector3 touchPoint) {
         return screenRightSide.contains(touchPoint.x, touchPoint.y);
     }
 
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public Vector3 getTouchPoint() {
+        return touchPoint;
     }
 }

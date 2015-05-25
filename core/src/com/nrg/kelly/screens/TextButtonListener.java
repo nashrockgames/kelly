@@ -1,10 +1,9 @@
 package com.nrg.kelly.screens;
 
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.nrg.kelly.Constants;
-import com.nrg.kelly.events.ButtonClickedEvent;
+import com.nrg.kelly.events.menus.ButtonClickedEvent;
 import com.nrg.kelly.events.Events;
 
 /**

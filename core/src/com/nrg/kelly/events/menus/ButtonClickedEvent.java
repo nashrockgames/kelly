@@ -1,4 +1,4 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.menus;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.nrg.kelly.Constants;

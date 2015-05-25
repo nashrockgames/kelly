@@ -1,8 +1,7 @@
-package com.nrg.kelly.screens;
+package com.nrg.kelly.screens.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.nrg.kelly.stages.Box2dGameStage;
+import com.nrg.kelly.stages.GameStageView;
 
 import javax.inject.Inject;
 
@@ -12,7 +11,7 @@ import javax.inject.Inject;
 public class GameScreenView {
 
     @Inject
-    Box2dGameStage box2dGameStage;
+    GameStageView gameStageView;
 
     @Inject
     public GameScreenView(){
@@ -20,11 +19,12 @@ public class GameScreenView {
     }
 
     public void show() {
-        box2dGameStage.show();
+        Gdx.input.setInputProcessor(gameStageView);
+        gameStageView.show();
     }
 
     public void render(float delta) {
-        box2dGameStage.draw();
-        box2dGameStage.act(delta);
+        gameStageView.draw();
+        gameStageView.act(delta);
     }
 }

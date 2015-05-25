@@ -6,7 +6,7 @@ import com.nrg.kelly.config.Config;
 import com.nrg.kelly.config.factories.MenuButtonFactory;
 import com.nrg.kelly.config.factories.MenuConfigConsumer;
 import com.nrg.kelly.config.menus.Menu;
-import com.nrg.kelly.screens.MainMenuScreenModel;
+import com.nrg.kelly.screens.menus.main.MainMenuScreenModel;
 import com.nrg.kelly.stages.Box2dGameModel;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;

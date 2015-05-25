@@ -24,6 +24,9 @@ public class Box2dFactory {
     private static Box2dFactory instance;
 
     public static Vector2 runnerJumpingLinearImpulse;
+    private static Vector2 slidePosition;
+    private static float slideAngle;
+    private static Vector2 runPosition;
 
     private Box2dFactory(){
 
@@ -35,6 +38,8 @@ public class Box2dFactory {
             final Runner runner = config.getActors().getRunner();
             runnerJumpingLinearImpulse = new Vector2(runner.getJumpImpulseX(),
                     runner.getJumpImpulseY());
+            slideAngle = (float)(90f * (Math.PI / 180f));
+            slidePosition = new Vector2(runner.getSlideX(), runner.getSlideY());
             instance = new Box2dFactory();
         }
         return instance;
@@ -63,11 +68,12 @@ public class Box2dFactory {
     }
 
     public Body createRunner() {
-        final Config CONFIG = ConfigFactory.getConfig();
-        final Runner runner = CONFIG.getActors().getRunner();
+        final Config config = ConfigFactory.getConfig();
+        final Runner runner = config.getActors().getRunner();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(new Vector2(runner.getX(), runner.getY()));
+        runPosition = new Vector2(runner.getX(), runner.getY());
+        bodyDef.position.set(runPosition);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(runner.getWidth() / 2, runner.getHeight() / 2);
         Body body = world.createBody(bodyDef);
@@ -82,7 +88,23 @@ public class Box2dFactory {
         return runnerJumpingLinearImpulse;
     }
 
+
+
     public static World getWorld() {
         return world;
+    }
+
+    public Vector2 getRunPosition() {
+        return runPosition;
+    }
+
+
+    public Vector2 getSlidePosition() {
+        return slidePosition;
+    }
+
+
+    public float getSlideAngle() {
+        return slideAngle;
     }
 }

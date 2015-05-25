@@ -1,14 +1,9 @@
 package com.nrg.kelly.screens;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
-import com.nrg.kelly.Constants;
-import com.nrg.kelly.events.ButtonClickedEvent;
-import com.nrg.kelly.events.Events;
+
 
 import java.util.function.BiConsumer;
 
