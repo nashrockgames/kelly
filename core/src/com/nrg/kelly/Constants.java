@@ -11,7 +11,7 @@ public class Constants {
     public enum MENU_ID {
         MAIN("main_menu");
         private String id;
-        private MENU_ID(String id){
+        MENU_ID(String id){
             this.id = id;
         }
         @Override

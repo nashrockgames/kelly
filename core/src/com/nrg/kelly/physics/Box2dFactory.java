@@ -8,11 +8,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
-import com.nrg.kelly.config.Config;
+import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.ConfigFactory;
 import com.nrg.kelly.config.actors.Ground;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.actors.WorldGravity;
+import com.nrg.kelly.config.levels.Enemy;
 
 /**
  * Created by Andrew on 26/04/2015.
@@ -34,8 +35,8 @@ public class Box2dFactory {
 
     public static Box2dFactory getInstance(){
         if(instance==null) {
-            final Config config = ConfigFactory.getConfig();
-            final Runner runner = config.getActors().getRunner();
+            final GameConfig gameConfig = ConfigFactory.getGameConfig();
+            final Runner runner = gameConfig.getActors().getRunner();
             runnerJumpingLinearImpulse = new Vector2(runner.getJumpImpulseX(),
                     runner.getJumpImpulseY());
             slideAngle = (float)(90f * (Math.PI / 180f));
@@ -46,8 +47,8 @@ public class Box2dFactory {
     }
 
     public ApplicationListener buildGame(){
-        final Config config = ConfigFactory.getConfig();
-        final WorldGravity worldGravity = config.getActors().getWorldGravity();
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final WorldGravity worldGravity = gameConfig.getActors().getWorldGravity();
         world = new World(new Vector2(worldGravity.getX(), worldGravity.getY()), true);
         final DaggerGameComponent.Builder builder = DaggerGameComponent.builder();
         final GameComponent gameComponent = builder.build();
@@ -56,7 +57,7 @@ public class Box2dFactory {
 
     public Body createGround() {
         BodyDef bodyDef = new BodyDef();
-        final Ground ground = ConfigFactory.getConfig().getActors().getGround();
+        final Ground ground = ConfigFactory.getGameConfig().getActors().getGround();
         bodyDef.position.set(new Vector2(ground.getX(), ground.getY()));
         Body body = world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
@@ -67,8 +68,8 @@ public class Box2dFactory {
     }
 
     public Body createRunner() {
-        final Config config = ConfigFactory.getConfig();
-        final Runner runner = config.getActors().getRunner();
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final Runner runner = gameConfig.getActors().getRunner();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         runPosition = new Vector2(runner.getX(), runner.getY());
@@ -78,6 +79,19 @@ public class Box2dFactory {
         Body body = world.createBody(bodyDef);
         body.setGravityScale(runner.getGravityScale());
         body.createFixture(shape, runner.getDensity());
+        body.resetMassData();
+        shape.dispose();
+        return body;
+    }
+
+    public Body createEnemy(Enemy enemy){
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(new Vector2(enemy.getX(), enemy.getY()));
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(enemy.getWidth() / 2, enemy.getHeight() / 2);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, enemy.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;

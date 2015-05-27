@@ -30,6 +30,4 @@ public class ViewModule {
         return box2dGameStageView;
     }
 
-
-
 }

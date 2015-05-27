@@ -3,13 +3,12 @@ package com.nrg.kelly.stages.actors;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.eventbus.Subscribe;
-import com.nrg.kelly.config.Config;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
 import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.LeftSideScreenTouchUpEvent;
+import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 
 import javax.inject.Inject;
 
@@ -17,9 +16,6 @@ import javax.inject.Inject;
  * Created by Andrew on 2/05/2015.
  */
 public class RunnerActor extends GameActor {
-
-    @Inject
-    Config config;
 
     @Inject
     GroundActor groundActor;

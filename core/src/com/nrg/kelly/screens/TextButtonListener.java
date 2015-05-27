@@ -6,9 +6,6 @@ import com.nrg.kelly.Constants;
 import com.nrg.kelly.events.menus.ButtonClickedEvent;
 import com.nrg.kelly.events.Events;
 
-/**
- * Created by Andrew on 21/05/2015.
- */
 public class TextButtonListener extends ClickListener {
 
     private final String id;
@@ -19,8 +16,9 @@ public class TextButtonListener extends ClickListener {
 
     @Override
     public void clicked(InputEvent event, float x, float y) {
+        final Constants.BUTTON_ID menuId = Constants.BUTTON_ID.valueOf(id.toUpperCase());
         Events.get().post(
-            new ButtonClickedEvent(Constants.BUTTON_ID.valueOf(id.toUpperCase()))
+            new ButtonClickedEvent(menuId)
         );
     }
 }

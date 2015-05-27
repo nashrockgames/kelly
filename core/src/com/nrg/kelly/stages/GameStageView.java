@@ -8,25 +8,21 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.eventbus.Subscribe;
+import com.nrg.kelly.config.factories.EnemyFactory;
 import com.nrg.kelly.events.physics.BeginContactEvent;
-import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
-import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.*;
 import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-
-
 import java.util.List;
-
 import javax.inject.Inject;
 
-/**
- * Created by Andrew on 26/04/2015.
- */
 public class GameStageView extends AbstractStage implements ContactListener {
 
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
+    private int level = 1;
+    private int enemy = 0;
 
     @Inject
     Box2dGameModel box2dGameModel;
@@ -35,9 +31,11 @@ public class GameStageView extends AbstractStage implements ContactListener {
     Box2dGameStageView box2dGameStageView;
 
     @Inject
+    EnemyFactory enemyFactory;
+
+    @Inject
     public GameStageView() {
         Events.get().register(this);
-        Gdx.input.setInputProcessor(this);
         Box2dFactory.getWorld().setContactListener(this);
     }
 
@@ -46,13 +44,11 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
         final Vector3 touchPoint = box2dGameStageView.getTouchPoint();
         box2dGameStageView.translateScreenToWorldCoordinates(touchPoint.set(x, y, 0));
-
         if (box2dGameStageView.rightSideTouched(touchPoint)) {
             Events.get().post(new RightSideScreenTouchDownEvent(x, y, pointer, button));
         } else {
             Events.get().post(new LeftSideScreenTouchDownEvent(x, y, pointer, button));
         }
-
         return super.touchDown(x, y, pointer, button);
     }
 
@@ -90,8 +86,6 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Override
     public void draw() {
 
-        //Clear the screen
-        //Update the stage
         super.draw();
         box2dGameStageView.renderGameStage();
 
@@ -100,6 +94,8 @@ public class GameStageView extends AbstractStage implements ContactListener {
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints();
+        this.addActor(enemyFactory.createEnemy(level, enemy));
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -108,17 +104,11 @@ public class GameStageView extends AbstractStage implements ContactListener {
     }
 
     @Override
-    public void endContact(Contact contact) {
-
-    }
+    public void endContact(Contact contact) {}
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
+    public void preSolve(Contact contact, Manifold oldManifold) {}
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-
-    }
+    public void postSolve(Contact contact, ContactImpulse impulse) {}
 }

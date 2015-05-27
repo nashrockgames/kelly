@@ -1,42 +1,43 @@
 {
-	"settings": {
-		"debug": true
-	},
-	"menus":[
-         	    {
-         	    "id" : "main_menu",
-         	    "skin" : "main_menu_skin.json",
-         	    "atlas" : "main_menu_buttons.atlas"
-                 "buttons":[{
-                     "id": "main_menu_play",
-                     },{
-                     "id": "main_menu_quit"
-                     }]
-         	    }
-	],
-	"actors":{
-		"worldGravity": {
-			"x": 0,
-			"y": -10
-		},
-		"ground": {
-			"x": 0,
-			"y": 0,
-			"height": 2.0,
-			"width": 50.0,
-			"density": 0.0
-		},
-		"runner": {
-			"x": 2,
-			"y": 2.0,
-			"height": 2.0,
-			"width": 1.0,
-			"density": 0.5,
-		  	"jumpImpulseX":0.0,
-		  	"jumpImpulseY":13.0,
-		  	"slideX":2.0,
-		  	"slideY":1.5,
-		  	"gravityScale":3.0
-		}
-	}
+  "settings": {
+    "debug": true
+  },
+  "levelCount":1,
+  "menus":[
+    {
+      "id" : "main_menu",
+      "skin" : "main_menu_skin.json",
+      "atlas" : "main_menu_buttons.atlas",
+       "buttons":[{
+         "id": "main_menu_play"
+         },{
+         "id": "main_menu_quit"
+         }]
+      }
+  ],
+  "actors":{
+    "worldGravity": {
+      "x": 0,
+      "y": -10
+    },
+    "ground": {
+      "x": 0,
+      "y": 0,
+      "height": 2.0,
+      "width": 50.0,
+      "density": 0.0
+    },
+    "runner": {
+      "x": 2,
+      "y": 2.0,
+      "height": 2.0,
+      "width": 1.0,
+      "density": 0.5,
+      "jumpImpulseX":0.0,
+      "jumpImpulseY":13.0,
+      "slideX":2.0,
+      "slideY":1.5,
+      "gravityScale":3.0
+    }
+  }
 }

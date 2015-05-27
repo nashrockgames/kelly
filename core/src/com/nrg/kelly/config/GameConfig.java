@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Andrew on 3/05/2015.
  */
-public class Config {
+public class GameConfig {
 
     private Settings settings;
 
@@ -18,9 +18,11 @@ public class Config {
 
     private List<Menu> menus;
 
-    public Config(){
+    private int levelCount;
 
+    public GameConfig(){
     }
+
     public Settings getSettings() {
         return settings;
     }
@@ -43,5 +45,13 @@ public class Config {
 
     public void setMenus(List<Menu> menus) {
         this.menus = menus;
+    }
+
+    public int getLevelCount() {
+        return levelCount;
+    }
+
+    public void setLevelCount(int levelCount) {
+        this.levelCount = levelCount;
     }
 }

@@ -1,4 +1,4 @@
-package com.nrg.kelly.stages;
+package com.nrg.kelly.events.screen;
 
 import com.nrg.kelly.events.screen.ScreenTouchedEvent;
 
