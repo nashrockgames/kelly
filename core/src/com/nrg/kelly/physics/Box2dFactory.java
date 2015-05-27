@@ -52,7 +52,6 @@ public class Box2dFactory {
         final DaggerGameComponent.Builder builder = DaggerGameComponent.builder();
         final GameComponent gameComponent = builder.build();
         return gameComponent.getKellyGame();
-
     }
 
     public Body createGround() {
@@ -87,8 +86,6 @@ public class Box2dFactory {
     public Vector2 getRunnerLinerImpulse(){
         return runnerJumpingLinearImpulse;
     }
-
-
 
     public static World getWorld() {
         return world;
