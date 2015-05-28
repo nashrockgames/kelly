@@ -57,9 +57,14 @@ public class EnemyFactory {
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         final List<Enemy> enemies = levelConfig.getEnemies();
         final Enemy enemy = enemies.get(enemyIndex);
-        final EnemyActor enemyActor = new EnemyActor(Box2dFactory.getInstance().createEnemy(enemy));
+        final EnemyActor enemyActor = new EnemyActor(enemy);
         enemyActor.setLinearVelocity(new Vector2(enemy.getVelocityX(), 0f));
         return enemyActor;
 
+    }
+
+    public boolean hasNextEnemy(int level, int enemy) {
+        return linkedListMap.keySet().contains(level) &&
+                linkedListMap.get(level).size() > enemy;
     }
 }

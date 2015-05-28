@@ -22,7 +22,9 @@ public class RunnerActor extends GameActor {
 
     final Box2dFactory box2dFactory = Box2dFactory.getInstance();
 
-    private boolean jumping;
+    private boolean hit = false;
+    private boolean jumping = false;
+    private boolean sliding = false;
 
     @Inject
     public RunnerActor() {
@@ -42,32 +44,36 @@ public class RunnerActor extends GameActor {
 
     @Subscribe
     public void jump(RightSideScreenTouchDownEvent rightSideScreenTouchDownEvent) {
-
-        if (!jumping) {
+        if (!(jumping || sliding || hit)) {
             final Body body = getBody();
             body.applyLinearImpulse(box2dFactory.getRunnerLinerImpulse(),
                     body.getWorldCenter(), true);
             jumping = true;
         }
-
     }
 
     @Subscribe
     public void slide(LeftSideScreenTouchDownEvent leftSideScreenTouchDownEvent){
-
-        if(!jumping){
+        if( !(jumping || hit) ){
             final Body body = getBody();
             body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
+            sliding = true;
         }
-
     }
 
     @Subscribe
     public void stopSliding(LeftSideScreenTouchUpEvent leftSideScreenTouchUpEvent){
+        if(!(hit || jumping)) {
+            final Body body = getBody();
+            body.setTransform(box2dFactory.getRunPosition(), 0f);
+            sliding = false;
+        }
+   }
 
+    public void hit() {
         final Body body = getBody();
-        body.setTransform(box2dFactory.getRunPosition(), 0f);
-
+        //body.applyAngularImpulse(getUserData().getHitAngularImpulse(), true);
+        hit = true;
     }
 
     public void landed() {

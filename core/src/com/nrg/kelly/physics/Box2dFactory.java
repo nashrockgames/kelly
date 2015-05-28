@@ -14,10 +14,9 @@ import com.nrg.kelly.config.actors.Ground;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.actors.WorldGravity;
 import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 
-/**
- * Created by Andrew on 26/04/2015.
- */
 public class Box2dFactory {
 
     private static World world;
@@ -117,5 +116,10 @@ public class Box2dFactory {
 
     public float getSlideAngle() {
         return slideAngle;
+    }
+
+    public static void destroyBody(Body body) {
+        getWorld().destroyBody(body);
+        Events.get().post(new OnEnemyDestroyedEvent());
     }
 }
