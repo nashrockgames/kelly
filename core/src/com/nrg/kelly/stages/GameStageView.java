@@ -6,16 +6,13 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.factories.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.screen.*;
-import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-import java.util.List;
 import javax.inject.Inject;
 
 public class GameStageView extends AbstractStage implements ContactListener {
@@ -64,12 +61,6 @@ public class GameStageView extends AbstractStage implements ContactListener {
         return super.touchUp(x, y, pointer, button);
     }
 
-    @Subscribe
-    public void setupActors(PostCreateGameEvent postCreateGameEvent){
-        final List<Actor> actors = this.box2dGameModel.getActors();
-        this.addActors(actors);
-    }
-
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -98,6 +89,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
         this.addActor(actorFactory.createEnemy(level, enemy));
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
+        this.addActors(this.box2dGameModel.getActors());
         Gdx.input.setInputProcessor(this);
     }
 

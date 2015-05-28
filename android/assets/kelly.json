@@ -28,10 +28,11 @@
       "density": 0.0
     },
     "runner": {
+      "atlas" : "kelly_run.atlas",
       "x": 2,
       "y": 2.0,
-      "height": 2.0,
-      "width": 1.0,
+      "height": 4.0,
+      "width": 2.0,
       "density": 0.5,
       "jumpImpulseX":0.0,
       "jumpImpulseY":13.0,

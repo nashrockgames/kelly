@@ -1,0 +1,41 @@
+
+kelly_run.png
+size: 1024,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+kelly_run
+  rotate: false
+  xy: 2, 2
+  size: 145, 250
+  orig: 145, 250
+  offset: 0, 0
+  index: 0
+kelly_run
+  rotate: false
+  xy: 149, 2
+  size: 145, 250
+  orig: 145, 250
+  offset: 0, 0
+  index: 1
+kelly_run
+  rotate: false
+  xy: 296, 2
+  size: 145, 250
+  orig: 145, 250
+  offset: 0, 0
+  index: 2
+kelly_run
+  rotate: false
+  xy: 443, 2
+  size: 145, 250
+  orig: 145, 250
+  offset: 0, 0
+  index: 3
+kelly_run
+  rotate: false
+  xy: 590, 2
+  size: 145, 250
+  orig: 145, 250
+  offset: 0, 0
+  index: 4

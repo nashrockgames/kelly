@@ -1,10 +1,5 @@
 package com.nrg.kelly.config.actors;
 
-import com.nrg.kelly.config.actors.Actor;
-
-/**
- * Created by Andrew on 3/05/2015.
- */
 public class Runner extends Actor {
 
     private float jumpImpulseX;
@@ -13,6 +8,15 @@ public class Runner extends Actor {
     private float slideX;
     private float slideY;
     private float hitAngularImpulse;
+    private String atlas;
+
+    public String getAtlas() {
+        return atlas;
+    }
+
+    public void setAtlas(String atlas) {
+        this.atlas = atlas;
+    }
 
     public float getJumpImpulseX() {
         return jumpImpulseX;
