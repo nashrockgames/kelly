@@ -5,9 +5,7 @@ import com.nrg.kelly.stages.GameStageView;
 
 import javax.inject.Inject;
 
-/**
- * Created by Andrew on 11/05/2015.
- */
+
 public class GameScreenView {
 
     @Inject

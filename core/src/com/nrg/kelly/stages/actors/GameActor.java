@@ -22,12 +22,13 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-
-        final Object userData = body.getUserData();
-        if (userData != null) {
-            updateRectangle((GameActor)userData);
+        final Body body = this.getBody();
+        if(body!=null) {
+            final Object userData = body.getUserData();
+            if (userData != null) {
+                updateRectangle((GameActor) userData);
+            }
         }
-
     }
 
     private void updateRectangle(GameActor userData) {

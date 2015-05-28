@@ -91,18 +91,13 @@ public class GameStageView extends AbstractStage implements ContactListener {
             this.addActor(actorFactory.createEnemy(level, enemy));
         }
     }
-/*
-    @Override
-    public void draw() {
-        super.draw();
-        box2dGameStageView.renderGameStage();
-    }
-*/
+
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints();
         this.addActor(actorFactory.createEnemy(level, enemy));
         this.addActor(actorFactory.createBackground(level));
+        this.addActor(actorFactory.createGround(level));
         Gdx.input.setInputProcessor(this);
     }
 

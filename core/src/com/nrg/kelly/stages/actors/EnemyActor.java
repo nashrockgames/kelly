@@ -36,7 +36,6 @@ public class EnemyActor extends GameActor {
     public void act(float delta) {
         super.act(delta);
         this.getBody().setLinearVelocity(linearVelocity);
-
         final Body body = this.getBody();
         if(!(body.getPosition().x + enemyConfig.getWidth() / 2 > 0)){
             if(!runnerHit){
@@ -44,6 +43,5 @@ public class EnemyActor extends GameActor {
                 this.remove();
             }
         }
-
     }
 }

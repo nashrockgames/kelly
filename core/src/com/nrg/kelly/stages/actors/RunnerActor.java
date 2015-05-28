@@ -18,9 +18,6 @@ import javax.inject.Inject;
  */
 public class RunnerActor extends GameActor {
 
-    @Inject
-    GroundActor groundActor;
-
     final Box2dFactory box2dFactory = Box2dFactory.getInstance();
 
     private boolean hit = false;
@@ -40,10 +37,10 @@ public class RunnerActor extends GameActor {
         final Body bodyB = contact.getFixtureB().getBody();
         final Object userData = bodyB.getUserData();
         if(bodyA.equals(this.getBody())){
-            if (bodyB.equals(groundActor.getBody())){
-                this.landed();
-            }
             if(userData !=null) {
+                if(userData instanceof GroundActor){
+                    this.landed();
+                }
                 if (userData instanceof EnemyActor){
                     this.hit();
                 }

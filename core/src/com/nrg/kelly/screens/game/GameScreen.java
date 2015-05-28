@@ -2,12 +2,8 @@ package com.nrg.kelly.screens.game;
 
 import com.badlogic.gdx.Screen;
 
-
 import javax.inject.Inject;
 
-/**
- * Created by Andrew on 26/04/2015.
- */
 public class GameScreen implements Screen {
 
     @Inject

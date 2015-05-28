@@ -13,6 +13,15 @@ public class LevelConfig {
     private int enemySeed;
     private List<Enemy> enemies;
     private String background;
+    private String ground;
+
+    public String getGround() {
+        return ground;
+    }
+
+    public void setGround(String ground) {
+        this.ground = ground;
+    }
 
     public int getEnemyCount() {
         return enemyCount;

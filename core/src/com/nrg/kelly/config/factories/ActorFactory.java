@@ -7,6 +7,7 @@ import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.GroundActor;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,10 +61,14 @@ public class ActorFactory {
     }
 
     public Actor createBackground(int level){
-
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         return new BackgroundActor(levelConfig.getBackground());
+    }
 
+    public Actor createGround(int level){
+        final LevelConfig levelConfig = config.getLevels().get(level - 1);
+        final String ground = levelConfig.getGround();
+        return new GroundActor(ground);
     }
 
 
