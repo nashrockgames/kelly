@@ -5,13 +5,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.levels.Enemy;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
-/**
- * Created by Andrew on 27/05/2015.
- */
 public class EnemyActor extends GameActor {
 
     private final Enemy enemyConfig;
@@ -21,7 +17,9 @@ public class EnemyActor extends GameActor {
 
     public EnemyActor(Enemy enemy) {
         this.enemyConfig = enemy;
-        this.setBody(Box2dFactory.getInstance().createEnemy(enemy));
+        final Body body = Box2dFactory.getInstance().createEnemy(enemy);
+        body.setUserData(this);
+        this.setBody(body);
         Events.get().register(this);
     }
 
@@ -46,17 +44,6 @@ public class EnemyActor extends GameActor {
                 this.remove();
             }
         }
-/*
-        if (!BodyUtils.bodyInBounds(body)) {
-            if (BodyUtils.bodyIsEnemy(body) && !runner.isHit()) {
-                enemy++;
-                if(enemyFactory.hasNextEnemy(level, enemy)) {
-                    this.addActor(enemyFactory.createEnemy(level, enemy));
-                }
-            }
-            world.destroyBody(body);
-        }
-*/
 
     }
 }

@@ -37,7 +37,8 @@
       "jumpImpulseY":13.0,
       "slideX":2.0,
       "slideY":1.5,
-      "gravityScale":3.0
+      "gravityScale":3.0,
+      "hitAngularImpulse": 10.0
     }
   }
 }

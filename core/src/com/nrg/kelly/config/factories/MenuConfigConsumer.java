@@ -2,10 +2,9 @@ package com.nrg.kelly.config.factories;
 
 import com.nrg.kelly.config.menus.Menu;
 import com.nrg.kelly.config.menus.buttons.Button;
+import com.nrg.kelly.util.Consumer;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -16,6 +15,9 @@ public class MenuConfigConsumer implements Consumer<Menu> {
     @Override
     public void accept(Menu menu) {
         final List<Button> buttons = menu.getButtons();
-        buttons.forEach(new MenuButtonConfigConsumer(menu));
+        final MenuButtonConfigConsumer menuButtonConfigConsumer = new MenuButtonConfigConsumer(menu);
+        for(Button b : buttons){
+            menuButtonConfigConsumer.accept(b);
+        }
     }
 }

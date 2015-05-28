@@ -3,14 +3,13 @@ package com.nrg.kelly.screens;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.google.common.base.Optional;
+import com.nrg.kelly.util.BiConsumer;
 
-
-import java.util.function.BiConsumer;
 
 /**
  * Created by Andrew on 21/05/2015.
  */
-public class ButtonAddingConsumer implements BiConsumer<String, TextButton>{
+public class ButtonAddingConsumer implements BiConsumer<String, TextButton> {
 
     private final Optional<Table> table;
 

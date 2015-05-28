@@ -12,6 +12,7 @@ public class Runner extends Actor {
     private float gravityScale;
     private float slideX;
     private float slideY;
+    private float hitAngularImpulse;
 
     public float getJumpImpulseX() {
         return jumpImpulseX;
@@ -43,5 +44,21 @@ public class Runner extends Actor {
 
     public float getSlideY() {
         return slideY;
+    }
+
+    public float getHitAngularImpulse() {
+        return hitAngularImpulse;
+    }
+
+    public void setHitAngularImpulse(float hitAngularImpulse) {
+        this.hitAngularImpulse = hitAngularImpulse;
+    }
+
+    public void setSlideX(float slideX) {
+        this.slideX = slideX;
+    }
+
+    public void setSlideY(float slideY) {
+        this.slideY = slideY;
     }
 }

@@ -3,6 +3,7 @@ package com.nrg.kelly.stages.actors;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.eventbus.Subscribe;
+import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
@@ -37,8 +38,16 @@ public class RunnerActor extends GameActor {
         final Contact contact = beginContactEvent.getContact();
         final Body bodyA = contact.getFixtureA().getBody();
         final Body bodyB = contact.getFixtureB().getBody();
-        if(bodyA.equals(this.getBody()) && bodyB.equals(groundActor.getBody())){
-            this.landed();
+        final Object userData = bodyB.getUserData();
+        if(bodyA.equals(this.getBody())){
+            if (bodyB.equals(groundActor.getBody())){
+                this.landed();
+            }
+            if(userData !=null) {
+                if (userData instanceof EnemyActor){
+                    this.hit();
+                }
+            }
         }
     }
 
@@ -72,7 +81,8 @@ public class RunnerActor extends GameActor {
 
     public void hit() {
         final Body body = getBody();
-        //body.applyAngularImpulse(getUserData().getHitAngularImpulse(), true);
+        body.applyAngularImpulse(box2dFactory.getHitAngularImpulse(), true);
+        Events.get().post(new RunnerHitEvent());
         hit = true;
     }
 

@@ -1,22 +1,17 @@
 package com.nrg.kelly.config.factories;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.nrg.kelly.config.menus.Menu;
 import com.nrg.kelly.config.menus.buttons.Button;
 import com.nrg.kelly.config.messages.MessagesFactory;
+import com.nrg.kelly.util.Consumer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+
 
 
 /**

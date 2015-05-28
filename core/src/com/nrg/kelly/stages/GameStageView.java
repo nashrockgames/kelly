@@ -2,17 +2,13 @@ package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
-import com.nrg.kelly.config.factories.EnemyFactory;
-import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.config.factories.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.screen.*;
@@ -36,7 +32,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
     Box2dGameStageView box2dGameStageView;
 
     @Inject
-    EnemyFactory enemyFactory;
+    ActorFactory actorFactory;
 
     @Inject
     public GameStageView() {
@@ -91,29 +87,22 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Subscribe
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
         enemy++;
-        if(enemyFactory.hasNextEnemy(level, enemy)) {
-            this.addActor(enemyFactory.createEnemy(level, enemy));
+        if(actorFactory.hasNextEnemy(level, enemy)) {
+            this.addActor(actorFactory.createEnemy(level, enemy));
         }
     }
-
-
 /*
-    private void createEnemy() {
-
-    }
-*/
     @Override
     public void draw() {
-
         super.draw();
         box2dGameStageView.renderGameStage();
-
     }
-
+*/
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints();
-        this.addActor(enemyFactory.createEnemy(level, enemy));
+        this.addActor(actorFactory.createEnemy(level, enemy));
+        this.addActor(actorFactory.createBackground(level));
         Gdx.input.setInputProcessor(this);
     }
 

@@ -3,10 +3,8 @@ package com.nrg.kelly.inject;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.GameConfig;
-import com.nrg.kelly.config.factories.EnemyFactory;
 import com.nrg.kelly.config.factories.MenuButtonFactory;
 import com.nrg.kelly.config.factories.MenuConfigConsumer;
-import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.config.menus.Menu;
 import com.nrg.kelly.screens.menus.main.MainMenuScreenModel;
 import com.nrg.kelly.stages.Box2dGameModel;
@@ -44,7 +42,10 @@ public class ModelModule {
             return menuButtonFactory;
         } else {
             final List<Menu> menus = gameConfig.getMenus();
-            menus.forEach(new MenuConfigConsumer());
+            final MenuConfigConsumer menuConfigConsumer = new MenuConfigConsumer();
+            for(Menu menu : menus){
+                menuConfigConsumer.accept(menu);
+            }
             return menuButtonFactory;
         }
 

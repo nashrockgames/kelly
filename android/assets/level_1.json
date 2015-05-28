@@ -1,4 +1,5 @@
 {
+  "background":"level_1_background.png",
   "enemyCount":20,
   "enemySeed": 5,
   "enemies":[

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   width="800"
+   height="480"
+   sodipodi:docname="level_1_background.svg"
+   inkscape:export-filename="C:\dev\kelly\libgdx\android\assets\level_1_background.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <metadata
+     id="metadata2991">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2989" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="988"
+     id="namedview2987"
+     showgrid="false"
+     inkscape:zoom="3.2125001"
+     inkscape:cx="266.77471"
+     inkscape:cy="222.22677"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2985" />
+  <rect
+     style="fill:#7ec0ee;fill-opacity:1;fill-rule:evenodd;stroke:none"
+     id="rect2997"
+     width="800"
+     height="480"
+     x="0"
+     y="0" />
+  <path
+     style="fill:#fff6d5;stroke:none"
+     d="M 0.4395605,479.44871 799.89011,480 800,238.95369 c -11.20165,13.28699 -10.50774,-24.82385 -47.87043,-7.3223 -24.97713,-46.73759 -42.95127,-5.08098 -55.09307,-18.14378 -19.50941,-20.98928 -46.58026,-12.64721 -48.16988,15.53423 -15.72001,-24.82022 -45.71651,-27.76812 -56.22925,-17.6694 -25.00151,-16.51252 -38.37755,-0.37764 -42.00961,9.65499 -2.02412,-12.62484 -33.13692,-24.66829 -36.10936,7.23951 -19.51906,-37.54202 -36.35872,-29.20123 -61.97309,-27.90846 -0.70681,-18.55657 -37.71324,-31.05633 -54.73914,-20.44899 -16.53746,-12.22465 -46.87644,5.161 -45.70634,22.95451 -18.35164,-1.06587 -47.14506,6.16097 -47.58904,32.33077 -15.43827,-16.46033 -36.55437,-19.1705 -48.02728,-7.57879 -9.14472,-15.12763 -13.08871,-22.21929 -42.41758,-15.69812 -2.39777,-35.19615 -44.17526,-31.98921 -50.36785,-8.3886 -13.30873,-11.01497 -42.91731,12.21783 -37.44081,24.86134 -18.00313,-3.27288 -27.970242,4.74942 -36.147379,23.4844 C 80.324279,238.95966 71.351037,228.5973 54.065933,243.0336 44.978835,224.95395 38.236811,233.54323 30.76923,233.88126 13.728612,226.88933 5.5858791,228.77927 0,238.62288 z"
+     id="path3769"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccccsccccccccccccccccc"
+     inkscape:export-filename="C:\dev\kelly\libgdx\android\assets\level_1_background.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:#a6d785;fill-opacity:1;stroke:#bced91;stroke-width:1.02558362px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0"
+     d="M 0,339.82027 0,480 l 800,0 0,-140.08605 c -56.38899,19.00475 -106.37448,-41.61753 -199.66058,-38.6097 -76.66813,4.11318 -96.8192,34.24508 -161.72245,33.89714 -38.98752,-0.50847 -68.70609,-34.39796 -118.64247,-34.00038 -43.64464,2.55707 -32.76269,33.01414 -119.16623,35.31684 -38.7137,3.86354 -64.03478,-20.78291 -84.57202,-23.22348 C 91.093499,309.32036 22.419672,325.46564 0,339.82027 z"
+     id="path3771"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccccccccc" />
+</svg>

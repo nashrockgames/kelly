@@ -40,7 +40,10 @@ public class MainMenuScreenView {
         final Map<String,TextButton> textButtons = mainMenuScreenModel.getTextButtons();
         table.setWidth(Gdx.graphics.getWidth());
         table.setHeight(Gdx.graphics.getHeight());
-        textButtons.forEach(new ButtonAddingConsumer(Optional.of(table)));
+        final ButtonAddingConsumer buttonAddingConsumer = new ButtonAddingConsumer(Optional.of(table));
+        for(String id : textButtons.keySet()) {
+            buttonAddingConsumer.accept(id, textButtons.get(id));
+        }
         this.table.setFillParent(true);
         this.stage.addActor(table);
         Gdx.input.setInputProcessor(stage);

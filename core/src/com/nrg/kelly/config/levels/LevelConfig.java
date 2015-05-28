@@ -12,6 +12,7 @@ public class LevelConfig {
     private int enemyCount;
     private int enemySeed;
     private List<Enemy> enemies;
+    private String background;
 
     public int getEnemyCount() {
         return enemyCount;
@@ -35,5 +36,13 @@ public class LevelConfig {
 
     public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 }
