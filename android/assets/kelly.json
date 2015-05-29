@@ -29,6 +29,7 @@
     },
     "runner": {
       "atlas" : "kelly_run.atlas",
+      "frameRate" : 0.125,
       "x": 2,
       "y": 2.0,
       "height": 4.0,

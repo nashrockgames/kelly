@@ -9,6 +9,7 @@ public class Runner extends Actor {
     private float slideY;
     private float hitAngularImpulse;
     private String atlas;
+    private float frameRate;
 
     public String getAtlas() {
         return atlas;
@@ -64,5 +65,13 @@ public class Runner extends Actor {
 
     public void setSlideY(float slideY) {
         this.slideY = slideY;
+    }
+
+    public float getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(float frameRate) {
+        this.frameRate = frameRate;
     }
 }

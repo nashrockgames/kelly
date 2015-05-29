@@ -36,7 +36,13 @@ public class GameStageView extends AbstractStage implements ContactListener {
         Events.get().register(this);
         Box2dFactory.getWorld().setContactListener(this);
     }
-
+/*
+    @Override
+    public void draw(){
+        super.draw();
+        this.box2dGameStageView.renderGameStage();
+    }
+*/
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
 
@@ -79,14 +85,14 @@ public class GameStageView extends AbstractStage implements ContactListener {
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
         enemy++;
         if(actorFactory.hasNextEnemy(level, enemy)) {
-            this.addActor(actorFactory.createEnemy(level, enemy));
+            //this.addActor(actorFactory.createEnemy(level, enemy));
         }
     }
 
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints();
-        this.addActor(actorFactory.createEnemy(level, enemy));
+        //this.addActor(actorFactory.createEnemy(level, enemy));
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
         this.addActors(this.box2dGameModel.getActors());

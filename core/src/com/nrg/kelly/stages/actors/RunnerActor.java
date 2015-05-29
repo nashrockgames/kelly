@@ -40,7 +40,7 @@ public class RunnerActor extends GameActor {
         setWidth(runner.getWidth());
         setHeight(runner.getHeight());
         atlas = new TextureAtlas(Gdx.files.internal(atlasFile));
-        animation = new Animation(1/8f, atlas.getRegions());
+        animation = new Animation(runner.getFrameRate(), atlas.getRegions());
         body.setUserData(this);
         setBody(body);
         Events.get().register(this);
