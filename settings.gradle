@@ -1,1 +1,2 @@
+include ':imagetools'
 include 'desktop', 'android', 'core'
