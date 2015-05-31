@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 
@@ -62,4 +63,5 @@ public class Box2dGameStageView {
     public Vector3 getTouchPoint() {
         return touchPoint;
     }
+
 }

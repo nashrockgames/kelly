@@ -8,14 +8,14 @@ public class Runner extends Actor {
     private float slideX;
     private float slideY;
     private float hitAngularImpulse;
-    private String atlas;
     private float frameRate;
+    private Atlas atlas;
 
-    public String getAtlas() {
+    public Atlas getAtlas() {
         return atlas;
     }
 
-    public void setAtlas(String atlas) {
+    public void setAtlas(Atlas atlas) {
         this.atlas = atlas;
     }
 

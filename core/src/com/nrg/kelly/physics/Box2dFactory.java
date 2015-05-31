@@ -48,12 +48,16 @@ public class Box2dFactory {
     }
 
     public ApplicationListener buildGame(){
-        final GameConfig gameConfig = ConfigFactory.getGameConfig();
-        final WorldGravity worldGravity = gameConfig.getActors().getWorldGravity();
-        world = new World(new Vector2(worldGravity.getX(), worldGravity.getY()), true);
+        createWorld();
         final DaggerGameComponent.Builder builder = DaggerGameComponent.builder();
         final GameComponent gameComponent = builder.build();
         return gameComponent.getKellyGame();
+    }
+
+    private void createWorld() {
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final WorldGravity worldGravity = gameConfig.getActors().getWorldGravity();
+        world = new World(new Vector2(worldGravity.getX(), worldGravity.getY()), true);
     }
 
     public Body createGround() {

@@ -1,6 +1,7 @@
 package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 
 public class GameStageView extends AbstractStage implements ContactListener {
 
+    public static final int VELOCITY_ITERATIONS = 6;
+    public static final int POSITION_ITERATIONS = 2;
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
     private int level = 1;
@@ -36,13 +39,13 @@ public class GameStageView extends AbstractStage implements ContactListener {
         Events.get().register(this);
         Box2dFactory.getWorld().setContactListener(this);
     }
-/*
+
     @Override
     public void draw(){
         super.draw();
-        this.box2dGameStageView.renderGameStage();
+        //this.box2dGameStageView.renderGameStage();
     }
-*/
+
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
 
@@ -75,7 +78,8 @@ public class GameStageView extends AbstractStage implements ContactListener {
         accumulator += delta;
 
         while (accumulator >= delta) {
-            Box2dFactory.getWorld().step(TIME_STEP, 6, 2);
+            Box2dFactory.getWorld().step(TIME_STEP,
+                    VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
         }
 
@@ -84,6 +88,10 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Subscribe
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
         enemy++;
+        spawnEnemy();
+    }
+
+    private void spawnEnemy(){
         if(actorFactory.hasNextEnemy(level, enemy)) {
             //this.addActor(actorFactory.createEnemy(level, enemy));
         }
@@ -92,11 +100,20 @@ public class GameStageView extends AbstractStage implements ContactListener {
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints();
-        //this.addActor(actorFactory.createEnemy(level, enemy));
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
         this.addActors(this.box2dGameModel.getActors());
         Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
+        spawnEnemy();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            Gdx.app.exit();
+        }
+        return false;
     }
 
     @Override

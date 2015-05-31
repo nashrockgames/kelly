@@ -5,7 +5,6 @@ import com.nrg.kelly.stages.GameStageView;
 
 import javax.inject.Inject;
 
-
 public class GameScreenView {
 
     @Inject

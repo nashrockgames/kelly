@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.eventbus.Subscribe;
@@ -19,28 +20,32 @@ import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 
 import javax.inject.Inject;
 
-/**
- * Created by Andrew on 2/05/2015.
- */
 public class RunnerActor extends GameActor {
 
     final Box2dFactory box2dFactory = Box2dFactory.getInstance();
-    private final Animation animation;
+    private final Animation runAnimation;
+    private final Animation jumpAnimation;
+    private final Animation slideAnimation;
     private boolean hit = false;
     private boolean jumping = false;
     private boolean sliding = false;
-    private final TextureAtlas atlas;
     private float stateTime;
 
     @Inject
     public RunnerActor() {
         final Runner runner = ConfigFactory.getGameConfig().getActors().getRunner();
-        final String atlasFile = runner.getAtlas();
+        final String run = runner.getAtlas().getRun();
+        final String jump = runner.getAtlas().getJump();
+        final String slide = runner.getAtlas().getSlide();
         final Body body = box2dFactory.createRunner();
         setWidth(runner.getWidth());
         setHeight(runner.getHeight());
-        atlas = new TextureAtlas(Gdx.files.internal(atlasFile));
-        animation = new Animation(runner.getFrameRate(), atlas.getRegions());
+        final TextureAtlas runAtlas = new TextureAtlas(Gdx.files.internal(run));
+        final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
+        final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
+        runAnimation = new Animation(runner.getFrameRate(), runAtlas.getRegions());
+        jumpAnimation = new Animation(runner.getFrameRate(), jumpAtlas.getRegions());
+        slideAnimation = new Animation(runner.getFrameRate(), slideAtlas.getRegions());
         body.setUserData(this);
         setBody(body);
         Events.get().register(this);
@@ -50,9 +55,30 @@ public class RunnerActor extends GameActor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
-        batch.draw(animation.getKeyFrame(stateTime, true), screenRectangle.x, screenRectangle.y,
-                screenRectangle.getWidth(), screenRectangle.getHeight());
+        final TextureRegion region;
+        if (sliding) {
+            region = slideAnimation.getKeyFrame(stateTime, true);
+            drawSlideAnimation(batch, region);
+        } else if (jumping) {
+            region = jumpAnimation.getKeyFrame(stateTime, true);
+            drawAnimation(batch, region);
+        }else {
+            region = runAnimation.getKeyFrame(stateTime, true);
+            drawAnimation(batch, region);
+        }
+    }
 
+    private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
+        batch.draw(textureRegion, screenRectangle.x - (textureRegion.getRegionWidth() / 2f),
+                screenRectangle.y + (textureRegion.getRegionHeight() / 2f),
+                screenRectangle.getHeight(),
+                screenRectangle.getWidth());
+    }
+
+    private void drawAnimation(Batch batch, TextureRegion textureRegion){
+        batch.draw(textureRegion, screenRectangle.x,
+                screenRectangle.y, screenRectangle.getWidth(),
+                screenRectangle.getHeight());
     }
 
     @Subscribe
@@ -88,6 +114,7 @@ public class RunnerActor extends GameActor {
         if( !(jumping || hit) ){
             final Body body = getBody();
             body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
+            updateRectangle(this);
             sliding = true;
         }
     }
@@ -97,6 +124,7 @@ public class RunnerActor extends GameActor {
         if(!(hit || jumping)) {
             final Body body = getBody();
             body.setTransform(box2dFactory.getRunPosition(), 0f);
+            updateRectangle(this);
             sliding = false;
         }
    }
@@ -107,6 +135,7 @@ public class RunnerActor extends GameActor {
         Events.get().post(new RunnerHitEvent());
         hit = true;
     }
+
 
     public void landed() {
        jumping = false;

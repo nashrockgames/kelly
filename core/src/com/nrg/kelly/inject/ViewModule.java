@@ -3,6 +3,7 @@ package com.nrg.kelly.inject;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.nrg.kelly.stages.Box2dGameStageView;
 
 import dagger.Module;
@@ -16,10 +17,15 @@ public class ViewModule {
 
     private static final int VIEWPORT_WIDTH = 20;
     private static final int VIEWPORT_HEIGHT = 13;
+    private FillViewport viewport;
 
     @Provides
     Camera provideCamera(){
-        return new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        final OrthographicCamera orthographicCamera =
+                new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        viewport = new FillViewport(100,100, orthographicCamera);
+        viewport.apply();
+        return orthographicCamera;
     }
 
     @Provides

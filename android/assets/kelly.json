@@ -28,17 +28,21 @@
       "density": 0.0
     },
     "runner": {
-      "atlas" : "kelly_run.atlas",
+      "atlas" : {
+        "run":"kelly_run.atlas",
+        "jump":"kelly_jump.atlas",
+        "slide":"kelly_slide.atlas"
+      },
       "frameRate" : 0.125,
-      "x": 2,
-      "y": 2.0,
+      "x": 2.0,
+      "y": 3.0,
       "height": 4.0,
       "width": 2.0,
       "density": 0.5,
       "jumpImpulseX":0.0,
-      "jumpImpulseY":13.0,
-      "slideX":2.0,
-      "slideY":1.5,
+      "jumpImpulseY":75.0,
+      "slideX":4.0,
+      "slideY":2.0,
       "gravityScale":3.0,
       "hitAngularImpulse": 10.0
     }
