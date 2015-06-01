@@ -130,7 +130,7 @@ public class RunnerActor extends GameActor {
         if( !(jumping || hit) ){
             final Body body = getBody();
             body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
-            updateRectangle(this);
+            updateTextureBounds(this);
             sliding = true;
         }
     }
@@ -140,7 +140,7 @@ public class RunnerActor extends GameActor {
         if(!(hit || jumping)) {
             final Body body = getBody();
             body.setTransform(box2dFactory.getRunPosition(), 0f);
-            updateRectangle(this);
+            updateTextureBounds(this);
             sliding = false;
         }
    }
@@ -158,4 +158,13 @@ public class RunnerActor extends GameActor {
     }
 
 
+    @Override
+    public float getTextureWidth() {
+        return 0;
+    }
+
+    @Override
+    public float getTextureHeight() {
+        return 0;
+    }
 }

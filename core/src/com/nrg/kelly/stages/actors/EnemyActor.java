@@ -44,4 +44,14 @@ public class EnemyActor extends GameActor {
             }
         }
     }
+
+    @Override
+    public float getTextureWidth() {
+        return 0;
+    }
+
+    @Override
+    public float getTextureHeight() {
+        return 0;
+    }
 }

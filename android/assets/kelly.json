@@ -42,7 +42,7 @@
       "width": 1.0,
       "density": 0.5,
       "jumpImpulseX":0.0,
-      "jumpImpulseY":15.0,
+      "jumpImpulseY":13.0,
       "slideX":2.01,
       "slideY":1.51,
       "gravityScale":3.0,
