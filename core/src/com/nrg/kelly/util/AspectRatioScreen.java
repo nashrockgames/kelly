@@ -27,7 +27,7 @@ public class AspectRatioScreen extends ApplicationAdapter implements InputProces
         aspectRatios.setSize(100, 100);
 
         camera = new OrthographicCamera();
-        viewport = new StretchViewport(100,100,camera);
+        viewport = new StretchViewport(200,200,camera);
         viewport.apply();
 
         camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);

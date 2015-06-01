@@ -5,8 +5,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.physics.Box2dFactory;
 
-import javax.inject.Inject;
-
 /**
  * Created by Andrew on 2/05/2015.
  */
@@ -24,10 +22,10 @@ public class GroundActor extends ScrollingActor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        batch.draw(textureRegion, textureRegionBounds1.x, screenRectangle.y, screenRectangle.getWidth(),
-                screenRectangle.getHeight());
-        batch.draw(textureRegion, textureRegionBounds2.x, screenRectangle.y, screenRectangle.getWidth(),
-                screenRectangle.getHeight());
+        batch.draw(textureRegion, textureRegionBounds1.x, textureBounds.y, textureBounds.getWidth(),
+                textureBounds.getHeight());
+        batch.draw(textureRegion, textureRegionBounds2.x, textureBounds.y, textureBounds.getWidth(),
+                textureBounds.getHeight());
     }
 
 }

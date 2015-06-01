@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.stages.Box2dGameStageView;
 
 import dagger.Module;
@@ -15,15 +17,15 @@ import dagger.Provides;
 @Module
 public class ViewModule {
 
-    private static final int VIEWPORT_WIDTH = 20;
-    private static final int VIEWPORT_HEIGHT = 13;
-    private FillViewport viewport;
-
     @Provides
-    Camera provideCamera(){
+    Camera provideCamera(GameConfig config){
+
+        final float viewPortWidth = config.getViewPortWidth();
+        final float viewPortHeight = config.getViewPortHeight();
         final OrthographicCamera orthographicCamera =
-                new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        viewport = new FillViewport(100,100, orthographicCamera);
+                new OrthographicCamera(viewPortWidth, viewPortHeight);
+        final FillViewport viewport =
+                new FillViewport(viewPortWidth, viewPortHeight, orthographicCamera);
         viewport.apply();
         return orthographicCamera;
     }

@@ -18,9 +18,29 @@ public class GameConfig {
 
     private List<Menu> menus;
 
+    private float viewPortWidth;
+
+    private float viewPortHeight;
+
     private int levelCount;
 
     public GameConfig(){
+    }
+
+    public float getViewPortWidth() {
+        return viewPortWidth;
+    }
+
+    public void setViewPortWidth(float viewPortWidth) {
+        this.viewPortWidth = viewPortWidth;
+    }
+
+    public float getViewPortHeight() {
+        return viewPortHeight;
+    }
+
+    public void setViewPortHeight(float viewPortHeight) {
+        this.viewPortHeight = viewPortHeight;
     }
 
     public Settings getSettings() {
