@@ -1,12 +1,18 @@
 package com.nrg.kelly.stages.actors;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.actors.ActorConfig;
+import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.inject.ConfigFactory;
+
+import java.util.List;
 
 public abstract class GameActor extends Actor {
 
@@ -18,6 +24,15 @@ public abstract class GameActor extends Actor {
 
     public GameActor(ActorConfig config) {
             this.config = Optional.fromNullable(config);
+    }
+
+    protected AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name){
+        for(AtlasConfig a: atlasConfigList){
+            if(a.getName().equals(name)){
+                return a;
+            }
+        }
+        throw new IllegalArgumentException("Unknown atlas name" + name);
     }
 
     @Override
@@ -38,6 +53,21 @@ public abstract class GameActor extends Actor {
         }
     }
 
+    protected void drawAnimation(Batch batch, TextureRegion textureRegion, Optional<ImageOffset> offsetOptional){
+
+        float x = textureBounds.x;
+        float y = textureBounds.y;
+        if(offsetOptional.isPresent()){
+            final ImageOffset imageOffset = offsetOptional.get();
+            x += imageOffset.getX();
+            y += imageOffset.getY();
+        }
+        batch.draw(textureRegion, x,
+                y, textureBounds.getWidth(),
+                textureBounds.getHeight());
+    }
+
+
     protected void updateTextureBounds(ActorConfig config) {
         //get the screen width
         final Rectangle textureBounds = this.getTextureBounds();
@@ -52,10 +82,7 @@ public abstract class GameActor extends Actor {
     protected float transformToScreenX(float x) {
         return x * 64;
     }
-    protected float transformToScreenY(float y) {
-        return y * 64;
-
-    }
+    protected float transformToScreenY(float y) { return y * 64; }
     public void setBody(Body body) {
         this.body = body;
     }

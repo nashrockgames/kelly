@@ -1,6 +1,6 @@
 package com.nrg.kelly.config.levels;
 
-import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.config.actors.Enemy;
 
 import java.util.List;
 

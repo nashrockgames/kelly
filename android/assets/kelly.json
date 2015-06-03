@@ -20,28 +20,51 @@
       "y": -10
     },
     "ground": {
-      "x": 0,
-      "y": 0,
+      "position":{
+        "x":0.0,
+        "y":0.0
+      },
       "height": 2.0,
       "width": 50.0,
       "density": 0.0
     },
     "runner": {
-      "atlas" : {
-        "run":"kelly_run.atlas",
-        "jump":"kelly_jump.atlas",
-        "slide":"kelly_slide.atlas"
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"kelly_run.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":-43
+          }
+        },
+        {
+          "name" : "jump",
+          "atlas":"kelly_jump.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":-43
+          }
+        },
+        {
+          "name": "slide",
+          "atlas": "kelly_slide.atlas",
+          "imageOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "position": {
+        "x": 2.01,
+        "y": 2.01
       },
       "frameRate" : 0.125,
-      "x": 2.01,
-      "y": 2.01,
-      "height": 1.0,
+      "height": 2.0,
       "width": 1.0,
       "density": 0.5,
       "jumpImpulseX":0.0,
       "jumpImpulseY":13.0,
-      "slideX":2.01,
-      "slideY":1.51,
       "gravityScale":3.0,
       "hitAngularImpulse": 10.0
     }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
-import com.nrg.kelly.config.actors.ActorConfig;
+import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
@@ -21,6 +21,8 @@ import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
 import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -39,24 +41,39 @@ public class RunnerActor extends GameActor {
     @Inject
     Box2dFactory box2dFactory;
 
+    private Runner runnerConfig;
+
+    private AtlasConfig runAtlasConfig;
+    private AtlasConfig jumpAtlasConfig;
+    private AtlasConfig slideAtlasConfig;
+
+
     @Inject
     public RunnerActor(Runner runner) {
         super(runner);
         Events.get().register(this);
     }
 
+
+
     @Subscribe
     public void createTextures(PostBuildGameModuleEvent postBuildGameModuleEvent){
-        final Runner runner = gameConfig.getActors().getRunner();
-        final String run = runner.getAtlas().getRun();
-        final String jump = runner.getAtlas().getJump();
-        final String slide = runner.getAtlas().getSlide();
+        runnerConfig = gameConfig.getActors().getRunner();
+        final List<AtlasConfig> atlasConfigList = runnerConfig.getAnimations();
+        runAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "default");
+        jumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump");
+        slideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide");
+
+        final String run = runAtlasConfig.getAtlas();
+        final String jump = jumpAtlasConfig.getAtlas();
+        final String slide = slideAtlasConfig.getAtlas();
         final TextureAtlas runAtlas = new TextureAtlas(Gdx.files.internal(run));
         final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
         final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
-        runAnimation = new Animation(runner.getFrameRate(), runAtlas.getRegions());
-        jumpAnimation = new Animation(runner.getFrameRate(), jumpAtlas.getRegions());
-        slideAnimation = new Animation(runner.getFrameRate(), slideAtlas.getRegions());
+
+        runAnimation = new Animation(runnerConfig.getFrameRate(), runAtlas.getRegions());
+        jumpAnimation = new Animation(runnerConfig.getFrameRate(), jumpAtlas.getRegions());
+        slideAnimation = new Animation(runnerConfig.getFrameRate(), slideAtlas.getRegions());
 
     }
 
@@ -76,32 +93,27 @@ public class RunnerActor extends GameActor {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
         final TextureRegion region;
+
         if (sliding) {
             region = slideAnimation.getKeyFrame(stateTime, true);
             drawSlideAnimation(batch, region);
         } else if (jumping) {
             region = jumpAnimation.getKeyFrame(stateTime, true);
-            drawAnimation(batch, region);
+            drawAnimation(batch, region, Optional.of(jumpAtlasConfig.getImageOffset()));
         }else {
             region = runAnimation.getKeyFrame(stateTime, true);
-            drawAnimation(batch, region);
+            drawAnimation(batch, region, Optional.of(runAtlasConfig.getImageOffset()));
         }
     }
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
         final Rectangle textureBounds = this.getTextureBounds();
-        batch.draw(textureRegion, textureBounds.x - (textureRegion.getRegionWidth() / 2f),
-                textureBounds.y + (textureRegion.getRegionHeight() / 2f),
+        batch.draw(textureRegion, textureBounds.x,
+                textureBounds.y,
                 textureBounds.getHeight(),
                 textureBounds.getWidth());
     }
 
-    private void drawAnimation(Batch batch, TextureRegion textureRegion){
-        final Rectangle textureBounds = this.getTextureBounds();
-        batch.draw(textureRegion, textureBounds.x,
-                textureBounds.y, textureBounds.getWidth(),
-                textureBounds.getHeight());
-    }
 
     @Subscribe
     public void beginContact(BeginContactEvent beginContactEvent){
@@ -161,5 +173,6 @@ public class RunnerActor extends GameActor {
     public void landed() {
        jumping = false;
     }
+
 
 }

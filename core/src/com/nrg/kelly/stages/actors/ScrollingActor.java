@@ -13,7 +13,7 @@ public abstract class ScrollingActor extends GameActor {
     protected final TextureRegion textureRegion;
     protected Rectangle textureRegionBounds1;
     protected Rectangle textureRegionBounds2;
-    private int speed = 100;
+    private int speed = 200;
 
     public ScrollingActor(ActorConfig config, String imagePath) {
         super(config);

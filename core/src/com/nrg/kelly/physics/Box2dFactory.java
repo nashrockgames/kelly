@@ -9,13 +9,17 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.Position;
 import com.nrg.kelly.inject.ConfigFactory;
 import com.nrg.kelly.config.actors.Ground;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.actors.WorldGravity;
-import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
+
+import java.util.List;
 
 public class Box2dFactory {
 
@@ -29,6 +33,8 @@ public class Box2dFactory {
     private static Vector2 runPosition;
     private static float hitAngularImpulse;
 
+    private static String RUN = "run";
+
     private Box2dFactory(){
 
     }
@@ -40,7 +46,8 @@ public class Box2dFactory {
             runnerJumpingLinearImpulse = new Vector2(runner.getJumpImpulseX(),
                     runner.getJumpImpulseY());
             slideAngle = (float)(90f * (Math.PI / 180f));
-            slidePosition = new Vector2(runner.getSlideX(), runner.getSlideY());
+            final Position position = runner.getPosition();
+            slidePosition = new Vector2(position.getX(), position.getY() - runner.getWidth() / 2);
             hitAngularImpulse = runner.getHitAngularImpulse();
             instance = new Box2dFactory();
         }
@@ -61,9 +68,10 @@ public class Box2dFactory {
     }
 
     public Body createGround() {
-        BodyDef bodyDef = new BodyDef();
+        final BodyDef bodyDef = new BodyDef();
         final Ground ground = ConfigFactory.getGameConfig().getActors().getGround();
-        bodyDef.position.set(new Vector2(ground.getX(), ground.getY()));
+        final Position position = ground.getPosition();
+        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
         Body body = world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(ground.getWidth() / 2, ground.getHeight() / 2);
@@ -75,9 +83,10 @@ public class Box2dFactory {
     public Body createRunner() {
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
         final Runner runner = gameConfig.getActors().getRunner();
+        final Position position = runner.getPosition();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        runPosition = new Vector2(runner.getX(), runner.getY());
+        runPosition = new Vector2(position.getX(), position.getY());
         bodyDef.position.set(runPosition);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(runner.getWidth() / 2, runner.getHeight() / 2);
@@ -92,7 +101,8 @@ public class Box2dFactory {
     public Body createEnemy(Enemy enemy){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        bodyDef.position.set(new Vector2(enemy.getX(), enemy.getY()));
+        final Position position = enemy.getPosition();
+        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(enemy.getWidth() / 2, enemy.getHeight() / 2);
         Body body = world.createBody(bodyDef);

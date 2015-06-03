@@ -1,4 +1,4 @@
-package com.nrg.kelly.config.levels;
+package com.nrg.kelly.config.actors;
 
 import com.nrg.kelly.config.actors.ActorConfig;
 

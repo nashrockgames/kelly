@@ -104,7 +104,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -114,7 +114,7 @@
      id="layer1"
      transform="translate(0,-988.36214)">
     <g
-       transform="matrix(0.11124949,-0.38381421,0.38233011,0.11602597,-313.05316,957.72206)"
+       transform="matrix(0.11124949,-0.38381421,0.38233011,0.11602597,-324.66374,944.82142)"
        id="g4278-8-5">
       <path
          sodipodi:nodetypes="sssss"
@@ -143,7 +143,7 @@
     </g>
     <g
        id="g4268-1-3"
-       transform="matrix(0.08838677,-0.3961872,0.42294561,0.09647095,-341.50487,977.11838)">
+       transform="matrix(0.08838677,-0.3961872,0.42294561,0.09647095,-353.11545,964.21774)">
       <g
          id="g4273-9-3"
          transform="matrix(0.99597489,-0.08484858,0.09468647,0.99597489,-81.61517,8.5955378)">
@@ -169,7 +169,7 @@
     </g>
     <g
        id="g4087"
-       transform="matrix(-0.17053245,-0.98535206,0.98535206,-0.17053245,-948.76316,1242.3415)">
+       transform="matrix(-0.17053245,-0.98535206,0.98535206,-0.17053245,-960.37374,1229.4409)">
       <path
          sodipodi:nodetypes="sssss"
          inkscape:connector-curvature="0"
@@ -207,7 +207,7 @@
     </g>
     <g
        id="g4097"
-       transform="translate(-71.759825,6.6115794)">
+       transform="translate(-83.370403,-6.2890629)">
       <path
          sodipodi:nodetypes="sssss"
          inkscape:connector-curvature="0"
@@ -235,7 +235,7 @@
     </g>
     <g
        id="g4202-4-8"
-       transform="matrix(0.19149418,0.35326435,-0.34516584,0.16678228,359.97918,868.88278)">
+       transform="matrix(0.19149418,0.35326435,-0.34516584,0.16678228,348.3686,855.98214)">
       <path
          sodipodi:nodetypes="sssss"
          inkscape:connector-curvature="0"
@@ -257,7 +257,7 @@
     </g>
     <g
        id="g4762-8"
-       transform="matrix(0.38806261,-0.08531958,0.08845613,0.39195869,-129.92621,700.50801)">
+       transform="matrix(0.38806261,-0.08531958,0.08845613,0.39195869,-141.53679,687.60737)">
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"

@@ -1,30 +1,33 @@
 package com.nrg.kelly.config.actors;
 
+import java.util.List;
+
 /**
  * Created by Andrew on 3/05/2015.
  */
 public abstract class ActorConfig {
 
-    private int x;
-    private int y;
     private float height;
     private float width;
     private float density;
+    private Position position;
 
-    public int getX() {
-        return x;
+    private List<AtlasConfig> animations;
+
+    public List<AtlasConfig> getAnimations() {
+        return animations;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setAnimations(List<AtlasConfig> animations) {
+        this.animations = animations;
     }
 
-    public int getY() {
-        return y;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public float getHeight() {

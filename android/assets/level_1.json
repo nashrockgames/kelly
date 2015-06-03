@@ -7,8 +7,10 @@
     {
       "width": 2.0,
       "height": 1.0,
-      "x": 25.0,
-      "y": 1.5,
+      "position":{
+        "x": 25.0,
+        "y": 1.5
+      },
       "density": 0.5,
       "velocityX" : -10
     }
@@ -16,8 +18,10 @@
     {
       "width": 1.0,
       "height": 2.0,
-      "x": 25.0,
-      "y": 2.0,
+      "position":{
+        "x": 25.0,
+        "y": 2.0
+      },
       "density": 0.5,
       "velocityX" : -10
     }
@@ -25,8 +29,10 @@
     {
       "width": 2.0,
       "height": 2.0,
-      "x": 25.0,
-      "y": 2.0,
+      "position":{
+        "x": 25.0,
+        "y": 2.0
+      },
       "density": 0.5,
       "velocityX" : -10
     }
@@ -34,8 +40,10 @@
     {
       "width": 1.0,
       "height": 1.0,
-      "x": 25.0,
-      "y": 3.0,
+      "position":{
+        "x": 25.0,
+        "y": 3.0
+      },
       "density": 0.5,
       "velocityX" : -10
     }
@@ -43,8 +51,10 @@
     {
       "width": 2.0,
       "height": 1.0,
-      "x": 25.0,
-      "y": 3.0,
+      "position":{
+        "x": 25.0,
+        "y": 3.0
+      },
       "density": 0.5,
       "velocityX" : -10
     }

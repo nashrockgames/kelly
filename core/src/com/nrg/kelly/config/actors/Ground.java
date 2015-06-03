@@ -5,5 +5,4 @@ package com.nrg.kelly.config.actors;
  */
 public class Ground extends ActorConfig {
 
-
 }

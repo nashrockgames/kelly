@@ -1,6 +1,6 @@
 package com.nrg.kelly.config.factories;
 
-import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.util.Consumer;
 

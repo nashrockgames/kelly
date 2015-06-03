@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
-import com.nrg.kelly.config.levels.Enemy;
+import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.stages.actors.BackgroundActor;
