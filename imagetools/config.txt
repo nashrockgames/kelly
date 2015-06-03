@@ -1,4 +1,4 @@
-split android/assets/raw/actors/kelly/sheets/run *.png 64 128 android/assets/raw/actors/kelly/run
+split android/assets/raw/actors/kelly/sheets/run *.png 64 64 android/assets/raw/actors/kelly/run
 split android/assets/raw/actors/kelly/sheets/jump *.png 64 128 android/assets/raw/actors/kelly/jump
 split android/assets/raw/actors/kelly/sheets/slide *.png 113 64 android/assets/raw/actors/kelly/slide
 
