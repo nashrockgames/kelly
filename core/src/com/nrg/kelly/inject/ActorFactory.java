@@ -2,6 +2,7 @@ package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.levels.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
@@ -67,9 +68,10 @@ public class ActorFactory {
     }
 
     public Actor createGround(int level){
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         final String ground = levelConfig.getGround();
-        return new GroundActor(ground);
+        return new GroundActor(gameConfig.getActors().getGround(), ground);
     }
 
 

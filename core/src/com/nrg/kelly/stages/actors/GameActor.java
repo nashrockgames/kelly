@@ -3,65 +3,76 @@ package com.nrg.kelly.stages.actors;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.common.base.Optional;
 import com.nrg.kelly.Constants;
+import com.nrg.kelly.config.actors.ActorConfig;
+import com.nrg.kelly.inject.ConfigFactory;
 
 public abstract class GameActor extends Actor {
 
+    protected Optional<ActorConfig> config;
     private Body body;
 
-    protected Rectangle textureBounds
+    private Rectangle textureBounds
             = new Rectangle();
-    private int textureWidth;
 
-    public void setBody(Body body) {
-        this.body = body;
-    }
-
-
-
-    public Body getBody() {
-        return body;
+    public GameActor(ActorConfig config) {
+            this.config = Optional.fromNullable(config);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        final Body body = this.getBody();
-        if(body!=null) {
-            final Object userData = body.getUserData();
-            if (userData != null) {
-                updateTextureBounds(this);
+        maybeUpdateTextureBounds();
+    }
+
+    protected void maybeUpdateTextureBounds(){
+        if(this.getConfig().isPresent()) {
+            final Body body = this.getBody();
+            if (body != null) {
+                final Object userData = body.getUserData();
+                if (userData instanceof GameActor) {
+                    updateTextureBounds(this.getConfig().get());
+                }
             }
         }
     }
 
-    protected void updateTextureBounds(GameActor gameActor) {
-
+    protected void updateTextureBounds(ActorConfig config) {
         //get the screen width
-
-        textureBounds.x = transformToScreenX(body.getPosition().x - gameActor.getWidth() / 2);
-        textureBounds.y = transformToScreenY(body.getPosition().y - gameActor.getHeight() / 2);
-        textureBounds.width = transformToScreenX(gameActor.getWidth());
-        textureBounds.height = transformToScreenY(gameActor.getHeight());
+        final Rectangle textureBounds = this.getTextureBounds();
+        final float bodyWidth = getWidth();
+        final float bodyHeight = getHeight();
+        textureBounds.x = transformToScreenX(getBody().getPosition().x - bodyWidth / 2);
+        textureBounds.y = transformToScreenY(getBody().getPosition().y - bodyHeight / 2);
+        textureBounds.width = transformToScreenX(bodyWidth);
+        textureBounds.height = transformToScreenY(bodyHeight);
     }
 
-    protected float transformToScreenX(float n) {
-        //TODO: multiply by height and width aspect ratios
-        float textureWidthRatio = this.getTextureWidth() / Constants.APP_WIDTH;
-        float stageWidthRatio;
-        //image texture width and height with screen vs actor width and height with stage
-        return Constants.WORLD_TO_SCREEN * n;
+    protected float transformToScreenX(float x) {
+        return x * 64;
     }
-    protected float transformToScreenY(float n) {
-        //TODO: multiply by height and width aspect ratios
-        float widthRatio = this.getTextureHeight() / Constants.APP_WIDTH;
+    protected float transformToScreenY(float y) {
+        return y * 64;
 
-        //TODO: multiply by height and width aspect ratios
-        //image texture width and height with screen vs actor width and height with stage
-        return Constants.WORLD_TO_SCREEN * n;
+    }
+    public void setBody(Body body) {
+        this.body = body;
     }
 
-    public abstract float getTextureWidth();
+    public Body getBody() {
+        return body;
+    }
 
-    public abstract float getTextureHeight();
+    public Rectangle getTextureBounds() {
+        return textureBounds;
+    }
+
+    public void setTextureBounds(Rectangle textureBounds) {
+        this.textureBounds = textureBounds;
+    }
+
+    public Optional<ActorConfig> getConfig() {
+        return config;
+    }
 }

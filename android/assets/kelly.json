@@ -1,9 +1,6 @@
 {
   "viewPortWidth": 20.0,
   "viewPortHeight": 13.0,
-  "settings": {
-    "debug": true
-  },
   "levelCount":1,
   "menus":[
     {

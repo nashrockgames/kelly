@@ -6,7 +6,7 @@ import com.nrg.kelly.Constants;
 public class BackgroundActor extends ScrollingActor {
 
     public BackgroundActor(String imagePath) {
-        super(imagePath);
+        super(null, imagePath);
     }
 
     @Override
@@ -18,13 +18,4 @@ public class BackgroundActor extends ScrollingActor {
                 Constants.APP_HEIGHT);
     }
 
-    @Override
-    public float getTextureWidth() {
-        return 0;
-    }
-
-    @Override
-    public float getTextureHeight() {
-        return 0;
-    }
 }

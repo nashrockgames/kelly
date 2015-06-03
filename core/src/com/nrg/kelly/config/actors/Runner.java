@@ -1,6 +1,6 @@
 package com.nrg.kelly.config.actors;
 
-public class Runner extends Actor {
+public class Runner extends ActorConfig {
 
     private float jumpImpulseX;
     private float jumpImpulseY;

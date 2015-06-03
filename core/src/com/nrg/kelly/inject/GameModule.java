@@ -2,6 +2,7 @@ package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.physics.Box2dFactory;
 
@@ -31,6 +32,10 @@ public class GameModule {
     @Provides
     ActorFactory provideEnemyFactory(LevelsConfig config){
         return ActorFactory.getInstance(config);
+    }
+    @Provides
+    Runner provideRunnerConfig(GameConfig gameConfig){
+        return gameConfig.getActors().getRunner();
     }
     @Provides
     Box2dFactory provideBox2dFactory(){

@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
@@ -37,7 +40,8 @@ public class RunnerActor extends GameActor {
     Box2dFactory box2dFactory;
 
     @Inject
-    public RunnerActor() {
+    public RunnerActor(Runner runner) {
+        super(runner);
         Events.get().register(this);
     }
 
@@ -85,6 +89,7 @@ public class RunnerActor extends GameActor {
     }
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
+        final Rectangle textureBounds = this.getTextureBounds();
         batch.draw(textureRegion, textureBounds.x - (textureRegion.getRegionWidth() / 2f),
                 textureBounds.y + (textureRegion.getRegionHeight() / 2f),
                 textureBounds.getHeight(),
@@ -92,6 +97,7 @@ public class RunnerActor extends GameActor {
     }
 
     private void drawAnimation(Batch batch, TextureRegion textureRegion){
+        final Rectangle textureBounds = this.getTextureBounds();
         batch.draw(textureRegion, textureBounds.x,
                 textureBounds.y, textureBounds.getWidth(),
                 textureBounds.getHeight());
@@ -130,7 +136,7 @@ public class RunnerActor extends GameActor {
         if( !(jumping || hit) ){
             final Body body = getBody();
             body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
-            updateTextureBounds(this);
+            maybeUpdateTextureBounds();
             sliding = true;
         }
     }
@@ -140,7 +146,7 @@ public class RunnerActor extends GameActor {
         if(!(hit || jumping)) {
             final Body body = getBody();
             body.setTransform(box2dFactory.getRunPosition(), 0f);
-            updateTextureBounds(this);
+            maybeUpdateTextureBounds();
             sliding = false;
         }
    }
@@ -152,19 +158,8 @@ public class RunnerActor extends GameActor {
         hit = true;
     }
 
-
     public void landed() {
        jumping = false;
     }
 
-
-    @Override
-    public float getTextureWidth() {
-        return 0;
-    }
-
-    @Override
-    public float getTextureHeight() {
-        return 0;
-    }
 }

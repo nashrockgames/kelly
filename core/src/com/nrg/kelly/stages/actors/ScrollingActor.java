@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.google.common.base.Optional;
 import com.nrg.kelly.Constants;
+import com.nrg.kelly.config.actors.ActorConfig;
 
 public abstract class ScrollingActor extends GameActor {
 
@@ -13,7 +15,8 @@ public abstract class ScrollingActor extends GameActor {
     protected Rectangle textureRegionBounds2;
     private int speed = 100;
 
-    public ScrollingActor(String imagePath) {
+    public ScrollingActor(ActorConfig config, String imagePath) {
+        super(config);
         textureRegion = new TextureRegion(new Texture(Gdx.files.internal(imagePath)));
         textureRegionBounds1 = new Rectangle(0 - Constants.APP_WIDTH / 2, 0,
                 Constants.APP_WIDTH, Constants.APP_HEIGHT);

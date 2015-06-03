@@ -5,9 +5,8 @@ package com.nrg.kelly;
  */
 public class Constants {
 
-    public static final int APP_WIDTH = 800;
-    public static final int APP_HEIGHT = 600;
-    public static final float WORLD_TO_SCREEN = 64f;
+    public static final int APP_WIDTH = 640;
+    public static final int APP_HEIGHT = 480;
 
     public enum MENU_ID {
         MAIN("main_menu");
