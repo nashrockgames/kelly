@@ -1,7 +1,9 @@
 package com.nrg;
 
 public enum COMMAND {
-    SPLIT("SPLIT");
+    CLEAN("CLEAN"),
+    SPLIT("SPLIT"),
+    PACK("PACK");
     private String id;
     COMMAND(String id){
         this.id = id;

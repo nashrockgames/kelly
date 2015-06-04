@@ -33,8 +33,6 @@ public class Box2dFactory {
     private static Vector2 runPosition;
     private static float hitAngularImpulse;
 
-    private static String RUN = "run";
-
     private Box2dFactory(){
 
     }

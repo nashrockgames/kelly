@@ -1,4 +1,16 @@
-split android/assets/raw/actors/kelly/sheets/run *.png 64 128 android/assets/raw/actors/kelly/run
-split android/assets/raw/actors/kelly/sheets/jump *.png 64 128 android/assets/raw/actors/kelly/jump
-split android/assets/raw/actors/kelly/sheets/slide *.png 128 64 android/assets/raw/actors/kelly/slide
+#actors
+clean resources/raw/actors/kelly/run
+split resources/raw/actors/kelly/sheets/run *.png 64 128 resources/raw/actors/kelly/run
+pack resources/raw/actors/kelly/run android/assets kelly_run
+
+clean resources/raw/actors/kelly/jump
+split resources/raw/actors/kelly/sheets/jump *.png 64 128 resources/raw/actors/kelly/jump
+pack resources/raw/actors/kelly/jump android/assets kelly_jump
+
+clean resources/raw/actors/kelly/slide
+split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/kelly/slide
+pack resources/raw/actors/kelly/slide android/assets kelly_slide
+
+#main menu packing
+pack resources/raw/buttons/mainmenu android/assets main_menu_buttons
 

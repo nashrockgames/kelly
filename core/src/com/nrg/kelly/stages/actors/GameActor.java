@@ -6,16 +6,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
-import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
-import com.nrg.kelly.inject.ConfigFactory;
 
 import java.util.List;
 
 public abstract class GameActor extends Actor {
 
+    public static final int WORLD_TO_SCREEN = 64;
     protected Optional<ActorConfig> config;
     private Body body;
 
@@ -32,7 +31,7 @@ public abstract class GameActor extends Actor {
                 return a;
             }
         }
-        throw new IllegalArgumentException("Unknown atlas name" + name);
+        throw new IllegalArgumentException("Unknown atlas name " + name);
     }
 
     @Override
@@ -73,16 +72,16 @@ public abstract class GameActor extends Actor {
         final Rectangle textureBounds = this.getTextureBounds();
         final float bodyWidth = getWidth();
         final float bodyHeight = getHeight();
-        textureBounds.x = transformToScreenX(getBody().getPosition().x - bodyWidth / 2);
-        textureBounds.y = transformToScreenY(getBody().getPosition().y - bodyHeight / 2);
-        textureBounds.width = transformToScreenX(bodyWidth);
-        textureBounds.height = transformToScreenY(bodyHeight);
+        textureBounds.x = transformToScreen(getBody().getPosition().x - bodyWidth / 2);
+        textureBounds.y = transformToScreen(getBody().getPosition().y - bodyHeight / 2);
+        textureBounds.width = transformToScreen(bodyWidth);
+        textureBounds.height = transformToScreen(bodyHeight);
     }
 
-    protected float transformToScreenX(float x) {
-        return x * 64;
+    protected float transformToScreen(float n) {
+        return n * WORLD_TO_SCREEN;
     }
-    protected float transformToScreenY(float y) { return y * 64; }
+
     public void setBody(Body body) {
         this.body = body;
     }
