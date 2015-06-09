@@ -6,7 +6,7 @@ public class Runner extends ActorConfig {
     private float jumpImpulseY;
     private float gravityScale;
     private float hitAngularImpulse;
-    private float frameRate;
+
 
     public float getJumpImpulseX() {
         return jumpImpulseX;
@@ -41,11 +41,4 @@ public class Runner extends ActorConfig {
         this.hitAngularImpulse = hitAngularImpulse;
     }
 
-    public float getFrameRate() {
-        return frameRate;
-    }
-
-    public void setFrameRate(float frameRate) {
-        this.frameRate = frameRate;
-    }
 }

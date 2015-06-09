@@ -52,6 +52,9 @@ public class ImageSplitter {
                 final int index = i > 0 ? i * j : j;
                 final String name = split[0] + "_" + index + "." +  ext;
                 final String pathName = outDir + "/" + name;
+                final File out = new File(outDir);
+                if(!out.exists())
+                    out.mkdir();
                 System.out.println("Creating image " + pathName);
                 ImageIO.write(subImage, ext, new File(pathName));
                 subImage.flush();

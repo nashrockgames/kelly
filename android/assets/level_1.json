@@ -5,6 +5,16 @@
   "enemySeed": 5,
   "enemies":[
     {
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"magpie.atlas",
+          "imageOffset":{
+          "x":0,
+          "y":0
+        }
+      }],
+      "frameRate": 0.125,
       "width": 2.0,
       "height": 1.0,
       "position":{
@@ -16,6 +26,16 @@
     }
     ,
     {
+    "animations":[
+            {
+              "name":"default",
+              "atlas":"magpie.atlas",
+              "imageOffset":{
+              "x":0,
+              "y":0
+            }
+      }],
+      "frameRate": 0.125,
       "width": 1.0,
       "height": 2.0,
       "position":{
@@ -27,6 +47,16 @@
     }
     ,
     {
+     "animations":[
+             {
+               "name":"default",
+               "atlas":"magpie.atlas",
+               "imageOffset":{
+               "x":0,
+               "y":0
+             }
+       }],
+      "frameRate": 0.125,
       "width": 2.0,
       "height": 2.0,
       "position":{
@@ -38,6 +68,16 @@
     }
     ,
     {
+    "animations":[
+             {
+               "name":"default",
+               "atlas":"magpie.atlas",
+               "imageOffset":{
+               "x":0,
+               "y":0
+             }
+       }],
+      "frameRate": 0.125,
       "width": 1.0,
       "height": 1.0,
       "position":{
@@ -49,6 +89,16 @@
     }
     ,
     {
+    "animations":[
+             {
+               "name":"default",
+               "atlas":"magpie.atlas",
+               "imageOffset":{
+               "x":0,
+               "y":0
+             }
+       }],
+      "frameRate": 0.125,
       "width": 2.0,
       "height": 1.0,
       "position":{

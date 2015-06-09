@@ -11,6 +11,7 @@ public abstract class ActorConfig {
     private float width;
     private float density;
     private Position position;
+    private float frameRate;
 
     private List<AtlasConfig> animations;
 
@@ -53,5 +54,14 @@ public abstract class ActorConfig {
     public void setDensity(float density) {
         this.density = density;
     }
+
+    public float getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(float frameRate) {
+        this.frameRate = frameRate;
+    }
+
 
 }

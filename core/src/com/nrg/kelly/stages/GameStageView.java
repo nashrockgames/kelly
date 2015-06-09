@@ -93,7 +93,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
     private void spawnEnemy(){
         if(actorFactory.hasNextEnemy(level, enemy)) {
-            //this.addActor(actorFactory.createEnemy(level, enemy));
+            this.addActor(actorFactory.createEnemy(level, enemy));
         }
     }
 

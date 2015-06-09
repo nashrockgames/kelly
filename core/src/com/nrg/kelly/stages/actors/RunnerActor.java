@@ -28,13 +28,12 @@ import javax.inject.Inject;
 
 public class RunnerActor extends GameActor {
 
-    private Animation runAnimation;
     private Animation jumpAnimation;
     private Animation slideAnimation;
     private boolean hit = false;
     private boolean jumping = false;
     private boolean sliding = false;
-    private float stateTime;
+
 
     @Inject
     GameConfig gameConfig;
@@ -43,10 +42,8 @@ public class RunnerActor extends GameActor {
 
     private Runner runnerConfig;
 
-    private AtlasConfig runAtlasConfig;
     private AtlasConfig jumpAtlasConfig;
     private AtlasConfig slideAtlasConfig;
-
 
     @Inject
     public RunnerActor(Runner runner) {
@@ -54,24 +51,23 @@ public class RunnerActor extends GameActor {
         Events.get().register(this);
     }
 
-
-
     @Subscribe
     public void createTextures(PostBuildGameModuleEvent postBuildGameModuleEvent){
         runnerConfig = gameConfig.getActors().getRunner();
+
         final List<AtlasConfig> atlasConfigList = runnerConfig.getAnimations();
-        runAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "default");
+        setDefaultAtlasConfig(this.getAtlasConfigByName(atlasConfigList, "default"));
+
         jumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump");
         slideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide");
 
-        final String run = runAtlasConfig.getAtlas();
+        final String run = getDefaultAtlasConfig().getAtlas();
         final String jump = jumpAtlasConfig.getAtlas();
         final String slide = slideAtlasConfig.getAtlas();
-        final TextureAtlas runAtlas = new TextureAtlas(Gdx.files.internal(run));
+        final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(run));
         final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
         final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
-
-        runAnimation = new Animation(runnerConfig.getFrameRate(), runAtlas.getRegions());
+        setDefaultAnimation(new Animation(runnerConfig.getFrameRate(), defaultAtlas.getRegions()));
         jumpAnimation = new Animation(runnerConfig.getFrameRate(), jumpAtlas.getRegions());
         slideAnimation = new Animation(runnerConfig.getFrameRate(), slideAtlas.getRegions());
 
@@ -93,7 +89,6 @@ public class RunnerActor extends GameActor {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
         final TextureRegion region;
-
         if (sliding) {
             region = slideAnimation.getKeyFrame(stateTime, true);
             drawSlideAnimation(batch, region);
@@ -101,8 +96,7 @@ public class RunnerActor extends GameActor {
             region = jumpAnimation.getKeyFrame(stateTime, true);
             drawAnimation(batch, region, Optional.of(jumpAtlasConfig.getImageOffset()));
         }else {
-            region = runAnimation.getKeyFrame(stateTime, true);
-            drawAnimation(batch, region, Optional.of(runAtlasConfig.getImageOffset()));
+            drawDefaultAnimation(batch);
         }
     }
 

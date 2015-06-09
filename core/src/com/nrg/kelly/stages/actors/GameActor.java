@@ -1,5 +1,6 @@
 package com.nrg.kelly.stages.actors;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -17,6 +18,35 @@ public abstract class GameActor extends Actor {
     public static final int WORLD_TO_SCREEN = 64;
     protected Optional<ActorConfig> config;
     private Body body;
+    protected float stateTime;
+    private Animation defaultAnimation;
+    private AtlasConfig defaultAtlasConfig;
+
+    public Animation getDefaultAnimation() {
+        return defaultAnimation;
+    }
+
+    public void setDefaultAnimation(Animation defaultAnimation) {
+        this.defaultAnimation = defaultAnimation;
+    }
+
+    protected void drawDefaultAnimation(Batch batch) {
+        if(getDefaultAnimation()!=null) {
+            final TextureRegion region =
+                    getDefaultAnimation().getKeyFrame(stateTime, true);
+            drawAnimation(batch, region,
+                    Optional.of(getDefaultAtlasConfig().getImageOffset()));
+        }
+    }
+
+
+    public AtlasConfig getDefaultAtlasConfig() {
+        return defaultAtlasConfig;
+    }
+
+    public void setDefaultAtlasConfig(AtlasConfig defaultAtlasConfig) {
+        this.defaultAtlasConfig = defaultAtlasConfig;
+    }
 
     private Rectangle textureBounds
             = new Rectangle();
@@ -25,7 +55,10 @@ public abstract class GameActor extends Actor {
             this.config = Optional.fromNullable(config);
     }
 
-    protected AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name){
+
+
+
+    public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name){
         for(AtlasConfig a: atlasConfigList){
             if(a.getName().equals(name)){
                 return a;

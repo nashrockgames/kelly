@@ -17,6 +17,8 @@ public class ImageCleaner {
     public void clean(String path){
 
         final File dir = new File(path);
+        if(!dir.exists())
+            dir.mkdir();
         final File[] files = dir.listFiles();
         for(File file : files){
             System.out.println("Removing " + file.getAbsolutePath());

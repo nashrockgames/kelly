@@ -1,5 +1,8 @@
 package com.nrg.kelly.stages.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.google.common.eventbus.Subscribe;
@@ -20,7 +23,9 @@ public class EnemyActor extends GameActor {
         super(enemy);
         final Body body = Box2dFactory.getInstance().createEnemy(enemy);
         body.setUserData(this);
-        this.setBody(body);
+        setBody(body);
+        setWidth(enemy.getWidth());
+        setHeight(enemy.getHeight());
         Events.get().register(this);
     }
 
@@ -48,4 +53,11 @@ public class EnemyActor extends GameActor {
         }
     }
 
-}
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        stateTime += Gdx.graphics.getDeltaTime();
+        this.drawDefaultAnimation(batch);
+    }
+
+    }

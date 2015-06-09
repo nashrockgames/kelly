@@ -1,8 +1,12 @@
 package com.nrg.kelly.inject;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
@@ -52,6 +56,16 @@ public class ActorFactory {
         final List<Enemy> enemies = levelConfig.getEnemies();
         final Enemy enemy = enemies.get(enemyIndex);
         final EnemyActor enemyActor = new EnemyActor(enemy);
+        final List<AtlasConfig> animations = enemy.getAnimations();
+        if(animations != null) {
+            final AtlasConfig defaultAtlasConfig = enemyActor
+                    .getAtlasConfigByName(animations, "default");
+            enemyActor.setDefaultAtlasConfig(defaultAtlasConfig);
+            final TextureAtlas defaultAtlas =
+                    new TextureAtlas(Gdx.files.internal(defaultAtlasConfig.getAtlas()));
+            enemyActor.setDefaultAnimation(new Animation(enemy.getFrameRate(),
+                    defaultAtlas.getRegions()));
+        }
         enemyActor.setLinearVelocity(new Vector2(enemy.getVelocityX(), 0f));
         return enemyActor;
 
