@@ -15,6 +15,10 @@ clean resources/raw/actors/enemies/magpie
 split resources/raw/actors/enemies/sheets/magpie *.png 128 64 resources/raw/actors/magpie
 pack resources/raw/actors/magpie android/assets magpie
 
+clean resources/raw/actors/enemies/wombat
+split resources/raw/actors/enemies/sheets/wombat *.png 128 64 resources/raw/actors/wombat
+pack resources/raw/actors/wombat android/assets wombat
+
 
 #main menu packing
 pack resources/raw/buttons/mainmenu android/assets main_menu_buttons

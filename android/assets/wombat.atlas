@@ -1,0 +1,34 @@
+
+wombat.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+wombat_64x128
+  rotate: false
+  xy: 2, 2
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: 0
+wombat_64x128
+  rotate: false
+  xy: 132, 2
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: 1
+wombat_64x128
+  rotate: false
+  xy: 262, 2
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: 2
+wombat_64x128
+  rotate: false
+  xy: 392, 2
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: 3

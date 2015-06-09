@@ -8,7 +8,7 @@
       "animations":[
         {
           "name":"default",
-          "atlas":"magpie.atlas",
+          "atlas":"wombat.atlas",
           "imageOffset":{
           "x":0,
           "y":0
@@ -29,7 +29,7 @@
     "animations":[
             {
               "name":"default",
-              "atlas":"magpie.atlas",
+              "atlas":"wombat.atlas",
               "imageOffset":{
               "x":0,
               "y":0
@@ -50,7 +50,7 @@
      "animations":[
              {
                "name":"default",
-               "atlas":"magpie.atlas",
+               "atlas":"wombat.atlas",
                "imageOffset":{
                "x":0,
                "y":0
@@ -71,7 +71,7 @@
     "animations":[
              {
                "name":"default",
-               "atlas":"magpie.atlas",
+               "atlas":"wombat.atlas",
                "imageOffset":{
                "x":0,
                "y":0
