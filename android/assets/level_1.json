@@ -8,18 +8,22 @@
       "animations":[
         {
           "name":"default",
-          "atlas":"wombat.atlas",
+          "atlas":"magpie.atlas",
           "imageOffset":{
-          "x":0,
-          "y":0
-        }
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+           "x":1.2,
+           "y":1.1
+          }
       }],
       "frameRate": 0.125,
       "width": 2.0,
       "height": 1.0,
       "position":{
         "x": 25.0,
-        "y": 1.5
+        "y": 3.01
       },
       "density": 0.5,
       "velocityX" : -10
@@ -31,16 +35,20 @@
               "name":"default",
               "atlas":"wombat.atlas",
               "imageOffset":{
-              "x":0,
-              "y":0
-            }
+                "x":0,
+                "y":0
+              },
+              "imageScale":{
+              "x":1.2,
+              "y":1.1
+              }
       }],
       "frameRate": 0.125,
       "width": 1.0,
       "height": 2.0,
       "position":{
         "x": 25.0,
-        "y": 2.0
+        "y": 2.01
       },
       "density": 0.5,
       "velocityX" : -10
@@ -50,18 +58,22 @@
      "animations":[
              {
                "name":"default",
-               "atlas":"wombat.atlas",
+               "atlas":"kangaroo.atlas",
                "imageOffset":{
-               "x":0,
-               "y":0
-             }
+                 "x":0,
+                 "y":0
+               },
+               "imageScale":{
+                 "x":1.2,
+                 "y":1.1
+               }
        }],
       "frameRate": 0.125,
       "width": 2.0,
       "height": 2.0,
       "position":{
         "x": 25.0,
-        "y": 2.0
+        "y": 2.01
       },
       "density": 0.5,
       "velocityX" : -10
@@ -73,16 +85,20 @@
                "name":"default",
                "atlas":"wombat.atlas",
                "imageOffset":{
-               "x":0,
-               "y":0
-             }
+                 "x":0,
+                 "y":0
+               },
+               "imageScale":{
+                 "x":1.2,
+                 "y":1.1
+               }
        }],
       "frameRate": 0.125,
       "width": 1.0,
       "height": 1.0,
       "position":{
         "x": 25.0,
-        "y": 3.0
+        "y": 3.01
       },
       "density": 0.5,
       "velocityX" : -10
@@ -94,16 +110,20 @@
                "name":"default",
                "atlas":"magpie.atlas",
                "imageOffset":{
-               "x":0,
-               "y":0
-             }
+                 "x":0,
+                 "y":0
+               },
+               "imageScale":{
+                 "x":1.2,
+                 "y":1.1
+               }
        }],
       "frameRate": 0.125,
       "width": 2.0,
       "height": 1.0,
       "position":{
         "x": 25.0,
-        "y": 3.0
+        "y": 3.01
       },
       "density": 0.5,
       "velocityX" : -10

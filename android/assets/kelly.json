@@ -36,6 +36,10 @@
           "imageOffset":{
             "x":0,
             "y":-43
+          },
+          "imageScale":{
+            "x":1.2,
+            "y":1
           }
         },
         {
@@ -44,6 +48,10 @@
           "imageOffset":{
             "x":0,
             "y":-43
+          },
+          "imageScale":{
+           "x":1.2,
+           "y":1
           }
         },
         {
@@ -52,6 +60,10 @@
           "imageOffset": {
             "x": 0,
             "y": 0
+          },
+          "imageScale":{
+           "x":1.2,
+           "y":1
           }
         }
       ],

@@ -6,6 +6,8 @@ import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.physics.Box2dFactory;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -30,8 +32,9 @@ public class GameModule {
         return ConfigFactory.getLevelsConfig();
     }
     @Provides
-    ActorFactory provideEnemyFactory(LevelsConfig config){
-        return ActorFactory.getInstance(config);
+    @Singleton
+    ActorFactory provideEnemyFactory(LevelsConfig levelsConfig){
+        return new ActorFactoryImpl(levelsConfig);
     }
     @Provides
     Runner provideRunnerConfig(GameConfig gameConfig){

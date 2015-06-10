@@ -15,6 +15,7 @@ import com.nrg.kelly.events.screen.*;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 public class GameStageView extends AbstractStage implements ContactListener {
 

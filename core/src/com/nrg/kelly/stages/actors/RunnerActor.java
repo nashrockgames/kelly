@@ -12,6 +12,8 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.ImageOffset;
+import com.nrg.kelly.config.actors.ImageScale;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
@@ -94,7 +96,10 @@ public class RunnerActor extends GameActor {
             drawSlideAnimation(batch, region);
         } else if (jumping) {
             region = jumpAnimation.getKeyFrame(stateTime, true);
-            drawAnimation(batch, region, Optional.of(jumpAtlasConfig.getImageOffset()));
+            drawAnimation(batch,
+                    region,
+                    Optional.of(jumpAtlasConfig.getImageOffset()),
+                    Optional.of(jumpAtlasConfig.getImageScale()));
         }else {
             drawDefaultAnimation(batch);
         }
@@ -102,10 +107,29 @@ public class RunnerActor extends GameActor {
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
         final Rectangle textureBounds = this.getTextureBounds();
-        batch.draw(textureRegion, textureBounds.x,
-                textureBounds.y,
-                textureBounds.getHeight(),
-                textureBounds.getWidth());
+        float x = textureBounds.x;
+        float y = textureBounds.y;
+        //swap width and height
+        float width = textureBounds.getHeight();
+        float height = textureBounds.getWidth();
+        final Optional<ImageOffset> offsetOptional =
+                Optional.fromNullable(this.slideAtlasConfig.getImageOffset());
+        final Optional<ImageScale> scaleOptional =
+                Optional.fromNullable(this.slideAtlasConfig.getImageScale());
+
+        if(offsetOptional.isPresent()){
+            final ImageOffset imageOffset = offsetOptional.get();
+            x += imageOffset.getX();
+            y += imageOffset.getY();
+        }
+        if(scaleOptional.isPresent()){
+            final ImageScale imageScale = scaleOptional.get();
+            width *= imageScale.getX();
+            height *= imageScale.getY();
+        }
+
+
+        batch.draw(textureRegion, x, y, width, height);
     }
 
 

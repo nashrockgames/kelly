@@ -1,8 +1,10 @@
 package com.nrg.kelly;
 import com.nrg.kelly.inject.GameModule;
 
-import dagger.Component;
+import javax.inject.Singleton;
 
+import dagger.Component;
+@Singleton
 @Component(modules = GameModule.class)
 public interface GameComponent {
 

@@ -5,6 +5,7 @@ public class AtlasConfig {
     private String name;
     private String atlas;
     private ImageOffset imageOffset;
+    private ImageScale imageScale;
 
     public AtlasConfig(){}
 
@@ -32,4 +33,11 @@ public class AtlasConfig {
         this.imageOffset = imageOffset;
     }
 
+    public ImageScale getImageScale() {
+        return imageScale;
+    }
+
+    public void setImageScale(ImageScale imageScale) {
+        this.imageScale = imageScale;
+    }
 }

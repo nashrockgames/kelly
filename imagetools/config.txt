@@ -20,6 +20,10 @@ split resources/raw/actors/enemies/sheets/wombat *.png 128 64 resources/raw/acto
 pack resources/raw/actors/wombat android/assets wombat
 
 
+clean resources/raw/actors/enemies/kangaroo
+split resources/raw/actors/enemies/sheets/kangaroo *.png 128 128 resources/raw/actors/kangaroo
+pack resources/raw/actors/kangaroo android/assets kangaroo
+
 #main menu packing
 pack resources/raw/buttons/mainmenu android/assets main_menu_buttons
 
