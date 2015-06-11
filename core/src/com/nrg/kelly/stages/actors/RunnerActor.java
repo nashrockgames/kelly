@@ -43,7 +43,6 @@ public class RunnerActor extends GameActor {
     Box2dFactory box2dFactory;
 
     private Runner runnerConfig;
-
     private AtlasConfig jumpAtlasConfig;
     private AtlasConfig slideAtlasConfig;
 
@@ -127,8 +126,6 @@ public class RunnerActor extends GameActor {
             width *= imageScale.getX();
             height *= imageScale.getY();
         }
-
-
         batch.draw(textureRegion, x, y, width, height);
     }
 
