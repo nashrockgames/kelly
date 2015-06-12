@@ -142,7 +142,7 @@ public class RunnerActor extends GameActor {
                     this.landed();
                 }
                 if (userData instanceof EnemyActor){
-                    this.hit();
+                    //this.hit();
                 }
             }
         }

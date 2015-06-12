@@ -19,10 +19,14 @@ clean resources/raw/actors/enemies/wombat
 split resources/raw/actors/enemies/sheets/wombat *.png 128 64 resources/raw/actors/wombat
 pack resources/raw/actors/wombat android/assets wombat
 
-
 clean resources/raw/actors/enemies/kangaroo
 split resources/raw/actors/enemies/sheets/kangaroo *.png 128 128 resources/raw/actors/kangaroo
 pack resources/raw/actors/kangaroo android/assets kangaroo
+
+clean resources/raw/actors/enemies/emu
+split resources/raw/actors/enemies/sheets/emu *.png 64 128 resources/raw/actors/emu
+pack resources/raw/actors/emu android/assets emu
+
 
 #main menu packing
 pack resources/raw/buttons/mainmenu android/assets main_menu_buttons

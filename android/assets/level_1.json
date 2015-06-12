@@ -1,7 +1,7 @@
 {
   "background":"level_1_background.png",
   "ground":"level_1_ground.png",
-  "enemyCount":20,
+  "enemyCount":50,
   "enemySeed": 5,
   "enemies":[
     {
@@ -33,14 +33,14 @@
     "animations":[
             {
               "name":"default",
-              "atlas":"wombat.atlas",
+              "atlas":"emu.atlas",
               "imageOffset":{
                 "x":0,
                 "y":0
               },
               "imageScale":{
-                "x":1.0,
-                "y":1.0
+                "x":1.2,
+                "y":1.1
               }
       }],
       "frameRate": 0.125,
@@ -86,7 +86,7 @@
                "atlas":"wombat.atlas",
                "imageOffset":{
                  "x":0,
-                 "y":0
+                 "y":-32
                },
                "imageScale":{
                  "x":1.0,
@@ -98,7 +98,7 @@
       "height": 1.0,
       "position":{
         "x": 25.0,
-        "y": 3.01
+        "y": 2.01
       },
       "density": 0.5,
       "velocityX" : -10
