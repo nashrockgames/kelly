@@ -78,7 +78,7 @@
       "jumpImpulseX":0.0,
       "jumpImpulseY":13.0,
       "gravityScale":3.0,
-      "hitAngularImpulse": 10.0
+      "hitAngularImpulse": 20.0
     }
   }
 }
