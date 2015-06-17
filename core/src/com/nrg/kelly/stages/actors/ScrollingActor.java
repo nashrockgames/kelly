@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.google.common.base.Optional;
-import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.actors.ActorConfig;
 
 public abstract class ScrollingActor extends GameActor {
@@ -18,10 +16,10 @@ public abstract class ScrollingActor extends GameActor {
     public ScrollingActor(ActorConfig config, String imagePath) {
         super(config);
         textureRegion = new TextureRegion(new Texture(Gdx.files.internal(imagePath)));
-        textureRegionBounds1 = new Rectangle(0 - Constants.APP_WIDTH / 2, 0,
-                Constants.APP_WIDTH, Constants.APP_HEIGHT);
-        textureRegionBounds2 = new Rectangle(Constants.APP_WIDTH / 2, 0,
-                Constants.APP_WIDTH, Constants.APP_HEIGHT);
+        textureRegionBounds1 = new Rectangle(0 - Gdx.graphics.getWidth() / 2, 0,
+                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        textureRegionBounds2 = new Rectangle(Gdx.graphics.getWidth() / 2, 0,
+                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -45,8 +43,8 @@ public abstract class ScrollingActor extends GameActor {
 
     private void resetBounds() {
         textureRegionBounds1 = textureRegionBounds2;
-        textureRegionBounds2 = new Rectangle(Constants.APP_WIDTH, 0,
-                Constants.APP_WIDTH, Constants.APP_HEIGHT);
+        textureRegionBounds2 = new Rectangle(Gdx.graphics.getWidth(), 0,
+                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 }

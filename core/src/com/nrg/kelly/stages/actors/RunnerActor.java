@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
+import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
@@ -42,15 +44,16 @@ public class RunnerActor extends GameActor {
     @Inject
     Box2dFactory box2dFactory;
 
-
     private AtlasConfig jumpAtlasConfig;
     private AtlasConfig slideAtlasConfig;
     private AtlasConfig dieAtlasConfig;
     private boolean deathScheduled = false;
+    private Runner runnerConfig;
 
     @Inject
     public RunnerActor(Runner runner) {
         super(runner);
+        this.runnerConfig = runner;
         Events.get().register(this);
     }
 
@@ -91,8 +94,6 @@ public class RunnerActor extends GameActor {
         setHeight(runner.getHeight());
     }
 
-
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
@@ -113,9 +114,9 @@ public class RunnerActor extends GameActor {
                         Optional.of(jumpAtlasConfig.getImageScale()));
                 break;
             case HIT:
-                //TODO: move to subscription of hit event
                 final Body body = this.getBody();
-                body.setTransform(2.01f, 2.01f, 0f);
+                this.setTransformAngle(0f);
+                this.setTransform(box2dFactory.getRunPosition());
                 region = dieAnimation.getKeyFrame(stateTime, true);
                 drawAnimation(batch,
                         region,
@@ -145,15 +146,23 @@ public class RunnerActor extends GameActor {
             @Override
             public void run() {
                 final Filter f = new Filter();
-                f.categoryBits = 1;
-                f.groupIndex = 2;
-                f.maskBits = 0;
+                f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
+                f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
+                f.maskBits = Constants.RUNNER_HIT_MASK_INDEX;
                 body.getFixtureList().get(0).setFilterData(f);
-                body.setLinearVelocity(0.0f, 10f);
-                body.applyLinearImpulse(5f, 8f, body.getPosition().x, body.getPosition().y, true);
+                body.setLinearVelocity(runnerConfig.getHitVelocityX(),
+                        runnerConfig.getHitVelocityY());
+                body.applyLinearImpulse(runnerConfig.getHitImpulseX(),
+                        runnerConfig.getHitImpulseY(), body.getPosition().x,
+                        body.getPosition().y, true);
                 setState(ActorState.FALLING);
+                clearTransform();
             }
-        }, 1.0f);
+        }, runnerConfig.getHitPauseTime());
+    }
+
+    private void clearTransform() {
+        this.setTransform(null);
     }
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
@@ -233,7 +242,6 @@ public class RunnerActor extends GameActor {
     public void hit() {
         final Body body = getBody();
         Events.get().post(new RunnerHitEvent(this));
-        body.setLinearVelocity(0f, 20f);
         setState(ActorState.HIT);
     }
 
@@ -254,6 +262,5 @@ public class RunnerActor extends GameActor {
        if(!this.getState().equals(ActorState.HIT))
        setState(ActorState.RUNNING);
     }
-
 
 }

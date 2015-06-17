@@ -31,7 +31,6 @@ public class Box2dFactory {
     private static Vector2 slidePosition;
     private static float slideAngle;
     private static Vector2 runPosition;
-    private static float hitAngularImpulse;
 
     private Box2dFactory(){
 
@@ -46,7 +45,6 @@ public class Box2dFactory {
             slideAngle = (float)(90f * (Math.PI / 180f));
             final Position position = runner.getPosition();
             slidePosition = new Vector2(position.getX(), position.getY() - runner.getWidth() / 2);
-            hitAngularImpulse = runner.getHitAngularImpulse();
             instance = new Box2dFactory();
         }
         return instance;
@@ -137,7 +135,4 @@ public class Box2dFactory {
         Events.get().post(new OnEnemyDestroyedEvent());
     }
 
-    public float getHitAngularImpulse() {
-        return hitAngularImpulse;
-    }
 }

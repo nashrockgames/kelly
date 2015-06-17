@@ -90,7 +90,11 @@
       "jumpImpulseX":0.0,
       "jumpImpulseY":13.0,
       "gravityScale":3.0,
-      "hitAngularImpulse": 20.0
+      "hitImpulseX":5.0,
+      "hitImpulseY":8.0,
+      "hitVelocityX": 0.0,
+      "hitVelocityY": 10.0,
+      "hitPauseTime":0.5
     }
   }
 }

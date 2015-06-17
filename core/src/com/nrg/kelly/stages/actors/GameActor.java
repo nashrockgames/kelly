@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
+import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
@@ -17,14 +19,30 @@ import java.util.List;
 public abstract class GameActor extends Actor {
 
 
-
-    public static final int WORLD_TO_SCREEN = 64;
     protected Optional<ActorConfig> config;
     private Body body;
     protected float stateTime;
     private Animation defaultAnimation;
     private AtlasConfig defaultAtlasConfig;
     private ActorState state = ActorState.RUNNING;
+    private Vector2 transform;
+    private float transformAngle = 0;
+
+    protected void setTransform(Vector2 transform){
+        this.transform = transform;
+    }
+
+    public float getTransformAngle() {
+        return transformAngle;
+    }
+
+    public void setTransformAngle(float transformAngle) {
+        this.transformAngle = transformAngle;
+    }
+
+    private Optional<Vector2> getTransform(){
+        return Optional.fromNullable(transform);
+    }
 
     public ActorState getState() {
         return state;
@@ -68,12 +86,8 @@ public abstract class GameActor extends Actor {
             = new Rectangle();
 
     public GameActor(ActorConfig config) {
-
         this.config = Optional.fromNullable(config);
     }
-
-
-
 
     public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name){
         for(AtlasConfig a: atlasConfigList){
@@ -87,6 +101,10 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        if(getTransform().isPresent()){
+            final Vector2 position = getTransform().get();
+            this.getBody().setTransform(position, this.getTransformAngle());
+        }
         maybeUpdateTextureBounds();
     }
 
@@ -139,7 +157,7 @@ public abstract class GameActor extends Actor {
     }
 
     protected float transformToScreen(float n) {
-        return n * WORLD_TO_SCREEN;
+        return n * Constants.WORLD_TO_SCREEN;
     }
 
     public void setBody(Body body) {

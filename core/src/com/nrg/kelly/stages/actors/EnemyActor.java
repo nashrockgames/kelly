@@ -60,5 +60,4 @@ public class EnemyActor extends GameActor {
         stateTime += Gdx.graphics.getDeltaTime();
         this.drawDefaultAnimation(batch);
     }
-
-    }
+}
