@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
@@ -32,9 +34,7 @@ public class RunnerActor extends GameActor {
 
     private Animation jumpAnimation;
     private Animation slideAnimation;
-    private boolean hit = false;
-    private boolean jumping = false;
-    private boolean sliding = false;
+    private Animation dieAnimation;
 
 
     @Inject
@@ -42,9 +42,11 @@ public class RunnerActor extends GameActor {
     @Inject
     Box2dFactory box2dFactory;
 
-    private Runner runnerConfig;
+
     private AtlasConfig jumpAtlasConfig;
     private AtlasConfig slideAtlasConfig;
+    private AtlasConfig dieAtlasConfig;
+    private boolean deathScheduled = false;
 
     @Inject
     public RunnerActor(Runner runner) {
@@ -54,23 +56,28 @@ public class RunnerActor extends GameActor {
 
     @Subscribe
     public void createTextures(PostBuildGameModuleEvent postBuildGameModuleEvent){
-        runnerConfig = gameConfig.getActors().getRunner();
-
+        final Runner runnerConfig = gameConfig.getActors().getRunner();
         final List<AtlasConfig> atlasConfigList = runnerConfig.getAnimations();
         setDefaultAtlasConfig(this.getAtlasConfigByName(atlasConfigList, "default"));
 
         jumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump");
         slideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide");
+        dieAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "die");
 
         final String run = getDefaultAtlasConfig().getAtlas();
         final String jump = jumpAtlasConfig.getAtlas();
         final String slide = slideAtlasConfig.getAtlas();
+        final String die = dieAtlasConfig.getAtlas();
+
         final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(run));
         final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
         final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
+        final TextureAtlas dieAtlas = new TextureAtlas(Gdx.files.internal(die));
+
         setDefaultAnimation(new Animation(runnerConfig.getFrameRate(), defaultAtlas.getRegions()));
         jumpAnimation = new Animation(runnerConfig.getFrameRate(), jumpAtlas.getRegions());
         slideAnimation = new Animation(runnerConfig.getFrameRate(), slideAtlas.getRegions());
+        dieAnimation = new Animation(runnerConfig.getFrameRate(), dieAtlas.getRegions());
 
     }
 
@@ -85,23 +92,68 @@ public class RunnerActor extends GameActor {
     }
 
 
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
+
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
         final TextureRegion region;
-        if (sliding) {
-            region = slideAnimation.getKeyFrame(stateTime, true);
-            drawSlideAnimation(batch, region);
-        } else if (jumping) {
-            region = jumpAnimation.getKeyFrame(stateTime, true);
-            drawAnimation(batch,
-                    region,
-                    Optional.of(jumpAtlasConfig.getImageOffset()),
-                    Optional.of(jumpAtlasConfig.getImageScale()));
-        }else {
-            drawDefaultAnimation(batch);
+        final ActorState state = this.getState();
+        switch(state){
+            case SLIDING:
+                region = slideAnimation.getKeyFrame(stateTime, true);
+                drawSlideAnimation(batch, region);
+                break;
+            case JUMPING:
+                region = jumpAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(jumpAtlasConfig.getImageOffset()),
+                        Optional.of(jumpAtlasConfig.getImageScale()));
+                break;
+            case HIT:
+                //TODO: move to subscription of hit event
+                final Body body = this.getBody();
+                body.setTransform(2.01f, 2.01f, 0f);
+                region = dieAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(dieAtlasConfig.getImageOffset()),
+                        Optional.of(dieAtlasConfig.getImageScale()));
+                if(!deathScheduled) {
+                    scheduleDeath(body);
+                    deathScheduled = true;
+                }
+                break;
+            case FALLING:
+                region = dieAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(dieAtlasConfig.getImageOffset()),
+                        Optional.of(dieAtlasConfig.getImageScale()));
+                break;
+            case RUNNING:
+                drawDefaultAnimation(batch);
+                break;
         }
+
+    }
+
+    private void scheduleDeath(final Body body) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                final Filter f = new Filter();
+                f.categoryBits = 1;
+                f.groupIndex = 2;
+                f.maskBits = 0;
+                body.getFixtureList().get(0).setFilterData(f);
+                body.setLinearVelocity(0.0f, 10f);
+                body.applyLinearImpulse(5f, 8f, body.getPosition().x, body.getPosition().y, true);
+                setState(ActorState.FALLING);
+            }
+        }, 1.0f);
     }
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {
@@ -139,10 +191,10 @@ public class RunnerActor extends GameActor {
         if(bodyA.equals(this.getBody())){
             if(userData !=null) {
                 if(userData instanceof GroundActor){
-                    this.landed();
+                    this.setLanded();
                 }
                 if (userData instanceof EnemyActor){
-                    //this.hit();
+                    this.hit();
                 }
             }
         }
@@ -150,43 +202,57 @@ public class RunnerActor extends GameActor {
 
     @Subscribe
     public void jump(RightSideScreenTouchDownEvent rightSideScreenTouchDownEvent) {
-        if (!(jumping || sliding || hit)) {
+        if (canJump()) {
             final Body body = getBody();
             body.applyLinearImpulse(box2dFactory.getRunnerLinerImpulse(),
                     body.getWorldCenter(), true);
-            jumping = true;
+            setState(ActorState.JUMPING);
         }
     }
 
     @Subscribe
     public void slide(LeftSideScreenTouchDownEvent leftSideScreenTouchDownEvent){
-        if( !(jumping || hit) ){
+        if( canSlide() ){
             final Body body = getBody();
             body.setTransform(box2dFactory.getSlidePosition(), box2dFactory.getSlideAngle());
             maybeUpdateTextureBounds();
-            sliding = true;
+            setState(ActorState.SLIDING);
         }
     }
 
     @Subscribe
     public void stopSliding(LeftSideScreenTouchUpEvent leftSideScreenTouchUpEvent){
-        if(!(hit || jumping)) {
+        if(canSlide()) {
             final Body body = getBody();
             body.setTransform(box2dFactory.getRunPosition(), 0f);
             maybeUpdateTextureBounds();
-            sliding = false;
+            setState(ActorState.RUNNING);
         }
    }
 
     public void hit() {
         final Body body = getBody();
-        body.applyAngularImpulse(box2dFactory.getHitAngularImpulse(), true);
-        Events.get().post(new RunnerHitEvent());
-        hit = true;
+        Events.get().post(new RunnerHitEvent(this));
+        body.setLinearVelocity(0f, 20f);
+        setState(ActorState.HIT);
     }
 
-    public void landed() {
-       jumping = false;
+    public boolean canJump(){
+        final ActorState state = this.getState();
+        return !(state.equals(ActorState.JUMPING) ||
+                state.equals(ActorState.HIT) ||
+                state.equals(ActorState.SLIDING));
+    }
+
+    public boolean canSlide(){
+        final ActorState state = this.getState();
+        return !(state.equals(ActorState.JUMPING) ||
+                state.equals(ActorState.HIT));
+    }
+
+    public void setLanded() {
+       if(!this.getState().equals(ActorState.HIT))
+       setState(ActorState.RUNNING);
     }
 
 

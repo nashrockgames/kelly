@@ -35,6 +35,7 @@ public class EnemyActor extends GameActor {
 
     @Subscribe
     public void runnerHit(RunnerHitEvent runnerHitEvent){
+        this.linearVelocity = new Vector2(10f, 10f);
         this.runnerHit = true;
     }
 

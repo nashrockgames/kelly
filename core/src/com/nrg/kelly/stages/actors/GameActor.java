@@ -16,12 +16,23 @@ import java.util.List;
 
 public abstract class GameActor extends Actor {
 
+
+
     public static final int WORLD_TO_SCREEN = 64;
     protected Optional<ActorConfig> config;
     private Body body;
     protected float stateTime;
     private Animation defaultAnimation;
     private AtlasConfig defaultAtlasConfig;
+    private ActorState state = ActorState.RUNNING;
+
+    public ActorState getState() {
+        return state;
+    }
+
+    public void setState(ActorState state) {
+        this.state = state;
+    }
 
     public Animation getDefaultAnimation() {
         return defaultAnimation;

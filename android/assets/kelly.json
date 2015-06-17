@@ -55,6 +55,18 @@
           }
         },
         {
+          "name" : "die",
+          "atlas":"kelly_die.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":2.0,
+            "y":1.0
+          }
+        },
+        {
           "name": "slide",
           "atlas": "kelly_slide.atlas",
           "imageOffset": {
