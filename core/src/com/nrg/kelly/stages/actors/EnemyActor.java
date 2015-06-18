@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.physics.Box2dFactory;
-
 
 public class EnemyActor extends GameActor {
 
@@ -35,7 +36,6 @@ public class EnemyActor extends GameActor {
 
     @Subscribe
     public void runnerHit(RunnerHitEvent runnerHitEvent){
-        this.linearVelocity = new Vector2(10f, 10f);
         this.runnerHit = true;
     }
 
@@ -58,6 +58,11 @@ public class EnemyActor extends GameActor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
-        this.drawDefaultAnimation(batch);
+        if(runnerHit) {
+            this.maintainPosition();
+            this.drawFirstFrame(batch);
+        } else {
+            this.drawDefaultAnimation(batch);
+        }
     }
 }

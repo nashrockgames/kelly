@@ -27,8 +27,17 @@ public abstract class GameActor extends Actor {
     private ActorState state = ActorState.RUNNING;
     private Vector2 transform;
     private float transformAngle = 0;
+    private Optional<Vector2> hitVector = Optional.absent();
 
-    protected void setTransform(Vector2 transform){
+    public Optional<Vector2> getHitVector() {
+        return hitVector;
+    }
+
+    public void setHitVector(Optional<Vector2> hitVector) {
+        this.hitVector = hitVector;
+    }
+
+    protected void setTransform(Vector2 transform) {
         this.transform = transform;
     }
 
@@ -40,7 +49,7 @@ public abstract class GameActor extends Actor {
         this.transformAngle = transformAngle;
     }
 
-    private Optional<Vector2> getTransform(){
+    private Optional<Vector2> getTransform() {
         return Optional.fromNullable(transform);
     }
 
@@ -61,7 +70,7 @@ public abstract class GameActor extends Actor {
     }
 
     protected void drawDefaultAnimation(Batch batch) {
-        if(getDefaultAnimation()!=null) {
+        if (getDefaultAnimation() != null) {
             final TextureRegion region =
                     getDefaultAnimation().getKeyFrame(stateTime, true);
             final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
@@ -70,6 +79,18 @@ public abstract class GameActor extends Actor {
             drawAnimation(batch, region,
                     Optional.fromNullable(imageOffset),
                     Optional.fromNullable(imageScale));
+        }
+    }
+
+    protected void maintainPosition() {
+        final Optional<Vector2> hitVector = getHitVector();
+        if (hitVector.isPresent()) {
+            this.setTransformAngle(0f);
+            this.setTransform(hitVector.get());
+        } else {
+            float currentX = this.getBody().getPosition().x;
+            float currentY = this.getBody().getPosition().y;
+            setHitVector(Optional.fromNullable(new Vector2(currentX, currentY)));
         }
     }
 
@@ -89,9 +110,9 @@ public abstract class GameActor extends Actor {
         this.config = Optional.fromNullable(config);
     }
 
-    public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name){
-        for(AtlasConfig a: atlasConfigList){
-            if(a.getName().equals(name)){
+    public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name) {
+        for (AtlasConfig a : atlasConfigList) {
+            if (a.getName().equals(name)) {
                 return a;
             }
         }
@@ -101,15 +122,15 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(getTransform().isPresent()){
+        if (getTransform().isPresent()) {
             final Vector2 position = getTransform().get();
             this.getBody().setTransform(position, this.getTransformAngle());
         }
         maybeUpdateTextureBounds();
     }
 
-    protected void maybeUpdateTextureBounds(){
-        if(this.getConfig().isPresent()) {
+    protected void maybeUpdateTextureBounds() {
+        if (this.getConfig().isPresent()) {
             final Body body = this.getBody();
             if (body != null) {
                 final Object userData = body.getUserData();
@@ -123,19 +144,19 @@ public abstract class GameActor extends Actor {
     protected void drawAnimation(Batch batch,
                                  TextureRegion textureRegion,
                                  Optional<ImageOffset> offsetOptional,
-                                 Optional<ImageScale> scaleOptional){
+                                 Optional<ImageScale> scaleOptional) {
 
         float x = textureBounds.x;
         float y = textureBounds.y;
         float width = textureBounds.getWidth();
         float height = textureBounds.getHeight();
 
-        if(offsetOptional.isPresent()){
+        if (offsetOptional.isPresent()) {
             final ImageOffset imageOffset = offsetOptional.get();
             x += imageOffset.getX();
             y += imageOffset.getY();
         }
-        if(scaleOptional.isPresent()){
+        if (scaleOptional.isPresent()) {
             final ImageScale imageScale = scaleOptional.get();
             width *= imageScale.getX();
             height *= imageScale.getY();
@@ -179,4 +200,15 @@ public abstract class GameActor extends Actor {
     public Optional<ActorConfig> getConfig() {
         return config;
     }
+
+    public void drawFirstFrame(Batch batch) {
+
+        final TextureRegion textureRegion = getDefaultAnimation().getKeyFrame(0f, true);
+        drawAnimation(batch,
+            textureRegion,
+            Optional.of(defaultAtlasConfig.getImageOffset()),
+            Optional.of(defaultAtlasConfig.getImageScale()));
+
+    }
+
 }

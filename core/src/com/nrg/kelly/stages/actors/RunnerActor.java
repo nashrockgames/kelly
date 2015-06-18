@@ -114,18 +114,12 @@ public class RunnerActor extends GameActor {
                         Optional.of(jumpAtlasConfig.getImageScale()));
                 break;
             case HIT:
-                final Body body = this.getBody();
-                this.setTransformAngle(0f);
-                this.setTransform(box2dFactory.getRunPosition());
+                maintainPosition();
                 region = dieAnimation.getKeyFrame(stateTime, true);
                 drawAnimation(batch,
                         region,
                         Optional.of(dieAtlasConfig.getImageOffset()),
                         Optional.of(dieAtlasConfig.getImageScale()));
-                if(!deathScheduled) {
-                    scheduleDeath(body);
-                    deathScheduled = true;
-                }
                 break;
             case FALLING:
                 region = dieAnimation.getKeyFrame(stateTime, true);
@@ -141,24 +135,28 @@ public class RunnerActor extends GameActor {
 
     }
 
+
     private void scheduleDeath(final Body body) {
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                final Filter f = new Filter();
-                f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
-                f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
-                f.maskBits = Constants.RUNNER_HIT_MASK_INDEX;
-                body.getFixtureList().get(0).setFilterData(f);
-                body.setLinearVelocity(runnerConfig.getHitVelocityX(),
-                        runnerConfig.getHitVelocityY());
-                body.applyLinearImpulse(runnerConfig.getHitImpulseX(),
-                        runnerConfig.getHitImpulseY(), body.getPosition().x,
-                        body.getPosition().y, true);
-                setState(ActorState.FALLING);
-                clearTransform();
-            }
-        }, runnerConfig.getHitPauseTime());
+        if(!deathScheduled) {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    final Filter f = new Filter();
+                    f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
+                    f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
+                    f.maskBits = Constants.RUNNER_HIT_MASK_INDEX;
+                    body.getFixtureList().get(0).setFilterData(f);
+                    body.setLinearVelocity(runnerConfig.getHitVelocityX(),
+                            runnerConfig.getHitVelocityY());
+                    body.applyLinearImpulse(runnerConfig.getHitImpulseX(),
+                            runnerConfig.getHitImpulseY(), body.getPosition().x,
+                            body.getPosition().y, true);
+                    setState(ActorState.FALLING);
+                    clearTransform();
+                }
+            }, runnerConfig.getHitPauseTime());
+            deathScheduled = true;
+        }
     }
 
     private void clearTransform() {
@@ -241,6 +239,7 @@ public class RunnerActor extends GameActor {
 
     public void hit() {
         final Body body = getBody();
+        scheduleDeath(body);
         Events.get().post(new RunnerHitEvent(this));
         setState(ActorState.HIT);
     }
@@ -249,18 +248,21 @@ public class RunnerActor extends GameActor {
         final ActorState state = this.getState();
         return !(state.equals(ActorState.JUMPING) ||
                 state.equals(ActorState.HIT) ||
-                state.equals(ActorState.SLIDING));
+                state.equals(ActorState.SLIDING) ||
+                state.equals(ActorState.FALLING));
     }
 
     public boolean canSlide(){
         final ActorState state = this.getState();
         return !(state.equals(ActorState.JUMPING) ||
-                state.equals(ActorState.HIT));
+                state.equals(ActorState.HIT) ||
+                state.equals(ActorState.FALLING));
     }
 
     public void setLanded() {
-       if(!this.getState().equals(ActorState.HIT))
-       setState(ActorState.RUNNING);
+        final ActorState state = this.getState();
+        if(!(state.equals(ActorState.HIT) || state.equals(ActorState.FALLING)))
+            setState(ActorState.RUNNING);
     }
 
 }

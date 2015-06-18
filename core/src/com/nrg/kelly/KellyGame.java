@@ -27,7 +27,7 @@ public class KellyGame extends Game {
 
     @Override
     public void create() {
-        this.setScreen(mainMenuScreen);
+        this.setScreen(gameScreen);
     }
 
     @Subscribe
