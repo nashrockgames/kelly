@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
-import com.nrg.kelly.Constants;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
@@ -17,7 +17,6 @@ import com.nrg.kelly.config.actors.ImageScale;
 import java.util.List;
 
 public abstract class GameActor extends Actor {
-
 
     protected Optional<ActorConfig> config;
     private Body body;
@@ -28,6 +27,15 @@ public abstract class GameActor extends Actor {
     private Vector2 transform;
     private float transformAngle = 0;
     private Optional<Vector2> hitVector = Optional.absent();
+    private CameraConfig cameraConfig;
+
+    public CameraConfig getCameraConfig() {
+        return cameraConfig;
+    }
+
+    public void setCameraConfig(CameraConfig cameraConfig) {
+        this.cameraConfig = cameraConfig;
+    }
 
     public Optional<Vector2> getHitVector() {
         return hitVector;
@@ -106,8 +114,9 @@ public abstract class GameActor extends Actor {
     private Rectangle textureBounds
             = new Rectangle();
 
-    public GameActor(ActorConfig config) {
+    public GameActor(ActorConfig config, CameraConfig cameraConfig) {
         this.config = Optional.fromNullable(config);
+        this.cameraConfig = cameraConfig;
     }
 
     public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name) {
@@ -135,7 +144,7 @@ public abstract class GameActor extends Actor {
             if (body != null) {
                 final Object userData = body.getUserData();
                 if (userData instanceof GameActor) {
-                    updateTextureBounds(this.getConfig().get());
+                    updateTextureBounds(this.cameraConfig);
                 }
             }
         }
@@ -166,19 +175,20 @@ public abstract class GameActor extends Actor {
     }
 
 
-    protected void updateTextureBounds(ActorConfig config) {
+    protected void updateTextureBounds(CameraConfig cameraConfig) {
         //get the screen width
         final Rectangle textureBounds = this.getTextureBounds();
+        final float worldToScreenScale = cameraConfig.getWorldToScreenScale();
         final float bodyWidth = getWidth();
         final float bodyHeight = getHeight();
-        textureBounds.x = transformToScreen(getBody().getPosition().x - bodyWidth / 2);
-        textureBounds.y = transformToScreen(getBody().getPosition().y - bodyHeight / 2);
-        textureBounds.width = transformToScreen(bodyWidth);
-        textureBounds.height = transformToScreen(bodyHeight);
+        textureBounds.x = transformToScreen(getBody().getPosition().x - bodyWidth / 2, worldToScreenScale);
+        textureBounds.y = transformToScreen(getBody().getPosition().y - bodyHeight / 2, worldToScreenScale);
+        textureBounds.width = transformToScreen(bodyWidth, worldToScreenScale);
+        textureBounds.height = transformToScreen(bodyHeight, worldToScreenScale);
     }
 
-    protected float transformToScreen(float n) {
-        return n * Constants.WORLD_TO_SCREEN;
+    protected float transformToScreen(float n, float scale) {
+        return n * scale;
     }
 
     public void setBody(Body body) {

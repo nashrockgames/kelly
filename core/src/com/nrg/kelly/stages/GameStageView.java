@@ -40,12 +40,13 @@ public class GameStageView extends AbstractStage implements ContactListener {
         Events.get().register(this);
         Box2dFactory.getWorld().setContactListener(this);
     }
-
+/*
     @Override
     public void draw(){
         super.draw();
-        //this.box2dGameStageView.renderGameStage();
+        this.box2dGameStageView.renderGameStage();
     }
+*/
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
@@ -108,7 +109,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
         Gdx.input.setCatchBackKey(true);
         spawnEnemy();
     }
-
+/*
     @Override
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.BACK){
@@ -116,6 +117,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
         }
         return false;
     }
+    */
 
     @Override
     public void beginContact(Contact contact) {

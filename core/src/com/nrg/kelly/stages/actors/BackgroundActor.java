@@ -1,14 +1,13 @@
 package com.nrg.kelly.stages.actors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.nrg.kelly.Constants;
+import com.nrg.kelly.config.CameraConfig;
 
 public class BackgroundActor extends ScrollingActor {
 
-    public BackgroundActor(String imagePath) {
-        super(null, imagePath);
+    public BackgroundActor(String imagePath, CameraConfig cameraConfig) {
+        super(null, imagePath, cameraConfig);
     }
 
     @Override

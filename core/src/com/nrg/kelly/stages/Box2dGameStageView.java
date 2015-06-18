@@ -42,12 +42,12 @@ public class Box2dGameStageView {
         camera.viewportHeight);
 
     }
-
+/*
     public void renderGameStage(){
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
     }
-
+*/
     public Vector3 translateScreenToWorldCoordinates(Vector3 touchPoint) {
         return camera.unproject(touchPoint);
     }

@@ -2,14 +2,12 @@ package com.nrg.kelly.stages.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.Enemy;
-import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.physics.Box2dFactory;
@@ -20,8 +18,8 @@ public class EnemyActor extends GameActor {
 
     public boolean runnerHit = false;
 
-    public EnemyActor(Enemy enemy) {
-        super(enemy);
+    public EnemyActor(Enemy enemy, CameraConfig cameraConfig) {
+        super(enemy, cameraConfig);
         final Body body = Box2dFactory.getInstance().createEnemy(enemy);
         body.setUserData(this);
         setBody(body);

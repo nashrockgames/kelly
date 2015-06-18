@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.actors.Enemy;
@@ -34,11 +35,14 @@ public class ActorFactoryImpl implements ActorFactory{
 
     private LevelsConfig config;
 
-    @Inject
-    public ActorFactoryImpl(LevelsConfig levelsConfig){
+    private CameraConfig cameraConfig;
 
-            config = levelsConfig;
-            this.createEnemyIndices();
+    @Inject
+    public ActorFactoryImpl(LevelsConfig levelsConfig, CameraConfig cameraConfig){
+
+        this.cameraConfig = cameraConfig;
+        config = levelsConfig;
+        this.createEnemyIndices();
 
     }
 
@@ -57,7 +61,7 @@ public class ActorFactoryImpl implements ActorFactory{
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         final List<Enemy> enemies = levelConfig.getEnemies();
         final Enemy enemy = enemies.get(enemyIndex);
-        final EnemyActor enemyActor = new EnemyActor(enemy);
+        final EnemyActor enemyActor = new EnemyActor(enemy, cameraConfig);
         final List<AtlasConfig> animations = enemy.getAnimations();
         if(animations != null) {
             final AtlasConfig defaultAtlasConfig = enemyActor
@@ -80,13 +84,13 @@ public class ActorFactoryImpl implements ActorFactory{
 
     public Actor createBackground(int level){
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
-        return new BackgroundActor(levelConfig.getBackground());
+        return new BackgroundActor(levelConfig.getBackground(), cameraConfig);
     }
 
     public Actor createGround(int level){
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         final String ground = levelConfig.getGround();
-        return new GroundActor(gameConfig.getActors().getGround(), ground);
+        return new GroundActor(gameConfig.getActors().getGround(), ground, cameraConfig);
     }
 }

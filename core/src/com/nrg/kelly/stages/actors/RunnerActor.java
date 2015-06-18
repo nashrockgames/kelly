@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -15,6 +14,7 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.config.actors.ImageScale;
@@ -38,7 +38,6 @@ public class RunnerActor extends GameActor {
     private Animation slideAnimation;
     private Animation dieAnimation;
 
-
     @Inject
     GameConfig gameConfig;
     @Inject
@@ -51,8 +50,8 @@ public class RunnerActor extends GameActor {
     private Runner runnerConfig;
 
     @Inject
-    public RunnerActor(Runner runner) {
-        super(runner);
+    public RunnerActor(Runner runner, CameraConfig cameraConfig) {
+        super(runner, cameraConfig);
         this.runnerConfig = runner;
         Events.get().register(this);
     }
