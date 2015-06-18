@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
-import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.Position;
 import com.nrg.kelly.inject.ConfigFactory;
 import com.nrg.kelly.config.actors.Ground;

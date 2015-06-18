@@ -1,5 +1,6 @@
 package com.nrg.kelly.stages.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -75,6 +76,21 @@ public abstract class GameActor extends Actor {
 
     public void setDefaultAnimation(Animation defaultAnimation) {
         this.defaultAnimation = defaultAnimation;
+    }
+
+    protected void drawDefaultTexture(Batch batch){
+        if (getDefaultAnimation() != null) {
+            final TextureRegion region =
+                    getDefaultAnimation().getKeyFrame(stateTime, true);
+            final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
+            final ImageOffset imageOffset = defaultAtlasConfig.getImageOffset();
+            final ImageScale imageScale = defaultAtlasConfig.getImageScale();
+            batch.draw(region,
+                    (Gdx.graphics.getWidth() / 2 + imageOffset.getX()) - (region.getRegionWidth() / 2),
+                    (Gdx.graphics.getHeight() / 2 + imageOffset.getY())  - (region.getRegionHeight() / 2),
+                    region.getRegionWidth() *  imageScale.getX(),
+                    region.getRegionHeight() * imageScale.getY());
+        }
     }
 
     protected void drawDefaultAnimation(Batch batch) {

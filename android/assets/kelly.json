@@ -2,18 +2,6 @@
   "viewPortWidth": 20.0,
   "viewPortHeight": 13.0,
   "levelCount":1,
-  "menus":[
-    {
-      "id" : "main_menu",
-      "skin" : "main_menu_skin.json",
-      "atlas" : "main_menu_buttons.atlas",
-       "buttons":[{
-         "id": "main_menu_play"
-         },{
-         "id": "main_menu_quit"
-         }]
-      }
-  ],
   "actors":{
     "worldGravity": {
       "x": 0,
@@ -27,6 +15,27 @@
       "height": 2.0,
       "width": 50.0,
       "density": 0.0
+    },
+    "playButton":{
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"play.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }}],
+      "position":{
+        "x":10.0,
+        "y":6.0
+      },
+      "frameRate" : 0.125,
+      "height": 2.0,
+      "width": 2.0
     },
     "runner": {
       "animations":[

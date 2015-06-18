@@ -93,4 +93,5 @@ public class ActorFactoryImpl implements ActorFactory{
         final String ground = levelConfig.getGround();
         return new GroundActor(gameConfig.getActors().getGround(), ground, cameraConfig);
     }
+
 }

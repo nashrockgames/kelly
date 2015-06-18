@@ -15,7 +15,6 @@ clean resources/raw/actors/kelly/die
 split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/die
 pack resources/raw/actors/kelly/die android/assets kelly_die
 
-
 clean resources/raw/actors/enemies/magpie
 split resources/raw/actors/enemies/sheets/magpie *.png 128 64 resources/raw/actors/magpie
 pack resources/raw/actors/magpie android/assets magpie
@@ -32,7 +31,7 @@ clean resources/raw/actors/enemies/emu
 split resources/raw/actors/enemies/sheets/emu *.png 64 128 resources/raw/actors/emu
 pack resources/raw/actors/emu android/assets emu
 
-
-#main menu packing
-pack resources/raw/buttons/mainmenu android/assets main_menu_buttons
+clean resources/raw/buttons/play
+split resources/raw/buttons/sheets/play *.png 128 128 resources/raw/buttons/play
+pack resources/raw/buttons/play android/assets play
 

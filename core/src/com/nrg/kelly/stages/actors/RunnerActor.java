@@ -54,6 +54,8 @@ public class RunnerActor extends GameActor {
         super(runner, cameraConfig);
         this.runnerConfig = runner;
         Events.get().register(this);
+        setWidth(runner.getWidth());
+        setHeight(runner.getHeight());
     }
 
     @Subscribe
@@ -89,8 +91,6 @@ public class RunnerActor extends GameActor {
         final Body body = box2dFactory.createRunner();
         body.setUserData(this);
         setBody(body);
-        setWidth(runner.getWidth());
-        setHeight(runner.getHeight());
     }
 
     @Override

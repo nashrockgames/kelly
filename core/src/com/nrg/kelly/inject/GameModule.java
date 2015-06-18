@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.Runner;
+import com.nrg.kelly.config.buttons.PlayButtonConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.physics.Box2dFactory;
 
@@ -32,6 +33,9 @@ public class GameModule {
     LevelsConfig provideLevelConfig(){
         return ConfigFactory.getLevelsConfig();
     }
+
+
+
     @Provides
     @Singleton
     ActorFactory provideEnemyFactory(LevelsConfig levelsConfig, CameraConfig cameraConfig){
@@ -41,6 +45,12 @@ public class GameModule {
     Runner provideRunnerConfig(GameConfig gameConfig){
         return gameConfig.getActors().getRunner();
     }
+
+    @Provides
+    PlayButtonConfig providePlayButtonConfig(GameConfig gameConfig){
+        return gameConfig.getActors().getPlayButton();
+    }
+
     @Provides
     Box2dFactory provideBox2dFactory(){
         return Box2dFactory.getInstance();
