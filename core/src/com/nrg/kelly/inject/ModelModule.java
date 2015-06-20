@@ -12,11 +12,9 @@ import dagger.Provides;
 public class ModelModule {
 
     @Provides
-    Box2dGameModel provideGameStageModel(RunnerActor runnerActor,
-                                         PlayButtonActor playButtonActor){
+    Box2dGameModel provideGameStageModel(RunnerActor runnerActor){
         Box2dGameModel gameStageModel = new Box2dGameModel();
         gameStageModel.getActors().add(runnerActor);
-        gameStageModel.getActors().add(playButtonActor);
         return gameStageModel;
     }
 

@@ -1,6 +1,8 @@
 package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.physics.box2d.World;
+import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.GameStateManagerImpl;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.Runner;
@@ -34,7 +36,11 @@ public class GameModule {
         return ConfigFactory.getLevelsConfig();
     }
 
-
+    @Provides
+    @Singleton
+    GameStateManager provideGameStateManager(){
+        return new GameStateManagerImpl();
+    }
 
     @Provides
     @Singleton
