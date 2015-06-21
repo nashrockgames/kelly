@@ -18,12 +18,14 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.config.actors.ImageScale;
+import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
@@ -99,7 +101,7 @@ public class RunnerActor extends GameActor {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
         final TextureRegion region;
-        final ActorState state = this.getState();
+        final ActorState state = this.getActorState();
         switch(state){
             case SLIDING:
                 region = slideAnimation.getKeyFrame(stateTime, true);
@@ -126,11 +128,26 @@ public class RunnerActor extends GameActor {
                         region,
                         Optional.of(dieAtlasConfig.getImageOffset()),
                         Optional.of(dieAtlasConfig.getImageScale()));
+                if(this.getBody().getPosition().y < 0){
+                    Events.get().post(new GameOverEvent(this));
+                }
                 break;
             case RUNNING:
                 drawDefaultAnimation(batch);
                 break;
         }
+
+    }
+    @Subscribe
+    public void resetPosition(PlayButtonClickedEvent playButtonClickedEvent){
+        //
+        final Filter f = new Filter();
+        f.categoryBits = Constants.RUNNER_RUNNING_CATEGORY;
+        f.groupIndex = Constants.RUNNER_RUNNING_CATEGORY;
+        f.maskBits = Constants.RUNNER_RUNNING_MASK_INDEX;
+        this.getBody().getFixtureList().get(0).setFilterData(f);
+        this.getBody().setTransform(box2dFactory.getRunPosition(), 0f);
+        this.setActorState(ActorState.RUNNING);
 
     }
 
@@ -244,7 +261,7 @@ public class RunnerActor extends GameActor {
     }
 
     public boolean canJump(){
-        final ActorState state = this.getState();
+        final ActorState state = this.getActorState();
         return !(state.equals(ActorState.JUMPING) ||
                 state.equals(ActorState.HIT) ||
                 state.equals(ActorState.SLIDING) ||
@@ -252,14 +269,14 @@ public class RunnerActor extends GameActor {
     }
 
     public boolean canSlide(){
-        final ActorState state = this.getState();
+        final ActorState state = this.getActorState();
         return !(state.equals(ActorState.JUMPING) ||
                 state.equals(ActorState.HIT) ||
                 state.equals(ActorState.FALLING));
     }
 
     public void setLanded() {
-        final ActorState state = this.getState();
+        final ActorState state = this.getActorState();
         if(!(state.equals(ActorState.HIT) || state.equals(ActorState.FALLING)))
             setState(ActorState.RUNNING);
     }

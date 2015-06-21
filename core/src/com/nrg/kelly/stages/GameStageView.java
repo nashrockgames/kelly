@@ -7,15 +7,18 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.screen.*;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 
 import javax.inject.Inject;
@@ -111,8 +114,11 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
     @Subscribe
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
-        enemy++;
-        spawnEnemy();
+        final GameState gameState = this.gameStateManager.getGameState();
+        if(gameState.equals(GameState.PLAYING)) {
+            enemy++;
+            spawnEnemy();
+        }
     }
 
     private void spawnEnemy(){
@@ -124,9 +130,14 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Subscribe
     public void onGameOver(GameOverEvent gameOverEvent){
         //remove any left over enemies
-
-
-
+        gameOverEvent.getRunnerActor().remove();
+        for(Actor actor : this.getActors()){
+            if(actor instanceof EnemyActor){
+                actor.remove();
+            }
+        }
+        this.addActor(playButtonActor);
+        this.gameStateManager.setGameState(GameState.PAUSED);
     }
 
     @Subscribe

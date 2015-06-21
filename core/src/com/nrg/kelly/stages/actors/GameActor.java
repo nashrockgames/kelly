@@ -24,7 +24,7 @@ public abstract class GameActor extends Actor {
     protected float stateTime;
     private Animation defaultAnimation;
     private AtlasConfig defaultAtlasConfig;
-    private ActorState state = ActorState.RUNNING;
+    private ActorState actorState = ActorState.RUNNING;
     private Vector2 transform;
     private float transformAngle = 0;
     private Optional<Vector2> hitVector = Optional.absent();
@@ -62,12 +62,12 @@ public abstract class GameActor extends Actor {
         return Optional.fromNullable(transform);
     }
 
-    public ActorState getState() {
-        return state;
+    public ActorState getActorState() {
+        return actorState;
     }
 
     public void setState(ActorState state) {
-        this.state = state;
+        this.actorState = state;
     }
 
     public Animation getDefaultAnimation() {
@@ -87,8 +87,8 @@ public abstract class GameActor extends Actor {
             final ImageScale imageScale = defaultAtlasConfig.getImageScale();
             batch.draw(region,
                     (Gdx.graphics.getWidth() / 2 + imageOffset.getX()) - (region.getRegionWidth() / 2),
-                    (Gdx.graphics.getHeight() / 2 + imageOffset.getY())  - (region.getRegionHeight() / 2),
-                    region.getRegionWidth() *  imageScale.getX(),
+                    (Gdx.graphics.getHeight() / 2 + imageOffset.getY()) - (region.getRegionHeight() / 2),
+                    region.getRegionWidth() * imageScale.getX(),
                     region.getRegionHeight() * imageScale.getY());
         }
     }
@@ -237,4 +237,7 @@ public abstract class GameActor extends Actor {
 
     }
 
+    public void setActorState(ActorState actorState) {
+        this.actorState = actorState;
+    }
 }
