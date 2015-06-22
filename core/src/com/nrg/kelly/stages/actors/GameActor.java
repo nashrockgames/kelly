@@ -66,10 +66,6 @@ public abstract class GameActor extends Actor {
         return actorState;
     }
 
-    public void setState(ActorState state) {
-        this.actorState = state;
-    }
-
     public Animation getDefaultAnimation() {
         return defaultAnimation;
     }

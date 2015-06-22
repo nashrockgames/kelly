@@ -17,7 +17,6 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                ModelModule.class,
                 ViewModule.class
         }
 )

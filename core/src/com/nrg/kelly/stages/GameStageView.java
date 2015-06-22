@@ -1,28 +1,34 @@
 package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.events.GameOverEvent;
+import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
+import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
+import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
+import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
-import com.nrg.kelly.events.screen.*;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
+import com.nrg.kelly.stages.actors.RunnerActor;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 public class GameStageView extends AbstractStage implements ContactListener {
 
@@ -35,9 +41,6 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
     @Inject
     GameStateManager gameStateManager;
-
-    @Inject
-    Box2dGameModel box2dGameModel;
 
     @Inject
     Box2dGameStageView box2dGameStageView;
@@ -57,10 +60,9 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Override
     public void draw(){
         super.draw();
-        this.box2dGameStageView.renderGameStage();
+        this.box2dGameStageView.debugGameStage();
     }
 */
-
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
 
@@ -130,9 +132,20 @@ public class GameStageView extends AbstractStage implements ContactListener {
     @Subscribe
     public void onGameOver(GameOverEvent gameOverEvent){
         //remove any left over enemies
-        gameOverEvent.getRunnerActor().remove();
+        final RunnerActor runnerActor = gameOverEvent.getRunnerActor();
+        final Body runnerBody = runnerActor.getBody();
+        runnerBody.setUserData(null);
+        final Array<JointEdge> jointList = runnerBody.getJointList();
+        for(JointEdge jointEdge : jointList){
+            Box2dFactory.getWorld().destroyJoint(jointEdge.joint);
+        }
+        Box2dFactory.destroyBody(runnerBody);
+        runnerActor.remove();
         for(Actor actor : this.getActors()){
             if(actor instanceof EnemyActor){
+                final Body body = ((EnemyActor) actor).getBody();
+                body.setUserData(null);
+                Box2dFactory.getWorld().destroyBody(body);
                 actor.remove();
             }
         }
@@ -141,8 +154,15 @@ public class GameStageView extends AbstractStage implements ContactListener {
     }
 
     @Subscribe
+    public void postBuildGame(PostBuildGameModuleEvent postBuildGameModuleEvent){
+        this.addActor(playButtonActor);
+        this.gameStateManager.setGameState(GameState.PAUSED);
+    }
+
+    @Subscribe
     public void addActors(PlayButtonClickedEvent playButtonClickedEvent){
-        this.addActors(this.box2dGameModel.getActors());
+        final RunnerActor runner = actorFactory.createRunner();
+        this.addActor(runner);
         spawnEnemy();
     }
 

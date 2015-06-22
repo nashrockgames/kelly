@@ -1,11 +1,14 @@
 package com.nrg.kelly.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.events.Events;
+import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 
 import javax.inject.Inject;
@@ -54,12 +57,11 @@ public class Box2dGameStageView {
                 width, height);
     }
 
-    /*
-        public void renderGameStage(){
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
-        }
-    */
+    public void debugGameStage(){
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        this.box2DDebugRenderer.render(Box2dFactory.getWorld(), camera.combined);
+    }
+
     public Vector3 translateScreenToWorldCoordinates(Vector3 touchPoint) {
         return camera.unproject(touchPoint);
     }

@@ -4,17 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
+import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
+import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.GroundActor;
+import com.nrg.kelly.stages.actors.RunnerActor;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,7 +81,6 @@ public class ActorFactoryImpl implements ActorFactory{
         }
         enemyActor.setLinearVelocity(new Vector2(enemy.getVelocityX(), 0f));
         return enemyActor;
-
     }
 
     public boolean hasNextEnemy(int level, int enemy) {
@@ -92,6 +98,18 @@ public class ActorFactoryImpl implements ActorFactory{
         final LevelConfig levelConfig = config.getLevels().get(level - 1);
         final String ground = levelConfig.getGround();
         return new GroundActor(gameConfig.getActors().getGround(), ground, cameraConfig);
+    }
+
+    public RunnerActor createRunner(){
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final Runner runner = gameConfig.getActors().getRunner();
+        final Body body = Box2dFactory.getInstance().createRunner();
+        RunnerActor runnerActor = new RunnerActor(runner, cameraConfig);
+        body.setUserData(runnerActor);
+        runnerActor.setBody(body);
+        runnerActor.setActorState(ActorState.RUNNING);
+        runnerActor.resetPosition();
+        return runnerActor;
     }
 
 }
