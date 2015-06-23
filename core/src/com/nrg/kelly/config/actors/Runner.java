@@ -10,6 +10,7 @@ public class Runner extends ActorConfig {
     private float hitVelocityX;
     private float hitVelocityY;
     private float hitPauseTime;
+    private float slideTime;
 
 
     public float getJumpImpulseX() {
@@ -74,5 +75,13 @@ public class Runner extends ActorConfig {
 
     public void setHitPauseTime(float hitPauseTime) {
         this.hitPauseTime = hitPauseTime;
+    }
+
+    public float getSlideTime() {
+        return slideTime;
+    }
+
+    public void setSlideTime(float slideTime) {
+        this.slideTime = slideTime;
     }
 }

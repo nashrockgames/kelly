@@ -103,7 +103,8 @@
       "hitImpulseY":8.0,
       "hitVelocityX": 0.0,
       "hitVelocityY": 10.0,
-      "hitPauseTime":0.5
+      "hitPauseTime":0.5,
+      "slideTime":1.0
     }
   }
 }

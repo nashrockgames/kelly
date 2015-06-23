@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
@@ -26,7 +25,6 @@ import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
 import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 
 import java.util.List;
 
@@ -205,34 +203,58 @@ public class RunnerActor extends GameActor {
 
     }
 
-    private Body getOtherBody(Body bodyA, Body bodyB) {
-        return bodyA.equals(this.getBody()) ? bodyB : bodyA;
-
-    }
-
     @Subscribe
     public void jump(RightSideScreenTouchDownEvent rightSideScreenTouchDownEvent) {
         if (canJump()) {
-            final Body body = getBody();
-            body.applyLinearImpulse(Box2dFactory.getInstance().getRunnerLinerImpulse(),
-                    body.getWorldCenter(), true);
-            setActorState(ActorState.JUMPING);
+            if(this.getActorState().equals(ActorState.SLIDING)){
+                this.stopSliding();
+                Timer.schedule(new Timer.Task(){
+                    @Override
+                    public void run() {
+                        applyJump();
+                        setActorState(ActorState.JUMPING);
+                    }
+                },0.1f);
+            }else {
+                applyJump();
+                setActorState(ActorState.JUMPING);
+            }
         }
     }
+
+    private void applyJump() {
+        final Body body = getBody();
+        body.applyLinearImpulse(Box2dFactory.getInstance().getRunnerLinerImpulse(),
+                body.getWorldCenter(), true);
+    }
+
 
     @Subscribe
     public void slide(LeftSideScreenTouchDownEvent leftSideScreenTouchDownEvent){
         if( canSlide() ){
-            final Body body = getBody();
-            body.setTransform(Box2dFactory.getInstance().getSlidePosition(),
-                    Box2dFactory.getInstance().getSlideAngle());
-            maybeUpdateTextureBounds();
-            setActorState(ActorState.SLIDING);
+            if(!getActorState().equals(ActorState.SLIDING)) {
+                final Body body = getBody();
+                body.setTransform(Box2dFactory.getInstance().getSlidePosition(),
+                        Box2dFactory.getInstance().getSlideAngle());
+                maybeUpdateTextureBounds();
+                scheduleStopSliding();
+                setActorState(ActorState.SLIDING);
+            }
         }
     }
 
-    @Subscribe
-    public void stopSliding(LeftSideScreenTouchUpEvent leftSideScreenTouchUpEvent){
+    private void scheduleStopSliding() {
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+               if(getActorState().equals(ActorState.SLIDING)){
+                    stopSliding();
+               }
+            }
+        }, this.runnerConfig.getSlideTime());
+    }
+
+    public void stopSliding(){
         if(canSlide()) {
             final Body body = getBody();
             body.setTransform(Box2dFactory.getInstance().getRunPosition(), 0f);
@@ -252,7 +274,6 @@ public class RunnerActor extends GameActor {
         final ActorState state = this.getActorState();
         return !(state.equals(ActorState.JUMPING) ||
                 state.equals(ActorState.HIT) ||
-                state.equals(ActorState.SLIDING) ||
                 state.equals(ActorState.FALLING));
     }
 
