@@ -1,5 +1,6 @@
 package com.nrg.kelly.stages;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -9,16 +10,20 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.events.FlingDirection;
+import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
+import com.nrg.kelly.events.OnTouchDownGestureEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
-import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
-import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.JumpControlInvokedEvent;
 import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
@@ -30,7 +35,7 @@ import com.nrg.kelly.stages.actors.RunnerActor;
 
 import javax.inject.Inject;
 
-public class GameStageView extends AbstractStage implements ContactListener {
+public class GameStageView extends Stage implements ContactListener {
 
     public static final int VELOCITY_ITERATIONS = 6;
     public static final int POSITION_ITERATIONS = 2;
@@ -44,6 +49,9 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
     @Inject
     Box2dGameStageView box2dGameStageView;
+
+    @Inject
+    DirectionGestureAdapter directionGestureAdapter;
 
     @Inject
     ActorFactory actorFactory;
@@ -63,19 +71,48 @@ public class GameStageView extends AbstractStage implements ContactListener {
         this.box2dGameStageView.debugGameStage();
     }
 */
+    @Subscribe
+    public void onTouchGesture(OnTouchDownGestureEvent onTouchDownGestureEvent){
+
+        final GameState gameState = gameStateManager.getGameState();
+        switch(gameState){
+            case PAUSED:
+                final Vector3 gestureVector3 = new Vector3(onTouchDownGestureEvent.getX(),
+                        onTouchDownGestureEvent.getY(), 0.0f);
+                if(this.box2dGameStageView.playButtonTouched(gestureVector3)){
+                    Events.get().post(new PlayButtonClickedEvent());
+                }
+        }
+    }
+
+    @Subscribe
+    public void onFlingGesture(OnFlingGestureEvent onFlingGestureEvent){
+
+        final GameState gameState = gameStateManager.getGameState();
+        switch(gameState){
+            case PLAYING:
+                final FlingDirection flingDirection = onFlingGestureEvent.getFlingDirection();
+                if(flingDirection.equals(FlingDirection.UP)){
+                    Events.get().post(new JumpControlInvokedEvent());
+                } else if(flingDirection.equals(FlingDirection.DOWN)){
+                    Events.get().post(new SlideControlInvokedEvent());
+                }
+        }
+
+    }
+
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
 
         final Vector3 touchPoint = box2dGameStageView.getTouchPoint();
         box2dGameStageView.translateScreenToWorldCoordinates(touchPoint.set(x, y, 0));
         final GameState gameState = gameStateManager.getGameState();
-
         switch(gameState){
             case PLAYING:
                 if (box2dGameStageView.rightSideTouched(touchPoint)) {
-                    Events.get().post(new RightSideScreenTouchDownEvent(x, y, pointer, button));
+                    Events.get().post(new JumpControlInvokedEvent());
                 } else {
-                    Events.get().post(new LeftSideScreenTouchDownEvent(x, y, pointer, button));
+                    Events.get().post(new SlideControlInvokedEvent());
                 }
                 break;
             case PAUSED:
@@ -93,7 +130,7 @@ public class GameStageView extends AbstractStage implements ContactListener {
             final Vector3 touchPoint = box2dGameStageView.getTouchPoint();
             box2dGameStageView.translateScreenToWorldCoordinates(touchPoint.set(x, y, 0));
             if (!box2dGameStageView.rightSideTouched(touchPoint)) {
-                Events.get().post(new LeftSideScreenTouchUpEvent(x, y, pointer, button));
+                Events.get().post(new LeftSideScreenTouchUpEvent());
             }
         }
         return super.touchUp(x, y, pointer, button);
@@ -172,7 +209,12 @@ public class GameStageView extends AbstractStage implements ContactListener {
         addBackgroundActors();
 
         this.addActor(playButtonActor);
-        Gdx.input.setInputProcessor(this);
+        final Application.ApplicationType type = Gdx.app.getType();
+        if(type.equals(Application.ApplicationType.Desktop)) {
+            Gdx.input.setInputProcessor(this);
+        }else{
+            Gdx.input.setInputProcessor(this.directionGestureAdapter);
+        }
         Gdx.input.setCatchBackKey(true);
     }
 
@@ -203,4 +245,8 @@ public class GameStageView extends AbstractStage implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {}
+
+
+
+
 }

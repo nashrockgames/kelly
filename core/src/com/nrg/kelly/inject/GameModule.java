@@ -17,7 +17,7 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                ViewModule.class
+            ViewModule.class
         }
 )
 public class GameModule {

@@ -3,13 +3,25 @@ clean resources/raw/actors/kelly/run
 split resources/raw/actors/kelly/sheets/run *.png 64 128 resources/raw/actors/kelly/run
 pack resources/raw/actors/kelly/run android/assets kelly_run
 
+clean resources/raw/actors/kelly/armour-run
+split resources/raw/actors/kelly/sheets/armour-run *.png 64 128 resources/raw/actors/kelly/armour-run
+pack resources/raw/actors/kelly/armour-run android/assets kelly_armour_run
+
 clean resources/raw/actors/kelly/jump
 split resources/raw/actors/kelly/sheets/jump *.png 64 128 resources/raw/actors/kelly/jump
 pack resources/raw/actors/kelly/jump android/assets kelly_jump
 
+clean resources/raw/actors/kelly/armour-jump
+split resources/raw/actors/kelly/sheets/armour-jump *.png 64 128 resources/raw/actors/kelly/armour-jump
+pack resources/raw/actors/kelly/armour-jump android/assets kelly_armour_jump
+
 clean resources/raw/actors/kelly/slide
 split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/kelly/slide
 pack resources/raw/actors/kelly/slide android/assets kelly_slide
+
+clean resources/raw/actors/kelly/armour-slide
+split resources/raw/actors/kelly/sheets/armour-slide *.png 64 128 resources/raw/actors/kelly/armour-slide
+pack resources/raw/actors/kelly/armour-slide android/assets kelly_armour_slide
 
 clean resources/raw/actors/kelly/die
 split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/die

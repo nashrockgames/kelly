@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
@@ -22,8 +21,8 @@ import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.screen.LeftSideScreenTouchDownEvent;
-import com.nrg.kelly.events.screen.RightSideScreenTouchDownEvent;
+import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
+import com.nrg.kelly.events.screen.JumpControlInvokedEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
 import java.util.List;
@@ -204,7 +203,7 @@ public class RunnerActor extends GameActor {
     }
 
     @Subscribe
-    public void jump(RightSideScreenTouchDownEvent rightSideScreenTouchDownEvent) {
+    public void jump(JumpControlInvokedEvent jumpControlInvokedEvent) {
         if (canJump()) {
             if(this.getActorState().equals(ActorState.SLIDING)){
                 this.stopSliding();
@@ -230,7 +229,7 @@ public class RunnerActor extends GameActor {
 
 
     @Subscribe
-    public void slide(LeftSideScreenTouchDownEvent leftSideScreenTouchDownEvent){
+    public void slide(SlideControlInvokedEvent slideControlInvokedEvent){
         if( canSlide() ){
             if(!getActorState().equals(ActorState.SLIDING)) {
                 final Body body = getBody();

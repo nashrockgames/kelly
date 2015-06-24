@@ -41,7 +41,7 @@
       "animations":[
         {
           "name":"default",
-          "atlas":"kelly_run.atlas",
+          "atlas":"kelly_armour_run.atlas",
           "imageOffset":{
             "x":0,
             "y":0
@@ -53,7 +53,7 @@
         },
         {
           "name" : "jump",
-          "atlas":"kelly_jump.atlas",
+          "atlas":"kelly_armour_jump.atlas",
           "imageOffset":{
             "x":0,
             "y":0
@@ -77,7 +77,7 @@
         },
         {
           "name": "slide",
-          "atlas": "kelly_slide.atlas",
+          "atlas": "kelly_armour_slide.atlas",
           "imageOffset": {
             "x": 0,
             "y": 0
