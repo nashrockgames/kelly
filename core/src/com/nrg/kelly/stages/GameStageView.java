@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
@@ -77,9 +78,8 @@ public class GameStageView extends Stage implements ContactListener {
         final GameState gameState = gameStateManager.getGameState();
         switch(gameState){
             case PAUSED:
-                final Vector3 gestureVector3 = new Vector3(onTouchDownGestureEvent.getX(),
-                        onTouchDownGestureEvent.getY(), 0.0f);
-                if(this.box2dGameStageView.playButtonTouched(gestureVector3)){
+                if(this.box2dGameStageView.playButtonGestureTouched(onTouchDownGestureEvent.getX(),
+                        onTouchDownGestureEvent.getY())){
                     Events.get().post(new PlayButtonClickedEvent());
                 }
         }

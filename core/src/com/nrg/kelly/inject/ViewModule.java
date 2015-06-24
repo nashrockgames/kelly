@@ -27,10 +27,11 @@ public class ViewModule {
     }
 
     @Provides
-    Box2dGameStageView provideGameStageView(Camera camera){
+    Box2dGameStageView provideGameStageView(Camera camera, CameraConfig cameraConfig){
         Box2dGameStageView box2dGameStageView = new Box2dGameStageView();
         box2dGameStageView.setCamera(camera);
         box2dGameStageView.setDebugRenderer(new Box2DDebugRenderer());
+        box2dGameStageView.setCameraConfig(cameraConfig);
         return box2dGameStageView;
     }
 

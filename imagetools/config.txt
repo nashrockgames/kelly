@@ -20,7 +20,7 @@ split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/
 pack resources/raw/actors/kelly/slide android/assets kelly_slide
 
 clean resources/raw/actors/kelly/armour-slide
-split resources/raw/actors/kelly/sheets/armour-slide *.png 64 128 resources/raw/actors/kelly/armour-slide
+split resources/raw/actors/kelly/sheets/armour-slide *.png 128 64 resources/raw/actors/kelly/armour-slide
 pack resources/raw/actors/kelly/armour-slide android/assets kelly_armour_slide
 
 clean resources/raw/actors/kelly/die

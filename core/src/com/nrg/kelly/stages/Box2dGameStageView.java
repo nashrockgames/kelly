@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
@@ -23,6 +24,7 @@ public class Box2dGameStageView {
     private Vector3 touchPoint;
     private Rectangle screenRightSide;
     private Rectangle playButtonRectangle;
+    private CameraConfig cameraConfig;
 
     @Inject
     public Box2dGameStageView(){
@@ -70,6 +72,16 @@ public class Box2dGameStageView {
         return screenRightSide.contains(touchPoint.x, touchPoint.y);
     }
 
+    public boolean playButtonGestureTouched(float xScreen, float yScreen){
+
+        final float x = (xScreen / cameraConfig.getWorldToScreenScale()) +
+                playButtonRectangle.getWidth();
+        final float y = (yScreen / cameraConfig.getWorldToScreenScale()) +
+                playButtonRectangle.getHeight();
+        return playButtonRectangle.contains(x, y);
+
+    }
+
     public boolean playButtonTouched(Vector3 touchPoint){
         return playButtonRectangle.contains(touchPoint.x, touchPoint.y);
     }
@@ -82,4 +94,7 @@ public class Box2dGameStageView {
         return touchPoint;
     }
 
+    public void setCameraConfig(CameraConfig cameraConfig) {
+        this.cameraConfig = cameraConfig;
+    }
 }

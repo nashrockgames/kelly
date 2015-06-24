@@ -9,7 +9,7 @@ public class OnFlingGestureEvent {
 
     public OnFlingGestureEvent(float velocityY) {
         if(Math.abs(velocityY) > 1) {
-            this.flingDirection = velocityY > 0 ? FlingDirection.UP : FlingDirection.DOWN;
+            this.flingDirection = velocityY > 0 ? FlingDirection.DOWN : FlingDirection.UP;
         } else {
             this.flingDirection = FlingDirection.NONE;
         }
