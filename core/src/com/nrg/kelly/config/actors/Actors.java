@@ -15,6 +15,16 @@ public class Actors {
 
     private PlayButtonConfig playButton;
 
+    private ArmourConfig armour;
+
+    public ArmourConfig getArmour() {
+        return armour;
+    }
+
+    public void setArmour(ArmourConfig armour) {
+        this.armour = armour;
+    }
+
     public PlayButtonConfig getPlayButton() {
         return playButton;
     }

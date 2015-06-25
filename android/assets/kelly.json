@@ -37,11 +37,46 @@
       "height": 2.0,
       "width": 2.0
     },
+    "armour":{
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"get_armour.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }}],
+      "position":{
+            "x": 25.0,
+            "y": 2.01
+      },
+      "density": 0.5,
+      "velocityX" : -10,
+      "frameRate" : 0.125,
+      "height": 2.0,
+      "width": 1.0
+    },
     "runner": {
       "animations":[
         {
           "name":"default",
           "atlas":"kelly_run.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+        },
+        {
+          "name":"armour-run",
+          "atlas":"kelly_armour_run.atlas",
           "imageOffset":{
             "x":0,
             "y":0
@@ -61,6 +96,18 @@
           "imageScale":{
             "x":1.0,
             "y":1.0
+          }
+        },
+        {
+          "name" : "armour-jump",
+          "atlas":"kelly_armour_jump.atlas",
+          "imageOffset":{
+           "x":0,
+           "y":0
+          },
+          "imageScale":{
+           "x":1.0,
+           "y":1.0
           }
         },
         {
@@ -85,6 +132,18 @@
           "imageScale":{
             "x":1.0,
             "y":1.0
+          }
+        },
+        {
+          "name": "armour-slide",
+          "atlas": "kelly_armour_slide.atlas",
+          "imageOffset": {
+           "x": 0,
+           "y": 0
+          },
+          "imageScale":{
+           "x":1.0,
+           "y":1.0
           }
         }
       ],

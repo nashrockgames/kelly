@@ -16,6 +16,7 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.config.actors.ImageScale;
+import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
@@ -37,6 +38,12 @@ public class RunnerActor extends GameActor {
     private AtlasConfig dieAtlasConfig;
     private boolean deathScheduled = false;
     private Runner runnerConfig;
+    private AtlasConfig armourJumpAtlasConfig;
+    private AtlasConfig armourSlideAtlasConfig;
+    private AtlasConfig armourRunAtlasConfig;
+    private Animation armourJumpAnimation;
+    private Animation armourSlideAnimation;
+    private Animation armourRunAnimation;
 
     public RunnerActor(Runner runner, CameraConfig cameraConfig) {
         super(runner, cameraConfig);
@@ -55,20 +62,34 @@ public class RunnerActor extends GameActor {
         slideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide");
         dieAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "die");
 
+        armourJumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-jump");
+        armourSlideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-slide");
+        armourRunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-run");
+
+
         final String run = getDefaultAtlasConfig().getAtlas();
         final String jump = jumpAtlasConfig.getAtlas();
         final String slide = slideAtlasConfig.getAtlas();
         final String die = dieAtlasConfig.getAtlas();
+        final String armourRun = armourRunAtlasConfig.getAtlas();
+        final String armourJump = armourJumpAtlasConfig.getAtlas();
+        final String armourSlide = armourSlideAtlasConfig.getAtlas();
 
         final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(run));
         final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
         final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
         final TextureAtlas dieAtlas = new TextureAtlas(Gdx.files.internal(die));
+        final TextureAtlas armourJumpAtlas = new TextureAtlas(Gdx.files.internal(armourJump));
+        final TextureAtlas armourSlideAtlas = new TextureAtlas(Gdx.files.internal(armourSlide));
+        final TextureAtlas armourRunAtlas = new TextureAtlas(Gdx.files.internal(armourRun));
 
         setDefaultAnimation(new Animation(runnerConfig.getFrameRate(), defaultAtlas.getRegions()));
         jumpAnimation = new Animation(runnerConfig.getFrameRate(), jumpAtlas.getRegions());
         slideAnimation = new Animation(runnerConfig.getFrameRate(), slideAtlas.getRegions());
         dieAnimation = new Animation(runnerConfig.getFrameRate(), dieAtlas.getRegions());
+        armourJumpAnimation = new Animation(runnerConfig.getFrameRate(), armourJumpAtlas.getRegions());
+        armourSlideAnimation = new Animation(runnerConfig.getFrameRate(), armourSlideAtlas.getRegions());
+        armourRunAnimation = new Animation(runnerConfig.getFrameRate(), armourRunAtlas.getRegions());
 
     }
 
@@ -188,10 +209,16 @@ public class RunnerActor extends GameActor {
         final Optional<RunnerActor> runnerActorOptional = beginContactEvent.getRunnerActor();
         final Optional<EnemyActor> enemyActorOptional = beginContactEvent.getEnemyActor();
         final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
+        final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
         for(RunnerActor runnerActor : runnerActorOptional.asSet()){
             for(EnemyActor enemyActor : enemyActorOptional.asSet()){
                 if(!this.getActorState().equals(ActorState.HIT)){
                     this.hit();
+                }
+            }
+            for(ArmourActor enemyActor : armourActorOptional.asSet()){
+                if(!this.getActorState().equals(ActorState.HIT)){
+                    this.pickupArmour();
                 }
             }
             for(GroundActor groundActor : groundActorOptional.asSet()){
@@ -200,6 +227,13 @@ public class RunnerActor extends GameActor {
 
         }
 
+    }
+
+    private void pickupArmour() {
+        Events.get().post(new ArmourPickedUpEvent());
+        //TODO:
+        //make sure this runner stays where he is (set run position)
+        //use a timer to set the "animation state" to ARMOUR_EQUIPPED
     }
 
     @Subscribe

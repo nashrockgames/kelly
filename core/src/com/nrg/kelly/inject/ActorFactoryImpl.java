@@ -6,18 +6,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
+import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
-import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.ActorState;
+import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.GroundActor;
@@ -110,6 +110,20 @@ public class ActorFactoryImpl implements ActorFactory{
         runnerActor.setActorState(ActorState.RUNNING);
         runnerActor.resetPosition();
         return runnerActor;
+    }
+
+    @Override
+    public ArmourActor createArmour() {
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final ArmourConfig armourConfig = gameConfig.getActors().getArmour();
+        final ArmourActor armourActor = new ArmourActor(armourConfig, cameraConfig);
+        final List<AtlasConfig> atlasConfigList = armourConfig.getAnimations();
+        armourActor.setDefaultAtlasConfig(armourActor.getAtlasConfigByName(atlasConfigList, "default"));
+        final String armour = armourActor.getDefaultAtlasConfig().getAtlas();
+        final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(armour));
+        armourActor.setDefaultAnimation(new Animation(armourConfig.getFrameRate(), defaultAtlas.getRegions()));
+        armourActor.setLinearVelocity(new Vector2(armourConfig.getVelocityX(), 0f));
+        return armourActor;
     }
 
 }

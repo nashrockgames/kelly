@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.Position;
 import com.nrg.kelly.inject.ConfigFactory;
 import com.nrg.kelly.config.actors.Ground;
@@ -134,4 +135,18 @@ public class Box2dFactory {
         Events.get().post(new OnEnemyDestroyedEvent());
     }
 
+    public Body createArmour(ArmourConfig armour) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        final Position position = armour.getPosition();
+        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(armour.getWidth() / 2, armour.getHeight() / 2);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, armour.getDensity());
+        body.resetMassData();
+        shape.dispose();
+        return body;
+
+    }
 }

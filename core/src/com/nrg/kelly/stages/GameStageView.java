@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
-import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
@@ -43,7 +42,7 @@ public class GameStageView extends Stage implements ContactListener {
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
     private int level = 1;
-    private int enemy = 0;
+    private int enemyCount = 0;
 
     @Inject
     GameStateManager gameStateManager;
@@ -153,16 +152,28 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
+
         final GameState gameState = this.gameStateManager.getGameState();
-        if(gameState.equals(GameState.PLAYING)) {
-            enemy++;
-            spawnEnemy();
+        if(enemyCount % 2 == 0){
+            //TODO spawn boss first, then after a number of bullets, spawn armour, then spawn gun with 1 bullet, if you miss, then spawn after boss bullets again
+            spawnArmour();
+        } else {
+            if(gameState.equals(GameState.PLAYING)) {
+                spawnEnemy();
+            }
         }
+
+        enemyCount++;
+
+    }
+
+    private void spawnArmour() {
+        this.addActor(actorFactory.createArmour());
     }
 
     private void spawnEnemy(){
-        if(actorFactory.hasNextEnemy(level, enemy)) {
-            this.addActor(actorFactory.createEnemy(level, enemy));
+        if(actorFactory.hasNextEnemy(level, enemyCount)) {
+            this.addActor(actorFactory.createEnemy(level, enemyCount));
         }
     }
 
