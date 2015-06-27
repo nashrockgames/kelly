@@ -42,7 +42,7 @@ public abstract class GameActor extends Actor {
         return hitVector;
     }
 
-    public void setHitVector(Optional<Vector2> hitVector) {
+    public void setMaintainPositionVector(Optional<Vector2> hitVector) {
         this.hitVector = hitVector;
     }
 
@@ -102,15 +102,20 @@ public abstract class GameActor extends Actor {
         }
     }
 
+    protected void unMaintainPosition(){
+        final Optional<Vector2> absent = Optional.absent();
+        this.setMaintainPositionVector(absent);
+    }
+
     protected void maintainPosition() {
-        final Optional<Vector2> hitVector = getHitVector();
-        if (hitVector.isPresent()) {
+        final Optional<Vector2> currentPositionVector = getHitVector();
+        if (currentPositionVector.isPresent()) {
             this.setTransformAngle(0f);
-            this.setTransform(hitVector.get());
+            this.setTransform(currentPositionVector.get());
         } else {
             float currentX = this.getBody().getPosition().x;
             float currentY = this.getBody().getPosition().y;
-            setHitVector(Optional.fromNullable(new Vector2(currentX, currentY)));
+            setMaintainPositionVector(Optional.fromNullable(new Vector2(currentX, currentY)));
         }
     }
 

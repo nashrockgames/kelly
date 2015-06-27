@@ -6,7 +6,7 @@ package com.nrg.kelly;
 public enum GameState {
 
     PLAYING,
-    PAUSED
+    TEMPORARILY_PAUSED, PAUSED
 
 }
 

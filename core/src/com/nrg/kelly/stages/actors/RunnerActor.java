@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.utils.Timer;
@@ -20,6 +21,7 @@ import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
+import com.nrg.kelly.events.game.TemporaryPauseEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
@@ -44,6 +46,7 @@ public class RunnerActor extends GameActor {
     private Animation armourJumpAnimation;
     private Animation armourSlideAnimation;
     private Animation armourRunAnimation;
+    private AnimationState animationState = AnimationState.DEFAULT;
 
     public RunnerActor(Runner runner, CameraConfig cameraConfig) {
         super(runner, cameraConfig);
@@ -100,13 +103,27 @@ public class RunnerActor extends GameActor {
         stateTime += Gdx.graphics.getDeltaTime();
         final TextureRegion region;
         final ActorState state = this.getActorState();
+        final AnimationState animationState = this.getAnimationState();
+        final Animation animation;
         switch(state){
+            case UPGRADING_ARMOUR:
+                maintainPosition();
+                region = armourRunAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(armourRunAtlasConfig.getImageOffset()),
+                        Optional.of(armourRunAtlasConfig.getImageScale()));
+                break;
             case SLIDING:
-                region = slideAnimation.getKeyFrame(stateTime, true);
+                animation = animationState.equals(AnimationState.ARMOUR_EQUIPPED) ?
+                        armourSlideAnimation : slideAnimation;
+                region = animation.getKeyFrame(stateTime, true);
                 drawSlideAnimation(batch, region);
                 break;
             case JUMPING:
-                region = jumpAnimation.getKeyFrame(stateTime, true);
+                animation = animationState.equals(AnimationState.ARMOUR_EQUIPPED) ?
+                        armourJumpAnimation : jumpAnimation;
+                region = animation.getKeyFrame(stateTime, true);
                 drawAnimation(batch,
                         region,
                         Optional.of(jumpAtlasConfig.getImageOffset()),
@@ -119,6 +136,7 @@ public class RunnerActor extends GameActor {
                         region,
                         Optional.of(dieAtlasConfig.getImageOffset()),
                         Optional.of(dieAtlasConfig.getImageScale()));
+
                 break;
             case FALLING:
                 region = dieAnimation.getKeyFrame(stateTime, true);
@@ -131,7 +149,15 @@ public class RunnerActor extends GameActor {
                 }
                 break;
             case RUNNING:
-                drawDefaultAnimation(batch);
+                if(animationState.equals(AnimationState.ARMOUR_EQUIPPED)){
+                    region = armourRunAnimation.getKeyFrame(stateTime, true);
+                    drawAnimation(batch,
+                            region,
+                            Optional.of(jumpAtlasConfig.getImageOffset()),
+                            Optional.of(jumpAtlasConfig.getImageScale()));
+                } else {
+                    drawDefaultAnimation(batch);
+                }
                 break;
         }
 
@@ -145,16 +171,14 @@ public class RunnerActor extends GameActor {
         f.maskBits = Constants.RUNNER_RUNNING_MASK_INDEX;
         this.getBody().getFixtureList().get(0).setFilterData(f);
         this.getBody().setTransform(Box2dFactory.getInstance().getRunPosition(), 0f);
-        this.setActorState(ActorState.RUNNING);
-
     }
-
 
     private void scheduleDeath(final Body body) {
         if(!deathScheduled) {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+                    //TODO: make this generic, add a rotation and use it for enemy deaths on armour hit
                     final Filter f = new Filter();
                     f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
                     f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
@@ -231,9 +255,18 @@ public class RunnerActor extends GameActor {
 
     private void pickupArmour() {
         Events.get().post(new ArmourPickedUpEvent());
-        //TODO:
-        //make sure this runner stays where he is (set run position)
-        //use a timer to set the "animation state" to ARMOUR_EQUIPPED
+        this.setActorState(ActorState.UPGRADING_ARMOUR);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setAnimationState(AnimationState.ARMOUR_EQUIPPED);
+                unMaintainPosition();
+                clearTransform();
+                setActorState(ActorState.RUNNING);
+                resetPosition();
+                getBody().setLinearVelocity(0f, 0f);
+            }
+        }, 0.1f);
     }
 
     @Subscribe
@@ -257,10 +290,10 @@ public class RunnerActor extends GameActor {
 
     private void applyJump() {
         final Body body = getBody();
-        body.applyLinearImpulse(Box2dFactory.getInstance().getRunnerLinerImpulse(),
+        final Vector2 runnerLinerImpulse = Box2dFactory.getInstance().getRunnerLinerImpulse();
+        body.applyLinearImpulse(runnerLinerImpulse,
                 body.getWorldCenter(), true);
     }
-
 
     @Subscribe
     public void slide(SlideControlInvokedEvent slideControlInvokedEvent){
@@ -297,10 +330,26 @@ public class RunnerActor extends GameActor {
    }
 
     public void hit() {
-        final Body body = getBody();
-        setActorState(ActorState.HIT);
-        scheduleDeath(body);
-        Events.get().post(new RunnerHitEvent(this));
+        if(getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
+            //TODO:
+
+            //temporarily pause acting
+            Events.get().post(new TemporaryPauseEvent(runnerConfig.getHitPauseTime()));
+
+            //fling the enemy spinning off the screen
+
+            //un pause everything
+
+            //flash the armour on / off until off
+
+            setAnimationState(AnimationState.DEFAULT);
+
+        }else {
+            final Body body = getBody();
+            setActorState(ActorState.HIT);
+            scheduleDeath(body);
+            Events.get().post(new RunnerHitEvent(this));
+        }
     }
 
     public boolean canJump(){
@@ -323,4 +372,11 @@ public class RunnerActor extends GameActor {
             setActorState(ActorState.RUNNING);
     }
 
+    public void setAnimationState(AnimationState animationState) {
+        this.animationState = animationState;
+    }
+
+    public AnimationState getAnimationState() {
+        return animationState;
+    }
 }

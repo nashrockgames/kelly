@@ -5,11 +5,11 @@ package com.nrg.kelly.stages.actors;
  */
 public enum ActorState {
 
-    DYING,
     FALLING,
     RUNNING,
     HIT,
     SLIDING,
+    UPGRADING_ARMOUR,
     JUMPING
 
 }

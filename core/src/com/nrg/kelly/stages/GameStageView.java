@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
@@ -20,6 +21,7 @@ import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnTouchDownGestureEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
+import com.nrg.kelly.events.game.TemporaryPauseEvent;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
@@ -152,7 +154,6 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
-
         final GameState gameState = this.gameStateManager.getGameState();
         if(enemyCount % 2 == 0){
             //TODO spawn boss first, then after a number of bullets, spawn armour, then spawn gun with 1 bullet, if you miss, then spawn after boss bullets again
@@ -162,8 +163,19 @@ public class GameStageView extends Stage implements ContactListener {
                 spawnEnemy();
             }
         }
-
         enemyCount++;
+    }
+
+    @Subscribe
+    public void onTemporaryPause(final TemporaryPauseEvent temporaryPauseEvent){
+
+        gameStateManager.setGameState(GameState.TEMPORARILY_PAUSED);
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+                gameStateManager.setGameState(GameState.PLAYING);
+            }
+        }, temporaryPauseEvent.getPauseTime());
 
     }
 
@@ -256,8 +268,5 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {}
-
-
-
 
 }
