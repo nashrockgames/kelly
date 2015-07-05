@@ -10,10 +10,13 @@ import com.nrg.kelly.stages.actors.RunnerActor;
 
 public interface ActorFactory {
 
-    public Actor createEnemy(int level);
-    public Actor createBackground(int level);
-    public Actor createGround(int level);
-    public RunnerActor createRunner();
-    public ArmourActor createArmour();
+    Actor createEnemy(int level);
+    Actor createBackground(int level);
+    Actor createGround(int level);
+    RunnerActor createRunner();
+    ArmourActor createArmour();
+    Actor createBoss(int level);
+    void reset();
+
 
 }

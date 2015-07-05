@@ -9,11 +9,11 @@ import java.util.List;
  */
 public class LevelConfig {
 
-    private int enemyCount;
     private int enemySeed;
     private List<Enemy> enemies;
     private String background;
     private String ground;
+    private Enemy boss;
 
     public String getGround() {
         return ground;
@@ -21,14 +21,6 @@ public class LevelConfig {
 
     public void setGround(String ground) {
         this.ground = ground;
-    }
-
-    public int getEnemyCount() {
-        return enemyCount;
-    }
-
-    public void setEnemyCount(int enemyCount) {
-        this.enemyCount = enemyCount;
     }
 
     public int getEnemySeed() {
@@ -53,5 +45,13 @@ public class LevelConfig {
 
     public void setBackground(String background) {
         this.background = background;
+    }
+
+    public Enemy getBoss() {
+        return boss;
+    }
+
+    public void setBoss(Enemy boss) {
+        this.boss = boss;
     }
 }

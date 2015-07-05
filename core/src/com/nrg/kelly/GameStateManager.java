@@ -3,8 +3,12 @@ package com.nrg.kelly;
 
 public interface GameStateManager {
 
-    public GameState getGameState();
+    GameState getGameState();
 
-    public void setGameState(GameState gameState);
+    BossState getBossState();
+
+    void setGameState(GameState gameState);
+
+    void setBossState(BossState bossState);
 
 }

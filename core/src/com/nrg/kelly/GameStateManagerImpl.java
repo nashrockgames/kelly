@@ -13,6 +13,8 @@ public class GameStateManagerImpl implements GameStateManager{
 
     private GameState gameState;
 
+    private BossState bossState;
+
     @Inject
     public GameStateManagerImpl(){
         Events.get().register(this);
@@ -27,9 +29,21 @@ public class GameStateManagerImpl implements GameStateManager{
         return gameState;
     }
 
+    @Override
+    public BossState getBossState() {
+        return bossState;
+    }
+
+    @Override
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
 
+    @Override
+    public void setBossState(BossState bossState) {
+        this.bossState = bossState;
+    }
+
 
 }
+

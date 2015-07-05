@@ -1,53 +1,58 @@
 #actors
-clean resources/raw/actors/kelly/run
-split resources/raw/actors/kelly/sheets/run *.png 64 128 resources/raw/actors/kelly/run
-pack resources/raw/actors/kelly/run android/assets kelly_run
+clean resources/raw/actors/kelly/frames/run
+split resources/raw/actors/kelly/sheets/run *.png 64 128 resources/raw/actors/kelly/frames/run
+pack resources/raw/actors/kelly/frames/run android/assets kelly_run
 
-clean resources/raw/actors/kelly/armour-run
-split resources/raw/actors/kelly/sheets/armour-run *.png 64 128 resources/raw/actors/kelly/armour-run
-pack resources/raw/actors/kelly/armour-run android/assets kelly_armour_run
+clean resources/raw/actors/kelly/frames/armour-run
+split resources/raw/actors/kelly/sheets/armour-run *.png 64 128 resources/raw/actors/kelly/frames/armour-run
+pack resources/raw/actors/kelly/frames/armour-run android/assets kelly_armour_run
 
-clean resources/raw/actors/kelly/jump
-split resources/raw/actors/kelly/sheets/jump *.png 64 128 resources/raw/actors/kelly/jump
-pack resources/raw/actors/kelly/jump android/assets kelly_jump
+clean resources/raw/actors/kelly/frames/jump
+split resources/raw/actors/kelly/sheets/jump *.png 64 128 resources/raw/actors/kelly/frames/jump
+pack resources/raw/actors/kelly/frames/jump android/assets kelly_jump
 
-clean resources/raw/actors/kelly/armour-jump
-split resources/raw/actors/kelly/sheets/armour-jump *.png 64 128 resources/raw/actors/kelly/armour-jump
-pack resources/raw/actors/kelly/armour-jump android/assets kelly_armour_jump
+clean resources/raw/actors/kelly/frames/armour-jump
+split resources/raw/actors/kelly/sheets/armour-jump *.png 64 128 resources/raw/actors/kelly/frames/armour-jump
+pack resources/raw/actors/kelly/frames/armour-jump android/assets kelly_armour_jump
 
-clean resources/raw/actors/kelly/slide
-split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/kelly/slide
-pack resources/raw/actors/kelly/slide android/assets kelly_slide
+clean resources/raw/actors/kelly/frames/slide
+split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/kelly/frames/slide
+pack resources/raw/actors/kelly/frames/slide android/assets kelly_slide
 
-clean resources/raw/actors/kelly/armour-slide
-split resources/raw/actors/kelly/sheets/armour-slide *.png 128 64 resources/raw/actors/kelly/armour-slide
-pack resources/raw/actors/kelly/armour-slide android/assets kelly_armour_slide
+clean resources/raw/actors/kelly/frames/armour-slide
+split resources/raw/actors/kelly/sheets/armour-slide *.png 128 64 resources/raw/actors/kelly/frames/armour-slide
+pack resources/raw/actors/kelly/frames/armour-slide android/assets kelly_armour_slide
 
-clean resources/raw/actors/kelly/die
-split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/die
-pack resources/raw/actors/kelly/die android/assets kelly_die
+clean resources/raw/actors/kelly/frames/die
+split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/frames/die
+pack resources/raw/actors/kelly/frames/die android/assets kelly_die
 
-clean resources/raw/actors/enemies/magpie
-split resources/raw/actors/enemies/sheets/magpie *.png 128 64 resources/raw/actors/magpie
-pack resources/raw/actors/magpie android/assets magpie
+clean resources/raw/actors/enemies/frames/magpie
+split resources/raw/actors/enemies/sheets/magpie *.png 128 64 resources/raw/actors/enemies/frames/magpie
+pack resources/raw/actors/enemies/frames/magpie android/assets magpie
 
-clean resources/raw/actors/enemies/wombat
-split resources/raw/actors/enemies/sheets/wombat *.png 128 64 resources/raw/actors/wombat
-pack resources/raw/actors/wombat android/assets wombat
+clean resources/raw/actors/enemies/frames/wombat
+split resources/raw/actors/enemies/sheets/wombat *.png 128 64 resources/raw/actors/enemies/frames/wombat
+pack resources/raw/actors/enemies/frames/wombat android/assets wombat
 
-clean resources/raw/actors/enemies/kangaroo
-split resources/raw/actors/enemies/sheets/kangaroo *.png 128 128 resources/raw/actors/kangaroo
-pack resources/raw/actors/kangaroo android/assets kangaroo
+clean resources/raw/actors/enemies/frames/kangaroo
+split resources/raw/actors/enemies/sheets/kangaroo *.png 128 128 resources/raw/actors/enemies/frames/kangaroo
+pack resources/raw/actors/enemies/frames/kangaroo android/assets kangaroo
 
-clean resources/raw/actors/enemies/emu
-split resources/raw/actors/enemies/sheets/emu *.png 64 128 resources/raw/actors/emu
-pack resources/raw/actors/emu android/assets emu
+clean resources/raw/actors/enemies/frames/emu
+split resources/raw/actors/enemies/sheets/emu *.png 64 128 resources/raw/actors/enemies/frames/emu
+pack resources/raw/actors/enemies/frames/emu android/assets emu
 
+clean resources/raw/actors/enemies/frames/cart-boss
+split resources/raw/actors/enemies/sheets/cart-boss *.png 128 128 resources/raw/actors/enemies/frames/cart-boss
+pack resources/raw/actors/enemies/frames/cart-boss android/assets cart_boss
+
+#Buttons
 clean resources/raw/buttons/play
 split resources/raw/buttons/sheets/play *.png 128 128 resources/raw/buttons/play
 pack resources/raw/buttons/play android/assets play
 
 #Objects
-clean resources/raw/actors/objects/get-armour
-split resources/raw/actors/objects/sheets/get-armour *.png 64 128 resources/raw/actors/objects/get-armour
-pack resources/raw/actors/objects/get-armour android/assets get_armour
+clean resources/raw/actors/objects/frames/get-armour
+split resources/raw/actors/objects/sheets/get-armour *.png 64 128 resources/raw/actors/objects/frames/get-armour
+pack resources/raw/actors/objects/frames/get-armour android/assets get_armour

@@ -18,6 +18,7 @@ import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
+import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
@@ -44,6 +45,11 @@ public class ActorFactoryImpl implements ActorFactory{
         this.levelsConfig = levelsConfig;
     }
 
+    @Override
+    public void reset() {
+        initLevel(1);
+    }
+
     public void initLevel(int level){
 
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
@@ -67,16 +73,20 @@ public class ActorFactoryImpl implements ActorFactory{
         final EnemyActor enemyActor = new EnemyActor(enemy, cameraConfig);
         final List<AtlasConfig> animations = enemy.getAnimations();
         if(animations != null) {
-            final AtlasConfig defaultAtlasConfig = enemyActor
-                    .getAtlasConfigByName(animations, "default");
-            enemyActor.setDefaultAtlasConfig(defaultAtlasConfig);
-            final TextureAtlas defaultAtlas =
-                    new TextureAtlas(Gdx.files.internal(defaultAtlasConfig.getAtlas()));
-            enemyActor.setDefaultAnimation(new Animation(enemy.getFrameRate(),
-                    defaultAtlas.getRegions()));
+            setupDefaultAnimation(enemy, enemyActor, animations);
         }
         enemyActor.setLinearVelocity(new Vector2(enemy.getVelocityX(), 0f));
         return enemyActor;
+    }
+
+    private void setupDefaultAnimation(Enemy enemy, EnemyActor enemyActor, List<AtlasConfig> animations) {
+        final AtlasConfig defaultAtlasConfig = enemyActor
+                .getAtlasConfigByName(animations, "default");
+        enemyActor.setDefaultAtlasConfig(defaultAtlasConfig);
+        final TextureAtlas defaultAtlas =
+                new TextureAtlas(Gdx.files.internal(defaultAtlasConfig.getAtlas()));
+        enemyActor.setDefaultAnimation(new Animation(enemy.getFrameRate(),
+                defaultAtlas.getRegions()));
     }
 
     public Actor createBackground(int level){
@@ -116,5 +126,19 @@ public class ActorFactoryImpl implements ActorFactory{
         armourActor.setLinearVelocity(new Vector2(armourConfig.getVelocityX(), 0f));
         return armourActor;
     }
+
+    @Override
+    public Actor createBoss(int level) {
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
+        final Enemy boss = levelConfig.getBoss();
+        final BossActor enemyActor = new BossActor(boss, cameraConfig);
+        final List<AtlasConfig> animations = boss.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(boss, enemyActor, animations);
+        }
+        enemyActor.setLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
+        return enemyActor;
+    }
+
 
 }

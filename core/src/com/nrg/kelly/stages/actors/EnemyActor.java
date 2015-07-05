@@ -15,7 +15,7 @@ import com.nrg.kelly.physics.Box2dFactory;
 
 public class EnemyActor extends GameActor {
 
-    private Vector2 linearVelocity;
+    protected Vector2 linearVelocity;
 
     public boolean runnerHit = false;
 
