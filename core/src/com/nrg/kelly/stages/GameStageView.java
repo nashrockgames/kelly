@@ -7,33 +7,40 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.events.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnTouchDownGestureEvent;
+import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
-import com.nrg.kelly.events.game.TemporaryPauseEvent;
+import com.nrg.kelly.events.game.HitArmourEvent;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 import com.nrg.kelly.events.screen.JumpControlInvokedEvent;
 import com.nrg.kelly.inject.ActorFactory;
-import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
+import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.actors.ActorState;
+import com.nrg.kelly.stages.actors.AnimationState;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,10 +48,20 @@ public class GameStageView extends Stage implements ContactListener {
 
     public static final int VELOCITY_ITERATIONS = 6;
     public static final int POSITION_ITERATIONS = 2;
+    public static final float ENEMY_SPAWN_DELAY = 4.0f;
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
     private int level = 1;
-    private int enemyCount = 0;
+    private Optional<Timer.Task> enemySchedule = Optional.absent();
+    private Optional<RunnerActor> runner = Optional.absent();
+    private float enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
+    private float enemyReduceSpawnDelaySeconds = 5.0f;
+    private float enemyReduceSpawnDelayPercentage = 0.1f;
+    private final float bossSpawnDelay = 60f;
+
+
+    private Optional<Timer.Task> enemySpawnTimeReduceTask = Optional.absent();
+    private float gameTime = 0f;
 
     @Inject
     GameStateManager gameStateManager;
@@ -61,11 +78,29 @@ public class GameStageView extends Stage implements ContactListener {
     @Inject
     PlayButtonActor playButtonActor;
 
+    private Optional<Timer.Task> gameTimeTask = Optional.absent();
+
     @Inject
     public GameStageView() {
         Events.get().register(this);
         Box2dFactory.getWorld().setContactListener(this);
     }
+
+    @Subscribe
+    public void onReduceEnemySpawnDelay(EnemySpawnTimeReducedEvent enemySpawnTimeReducedEvent){
+
+        enemySpawnTimeReduceTask = Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                enemySpawnDelaySeconds = enemySpawnDelaySeconds -
+                        (enemySpawnDelaySeconds * enemyReduceSpawnDelayPercentage);
+                Events.get().post(new EnemySpawnTimeReducedEvent());
+            }
+        }, enemyReduceSpawnDelaySeconds));
+
+    }
+
+
 /*
     @Override
     public void draw(){
@@ -75,7 +110,6 @@ public class GameStageView extends Stage implements ContactListener {
 */
     @Subscribe
     public void onTouchGesture(OnTouchDownGestureEvent onTouchDownGestureEvent){
-
         final GameState gameState = gameStateManager.getGameState();
         switch(gameState){
             case PAUSED:
@@ -88,7 +122,6 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onFlingGesture(OnFlingGestureEvent onFlingGestureEvent){
-
         final GameState gameState = gameStateManager.getGameState();
         switch(gameState){
             case PLAYING:
@@ -99,7 +132,6 @@ public class GameStageView extends Stage implements ContactListener {
                     Events.get().post(new SlideControlInvokedEvent());
                 }
         }
-
     }
 
     @Override
@@ -140,7 +172,8 @@ public class GameStageView extends Stage implements ContactListener {
     @Override
     public void act(float delta) {
         final GameState gameState = this.gameStateManager.getGameState();
-        if(gameState.equals(GameState.PLAYING)) {
+        if(gameState.equals(GameState.PLAYING) ||
+                gameState.equals(GameState.HOLD_POSITION)) {
             super.act(delta);
             // Fixed timestep
             accumulator += delta;
@@ -152,30 +185,66 @@ public class GameStageView extends Stage implements ContactListener {
         }
     }
 
+    private boolean canSpawnEnemy(RunnerActor runnerActor){
+
+        final ActorState actorState = runnerActor.getActorState();
+        return !actorState.equals(ActorState.HIT) &&
+                !actorState.equals(ActorState.FALLING);
+
+    }
+
     @Subscribe
-    public void onEnemyDestroyed(OnEnemyDestroyedEvent onEnemyDestroyedEvent){
+    public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){
+
+        if(this.gameTime > 0f && this.gameTime % bossSpawnDelay == 0){
+            //TODO spawn boss first, then after a number of bullets, spawn armour, then spawn gun with 1 bullet, if you miss, then spawn after boss bullets again
+            if(runner.isPresent()) {
+                if(!runner.get().getActorState().equals(ActorState.UPGRADING_ARMOUR)) {
+                    if(!runner.get().getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)) {
+                        this.spawnArmour();
+                    }
+                }
+            }
+        } else {
+           this.enemySchedule = Optional.of(Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
+                        for (final RunnerActor runnerActor : runner.asSet()) {
+                            if (canSpawnEnemy(runnerActor)) {
+                                spawnEnemy();
+                            }
+                        }
+                    }
+                }
+            }, enemySpawnDelaySeconds));
+
+        }
+
+        /*
         final GameState gameState = this.gameStateManager.getGameState();
         if(enemyCount % 2 == 0){
-            //TODO spawn boss first, then after a number of bullets, spawn armour, then spawn gun with 1 bullet, if you miss, then spawn after boss bullets again
+
             spawnArmour();
         } else {
             if(gameState.equals(GameState.PLAYING)) {
                 spawnEnemy();
             }
         }
-        enemyCount++;
+        */
+
     }
 
     @Subscribe
-    public void onTemporaryPause(final TemporaryPauseEvent temporaryPauseEvent){
+    public void onArmourHitEvent(final HitArmourEvent hitArmourEvent){
 
-        gameStateManager.setGameState(GameState.TEMPORARILY_PAUSED);
-        Timer.schedule(new Timer.Task(){
+        gameStateManager.setGameState(GameState.HOLD_POSITION);
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 gameStateManager.setGameState(GameState.PLAYING);
             }
-        }, temporaryPauseEvent.getPauseTime());
+        }, 0.25f);
 
     }
 
@@ -184,53 +253,95 @@ public class GameStageView extends Stage implements ContactListener {
     }
 
     private void spawnEnemy(){
-        if(actorFactory.hasNextEnemy(level, enemyCount)) {
-            this.addActor(actorFactory.createEnemy(level, enemyCount));
-        }
+            this.addActor(actorFactory.createEnemy(level));
+            Events.get().post(new OnEnemySpawnedEvent());
     }
 
     @Subscribe
     public void onGameOver(GameOverEvent gameOverEvent){
-        //remove any left over enemies
-        final RunnerActor runnerActor = gameOverEvent.getRunnerActor();
-        final Body runnerBody = runnerActor.getBody();
-        runnerBody.setUserData(null);
-        final Array<JointEdge> jointList = runnerBody.getJointList();
-        for(JointEdge jointEdge : jointList){
-            Box2dFactory.getWorld().destroyJoint(jointEdge.joint);
+
+        Gdx.app.log(this.getClass().getName(), "Total game time = " + this.gameTime + " seconds");
+
+        if(this.enemySchedule.isPresent()){
+            this.enemySchedule.get().cancel();
         }
-        Box2dFactory.destroyBody(runnerBody);
-        runnerActor.remove();
+        if(this.enemySpawnTimeReduceTask.isPresent()){
+            enemySpawnTimeReduceTask.get().cancel();
+        }
+        if(gameTimeTask.isPresent()){
+            gameTimeTask.get().cancel();
+        }
+
+        for(RunnerActor runnerActor : runner.asSet()) {
+            destroyActor(runnerActor);
+        }
+        //remove any left over enemies by index
+        final List<EnemyActor> enemyActorList = this.getEnemyActors();
+        for(int index = 0; index < enemyActorList.size(); index++){
+            final EnemyActor enemyActor = enemyActorList.get(index);
+            destroyActor(enemyActor);
+
+        }
+        this.addActor(playButtonActor);
+        this.gameStateManager.setGameState(GameState.PAUSED);
+    }
+
+    private List<EnemyActor> getEnemyActors(){
+        final List<EnemyActor> enemyActors = new ArrayList<EnemyActor>();
         for(Actor actor : this.getActors()){
             if(actor instanceof EnemyActor){
-                final Body body = ((EnemyActor) actor).getBody();
-                body.setUserData(null);
-                Box2dFactory.getWorld().destroyBody(body);
-                actor.remove();
+                enemyActors.add((EnemyActor)actor);
             }
         }
+        return enemyActors;
+    }
+
+    private void destroyActor(GameActor gameActor){
+
+        final Body body = gameActor.getBody();
+        body.setUserData(null);
+        Box2dFactory.destroyBody(body);
+        gameActor.remove();
+
+    }
+
+    @Subscribe
+    public void postBuildGame(PostBuildGameModuleEvent postBuildGameModuleEvent) {
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
     }
 
     @Subscribe
-    public void postBuildGame(PostBuildGameModuleEvent postBuildGameModuleEvent){
-        this.addActor(playButtonActor);
-        this.gameStateManager.setGameState(GameState.PAUSED);
-    }
-
-    @Subscribe
-    public void addActors(PlayButtonClickedEvent playButtonClickedEvent){
-        final RunnerActor runner = actorFactory.createRunner();
-        this.addActor(runner);
+    public void onPlayButtonClicked(PlayButtonClickedEvent playButtonClickedEvent){
+        runner = Optional.of(actorFactory.createRunner());
+        for(RunnerActor runnerActor : runner.asSet()) {
+            this.addActor(runnerActor);
+        }
+        this.enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
+        this.gameTime = 0f;
+        onPlayTimeUpdated(new OnPlayTimeUpdatedEvent());
+        onReduceEnemySpawnDelay(new EnemySpawnTimeReducedEvent());
         spawnEnemy();
+    }
+
+    @Subscribe
+    public void onPlayTimeUpdated(OnPlayTimeUpdatedEvent onPlayTimeUpdatedEvent) {
+
+        gameTimeTask = Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                gameTime += 1f;
+                Events.get().post(new OnPlayTimeUpdatedEvent());
+            }
+        }, 1.0f));
+
+
     }
 
     public void show() {
         this.box2dGameStageView.setupCamera();
         this.box2dGameStageView.setupTouchPoints(this.playButtonActor);
         addBackgroundActors();
-
         this.addActor(playButtonActor);
         final Application.ApplicationType type = Gdx.app.getType();
         if(type.equals(Application.ApplicationType.Desktop)) {

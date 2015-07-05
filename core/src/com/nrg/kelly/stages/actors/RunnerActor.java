@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
@@ -21,7 +23,7 @@ import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
-import com.nrg.kelly.events.game.TemporaryPauseEvent;
+import com.nrg.kelly.events.game.HitArmourEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
@@ -167,10 +169,16 @@ public class RunnerActor extends GameActor {
         //
         final Filter f = new Filter();
         f.categoryBits = Constants.RUNNER_RUNNING_CATEGORY;
-        f.groupIndex = Constants.RUNNER_RUNNING_CATEGORY;
+        f.groupIndex = Constants.RUNNER_RUNNING_GROUP_INDEX;
         f.maskBits = Constants.RUNNER_RUNNING_MASK_INDEX;
-        this.getBody().getFixtureList().get(0).setFilterData(f);
-        this.getBody().setTransform(Box2dFactory.getInstance().getRunPosition(), 0f);
+        final Body body = this.getBody();
+        if(body!=null) {
+            final Array<Fixture> fixtureList = body.getFixtureList();
+            if(fixtureList != null && fixtureList.size > 0) {
+                fixtureList.get(0).setFilterData(f);
+            }
+            body.setTransform(Box2dFactory.getInstance().getRunPosition(), 0f);
+        }
     }
 
     private void scheduleDeath(final Body body) {
@@ -237,7 +245,7 @@ public class RunnerActor extends GameActor {
         for(RunnerActor runnerActor : runnerActorOptional.asSet()){
             for(EnemyActor enemyActor : enemyActorOptional.asSet()){
                 if(!this.getActorState().equals(ActorState.HIT)){
-                    this.hit();
+                    this.hit(enemyActor);
                 }
             }
             for(ArmourActor enemyActor : armourActorOptional.asSet()){
@@ -310,12 +318,12 @@ public class RunnerActor extends GameActor {
     }
 
     private void scheduleStopSliding() {
-        Timer.schedule(new Timer.Task(){
+        Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-               if(getActorState().equals(ActorState.SLIDING)){
+                if (getActorState().equals(ActorState.SLIDING)) {
                     stopSliding();
-               }
+                }
             }
         }, this.runnerConfig.getSlideTime());
     }
@@ -329,14 +337,16 @@ public class RunnerActor extends GameActor {
         }
    }
 
-    public void hit() {
+    public void hit(final EnemyActor enemyActor) {
         if(getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
             //TODO:
 
-            //temporarily pause acting
-            Events.get().post(new TemporaryPauseEvent(runnerConfig.getHitPauseTime()));
+            //temporarily keep all
+            Events.get().post(new HitArmourEvent(enemyActor));
 
+            enemyActor.setActorState(ActorState.HIT_BY_ARMOUR);
             //fling the enemy spinning off the screen
+
 
             //un pause everything
 
@@ -344,7 +354,7 @@ public class RunnerActor extends GameActor {
 
             setAnimationState(AnimationState.DEFAULT);
 
-        }else {
+        }else{
             final Body body = getBody();
             setActorState(ActorState.HIT);
             scheduleDeath(body);

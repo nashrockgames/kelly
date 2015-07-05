@@ -11,7 +11,6 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.Runner;
-import com.nrg.kelly.config.factories.EnemyIndexConsumer;
 import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
@@ -22,12 +21,8 @@ import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,38 +30,39 @@ import javax.inject.Singleton;
 @Singleton
 public class ActorFactoryImpl implements ActorFactory{
 
-
-    final static Map<Integer,List<Integer>> linkedListMap =
-            Collections.synchronizedMap(new HashMap<Integer, List<Integer>>());
-
-
-    private LevelsConfig config;
+    private LevelsConfig levelsConfig;
 
     private CameraConfig cameraConfig;
 
+    private int enemySeed = 0;
+
+    private Random random;
+
     @Inject
     public ActorFactoryImpl(LevelsConfig levelsConfig, CameraConfig cameraConfig){
-
         this.cameraConfig = cameraConfig;
-        config = levelsConfig;
-        this.createEnemyIndices();
+        this.levelsConfig = levelsConfig;
+    }
+
+    public void initLevel(int level){
+
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
+        this.enemySeed = levelConfig.getEnemySeed();
+        random = new Random(enemySeed);
 
     }
 
-    private void createEnemyIndices() {
-        final LinkedList<LevelConfig> levels = config.getLevels();
-        final EnemyIndexConsumer levelConfigEnemyIndexConsumer =
-                new EnemyIndexConsumer(linkedListMap);
-        for(LevelConfig levelConfig : levels) {
-            levelConfigEnemyIndexConsumer.accept(levelConfig);
+    public Actor createEnemy(int level) {
+
+        if(random==null){
+            initLevel(level);
         }
-    }
 
-    public Actor createEnemy(int level, int enemyCount) {
-
-        final int enemyIndex =  linkedListMap.get(level).get(enemyCount);
-        final LevelConfig levelConfig = config.getLevels().get(level - 1);
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final List<Enemy> enemies = levelConfig.getEnemies();
+        final int size = enemies.size();
+        final int max = size - 1;
+        final int enemyIndex = random.nextInt((max - 1) + 1) + 1;
         final Enemy enemy = enemies.get(enemyIndex);
         final EnemyActor enemyActor = new EnemyActor(enemy, cameraConfig);
         final List<AtlasConfig> animations = enemy.getAnimations();
@@ -83,19 +79,14 @@ public class ActorFactoryImpl implements ActorFactory{
         return enemyActor;
     }
 
-    public boolean hasNextEnemy(int level, int enemy) {
-        return linkedListMap.keySet().contains(level) &&
-                linkedListMap.get(level).size() > enemy;
-    }
-
     public Actor createBackground(int level){
-        final LevelConfig levelConfig = config.getLevels().get(level - 1);
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         return new BackgroundActor(levelConfig.getBackground(), cameraConfig);
     }
 
     public Actor createGround(int level){
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
-        final LevelConfig levelConfig = config.getLevels().get(level - 1);
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final String ground = levelConfig.getGround();
         return new GroundActor(gameConfig.getActors().getGround(), ground, cameraConfig);
     }

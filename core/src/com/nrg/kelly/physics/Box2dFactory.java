@@ -4,8 +4,10 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
@@ -16,10 +18,6 @@ import com.nrg.kelly.config.actors.Ground;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.config.actors.WorldGravity;
 import com.nrg.kelly.config.actors.Enemy;
-import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.game.OnEnemyDestroyedEvent;
-
-import java.util.List;
 
 public class Box2dFactory {
 
@@ -131,8 +129,11 @@ public class Box2dFactory {
     }
 
     public static void destroyBody(Body body) {
+        final Array<JointEdge> jointList = body.getJointList();
+        for(JointEdge jointEdge : jointList){
+            getWorld().destroyJoint(jointEdge.joint);
+        }
         getWorld().destroyBody(body);
-        Events.get().post(new OnEnemyDestroyedEvent());
     }
 
     public Body createArmour(ArmourConfig armour) {
