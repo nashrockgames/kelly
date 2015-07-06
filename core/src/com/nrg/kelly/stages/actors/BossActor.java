@@ -7,6 +7,8 @@ import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.events.BossFiredEvent;
+import com.nrg.kelly.events.Events;
 
 import java.util.Set;
 
@@ -15,9 +17,16 @@ public class BossActor extends EnemyActor{
 
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireSchedule = Optional.absent();
+    public static final float FIRE_DELAY_SECONDS = 1.2f;
+
+    private int bulletsFired = 0;
 
     public BossActor(Enemy enemy, CameraConfig cameraConfig) {
         super(enemy, cameraConfig);
+    }
+
+    public Optional<Timer.Task> getFireSchedule() {
+        return fireSchedule;
     }
 
     @Override
@@ -26,16 +35,19 @@ public class BossActor extends EnemyActor{
         final Body body = this.getBody();
         for (ActorConfig actorConfig : this.getConfig().asSet()) {
             final float pos = this.getTextureBounds().getX() + this.getTextureBounds().getWidth();
-            if(pos < Gdx.graphics.getWidth()){
-                body.setLinearVelocity(0f, 0f);
-                this.isInFiringPosition = true;
-            } else {
-                body.setLinearVelocity(linearVelocity);
-            }
+            updatePosition(body, pos);
             if(canFireBullet()){
                 fireBullet();
             }
+        }
+    }
 
+    private void updatePosition(Body body, float pos) {
+        if(pos < Gdx.graphics.getWidth()){
+            body.setLinearVelocity(0f, 0f);
+            this.isInFiringPosition = true;
+        } else {
+            body.setLinearVelocity(linearVelocity);
         }
     }
 
@@ -50,15 +62,17 @@ public class BossActor extends EnemyActor{
     }
 
     private void fireBullet() {
-
+        final BossActor instance = this;
         fireSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Gdx.app.log(this.getClass().getName(), "Fired bullet.");
+                Events.get().post(new BossFiredEvent(instance));
             }
-        }, 1.2f));
-
+        }, FIRE_DELAY_SECONDS));
+        this.bulletsFired+=1;
     }
 
-
+    public int getBulletsFired() {
+        return bulletsFired;
+    }
 }

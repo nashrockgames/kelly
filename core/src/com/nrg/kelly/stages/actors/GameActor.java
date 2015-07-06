@@ -25,9 +25,9 @@ public abstract class GameActor extends Actor {
     private Animation defaultAnimation;
     private AtlasConfig defaultAtlasConfig;
     private ActorState actorState = ActorState.RUNNING;
-    private Vector2 transform;
-    private float transformAngle = 0;
-    private Optional<Vector2> hitVector = Optional.absent();
+    private Optional<Vector2> forcedTransform = Optional.absent();
+    private float forcedTransformAngle = 0f;
+    private Optional<Vector2> forcedPositionVector = Optional.absent();
     private CameraConfig cameraConfig;
 
     public CameraConfig getCameraConfig() {
@@ -38,28 +38,28 @@ public abstract class GameActor extends Actor {
         this.cameraConfig = cameraConfig;
     }
 
-    public Optional<Vector2> getHitVector() {
-        return hitVector;
+    public Optional<Vector2> getForcedPositionVector() {
+        return forcedPositionVector;
     }
 
-    public void setMaintainPositionVector(Optional<Vector2> hitVector) {
-        this.hitVector = hitVector;
+    public void setForcedPositionVector(Optional<Vector2> hitVector) {
+        this.forcedPositionVector = hitVector;
     }
 
-    protected void setTransform(Vector2 transform) {
-        this.transform = transform;
+    protected void setForcedTransform(Optional<Vector2> forcedTransform) {
+        this.forcedTransform = forcedTransform;
     }
 
-    public float getTransformAngle() {
-        return transformAngle;
+    public float getForcedTransformAngle() {
+        return forcedTransformAngle;
     }
 
-    public void setTransformAngle(float transformAngle) {
-        this.transformAngle = transformAngle;
+    public void setForcedTransformAngle(float forcedTransformAngle) {
+        this.forcedTransformAngle = forcedTransformAngle;
     }
 
-    private Optional<Vector2> getTransform() {
-        return Optional.fromNullable(transform);
+    private Optional<Vector2> getForcedTransform() {
+        return forcedTransform;
     }
 
     public ActorState getActorState() {
@@ -104,18 +104,18 @@ public abstract class GameActor extends Actor {
 
     protected void unMaintainPosition(){
         final Optional<Vector2> absent = Optional.absent();
-        this.setMaintainPositionVector(absent);
+        this.setForcedPositionVector(absent);
     }
 
     protected void maintainPosition() {
-        final Optional<Vector2> currentPositionVector = getHitVector();
+        final Optional<Vector2> currentPositionVector = getForcedPositionVector();
         if (currentPositionVector.isPresent()) {
-            this.setTransformAngle(0f);
-            this.setTransform(currentPositionVector.get());
+            this.setForcedTransformAngle(0f);
+            this.setForcedTransform(currentPositionVector);
         } else {
             float currentX = this.getBody().getPosition().x;
             float currentY = this.getBody().getPosition().y;
-            setMaintainPositionVector(Optional.fromNullable(new Vector2(currentX, currentY)));
+            setForcedPositionVector(Optional.fromNullable(new Vector2(currentX, currentY)));
         }
     }
 
@@ -148,9 +148,9 @@ public abstract class GameActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (getTransform().isPresent()) {
-            final Vector2 position = getTransform().get();
-            this.getBody().setTransform(position, this.getTransformAngle());
+        if (getForcedTransform().isPresent()) {
+            final Vector2 position = getForcedTransform().get();
+            this.getBody().setTransform(position, this.getForcedTransformAngle());
         }
         maybeUpdateTextureBounds();
     }

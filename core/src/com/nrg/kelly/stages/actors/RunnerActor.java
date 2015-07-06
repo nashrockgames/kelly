@@ -206,7 +206,8 @@ public class RunnerActor extends GameActor {
     }
 
     private void clearTransform() {
-        this.setTransform(null);
+        final Optional<Vector2> noTransform = Optional.absent();
+        this.setForcedTransform(noTransform);
     }
 
     private void drawSlideAnimation(Batch batch, TextureRegion textureRegion) {

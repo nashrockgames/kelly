@@ -16,6 +16,7 @@ public interface ActorFactory {
     RunnerActor createRunner();
     ArmourActor createArmour();
     Actor createBoss(int level);
+    Actor createBossBullet(int level);
     void reset();
 
 

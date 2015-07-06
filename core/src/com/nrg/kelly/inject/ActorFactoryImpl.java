@@ -70,12 +70,7 @@ public class ActorFactoryImpl implements ActorFactory{
         final int max = size - 1;
         final int enemyIndex = random.nextInt((max - 1) + 1) + 1;
         final Enemy enemy = enemies.get(enemyIndex);
-        final EnemyActor enemyActor = new EnemyActor(enemy, cameraConfig);
-        final List<AtlasConfig> animations = enemy.getAnimations();
-        if(animations != null) {
-            setupDefaultAnimation(enemy, enemyActor, animations);
-        }
-        enemyActor.setLinearVelocity(new Vector2(enemy.getVelocityX(), 0f));
+        final EnemyActor enemyActor = createEnemyActor(enemy);
         return enemyActor;
     }
 
@@ -140,5 +135,22 @@ public class ActorFactoryImpl implements ActorFactory{
         return enemyActor;
     }
 
+    @Override
+    public Actor createBossBullet(int level) {
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
+        final Enemy bossBullet = levelConfig.getBossBullet();
+        final EnemyActor enemyActor = createEnemyActor(bossBullet);
+        return enemyActor;
+    }
+
+    private EnemyActor createEnemyActor(final Enemy enemyConfig) {
+        final EnemyActor enemyActor = new EnemyActor(enemyConfig, cameraConfig);
+        final List<AtlasConfig> animations = enemyConfig.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(enemyConfig, enemyActor, animations);
+        }
+        enemyActor.setLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        return enemyActor;
+    }
 
 }

@@ -14,6 +14,15 @@ public class LevelConfig {
     private String background;
     private String ground;
     private Enemy boss;
+    private Enemy bossBullet;
+
+    public Enemy getBossBullet() {
+        return bossBullet;
+    }
+
+    public void setBossBullet(Enemy bossBullet) {
+        this.bossBullet = bossBullet;
+    }
 
     public String getGround() {
         return ground;

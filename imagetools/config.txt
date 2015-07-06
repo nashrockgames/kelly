@@ -56,3 +56,7 @@ pack resources/raw/buttons/play android/assets play
 clean resources/raw/actors/objects/frames/get-armour
 split resources/raw/actors/objects/sheets/get-armour *.png 64 128 resources/raw/actors/objects/frames/get-armour
 pack resources/raw/actors/objects/frames/get-armour android/assets get_armour
+
+clean resources/raw/actors/objects/frames/cart-boss-bullet
+split resources/raw/actors/objects/sheets/cart-boss-bullet *.png 16 16 resources/raw/actors/objects/frames/cart-boss-bullet
+pack resources/raw/actors/objects/frames/cart-boss-bullet android/assets cart_boss_bullet

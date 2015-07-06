@@ -16,6 +16,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.events.BossFiredEvent;
 import com.nrg.kelly.events.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
@@ -34,6 +35,8 @@ import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.ActorState;
+import com.nrg.kelly.stages.actors.AnimationState;
+import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
@@ -52,15 +55,15 @@ public class GameStageView extends Stage implements ContactListener {
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
     private int level = 1;
-    private Optional<Timer.Task> enemySchedule = Optional.absent();
     private Optional<RunnerActor> runner = Optional.absent();
     private float enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
     private float enemyReduceSpawnDelaySeconds = 5.0f;
     private float enemyReduceSpawnDelayPercentage = 0.1f;
     private final float bossSpawnDelay = 10f;
-
-
     private Optional<Timer.Task> enemySpawnTimeReduceTask = Optional.absent();
+    private Optional<Timer.Task> gameTimeTask = Optional.absent();
+    private Optional<Timer.Task> bossFireSchedule = Optional.absent();
+    private Optional<Timer.Task> enemySchedule = Optional.absent();
     private float gameTime = 0f;
 
     @Inject
@@ -78,8 +81,6 @@ public class GameStageView extends Stage implements ContactListener {
     @Inject
     PlayButtonActor playButtonActor;
 
-    private Optional<Timer.Task> gameTimeTask = Optional.absent();
-
     @Inject
     public GameStageView() {
         Events.get().register(this);
@@ -88,7 +89,6 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onReduceEnemySpawnDelay(EnemySpawnTimeReducedEvent enemySpawnTimeReducedEvent){
-
         enemySpawnTimeReduceTask = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -97,9 +97,7 @@ public class GameStageView extends Stage implements ContactListener {
                 Events.get().post(new EnemySpawnTimeReducedEvent());
             }
         }, enemyReduceSpawnDelaySeconds));
-
     }
-
 
 /*
     @Override
@@ -136,7 +134,6 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
-
         final Vector3 touchPoint = box2dGameStageView.getTouchPoint();
         box2dGameStageView.translateScreenToWorldCoordinates(touchPoint.set(x, y, 0));
         final GameState gameState = gameStateManager.getGameState();
@@ -185,62 +182,79 @@ public class GameStageView extends Stage implements ContactListener {
     }
 
     private boolean canSpawnEnemy(RunnerActor runnerActor){
-
         final ActorState actorState = runnerActor.getActorState();
         final BossState bossState = gameStateManager.getBossState();
         return !bossState.equals(BossState.SPAWNING) &&
                 !actorState.equals(ActorState.HIT) &&
                 !actorState.equals(ActorState.FALLING);
+    }
 
+    private boolean canSpawnBoss(){
+        final BossState bossState = gameStateManager.getBossState();
+        final GameState gameState = gameStateManager.getGameState();
+        return bossState.equals(BossState.NONE) &&
+               gameState.equals(GameState.PLAYING);
+    }
+
+    private boolean canSpawnArmour(RunnerActor runnerActor){
+        final ActorState actorState = runnerActor.getActorState();
+        final BossState bossState = gameStateManager.getBossState();
+        final AnimationState animationState = runnerActor.getAnimationState();
+
+        return !bossState.equals(BossState.SPAWNING) &&
+                !actorState.equals(ActorState.HIT) &&
+                !animationState.equals(AnimationState.ARMOUR_EQUIPPED) &&
+                !actorState.equals(ActorState.FALLING);
+    }
+
+
+    @Subscribe
+    public void onBossFiredEvent(BossFiredEvent bossFiredEvent){
+
+        final Actor bossBullet = this.actorFactory.createBossBullet(this.level);
+        final BossActor bossActor = bossFiredEvent.getBossActor();
+        bossFireSchedule = bossActor.getFireSchedule();
+        this.gameStateManager.setBossState(BossState.FIRING);
+        this.addActor(bossBullet);
+        for(RunnerActor runnerActor : runner.asSet()) {
+            final int bulletsFired = bossActor.getBulletsFired();
+            if (bulletsFired > 0 && bulletsFired % 5 == 0) {
+                if (canSpawnArmour(runnerActor)) {
+                    this.spawnArmour();
+                }
+            }
+        }
     }
 
     @Subscribe
     public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){
 
         if(this.gameTime > 0f && this.gameTime % bossSpawnDelay == 0){
-            /*TODO spawn boss first,
-            // then after a number of bullets fired by boss,
-            // spawn armour, then spawn gun with 1 bullet,
-            // if you miss, then spawn gun after boss shoots a few bullets again
-            */
-
-            spawnBoss();
-            /*
-            if(runner.isPresent()) {
-                if(!runner.get().getActorState().equals(ActorState.UPGRADING_ARMOUR)) {
-                    if(!runner.get().getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)) {
-                        this.spawnArmour();
-                    }
-                }
-            }*/
+            if(canSpawnBoss()) {
+                spawnBoss();
+            }
         } else {
-           this.enemySchedule = Optional.of(Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
-                        for (final RunnerActor runnerActor : runner.asSet()) {
-                            if (canSpawnEnemy(runnerActor)) {
-                                spawnEnemy();
-                            }
+           final BossState bossState = this.gameStateManager.getBossState();
+            if(bossState.equals(BossState.NONE)) {
+                scheduleSpawnEnemy();
+            }
+        }
+
+    }
+
+    private void scheduleSpawnEnemy() {
+        this.enemySchedule = Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
+                    for (final RunnerActor runnerActor : runner.asSet()) {
+                        if (canSpawnEnemy(runnerActor)) {
+                            spawnEnemy();
                         }
                     }
                 }
-            }, enemySpawnDelaySeconds));
-
-        }
-
-        /*
-        final GameState gameState = this.gameStateManager.getGameState();
-        if(enemyCount % 2 == 0){
-
-            spawnArmour();
-        } else {
-            if(gameState.equals(GameState.PLAYING)) {
-                spawnEnemy();
             }
-        }
-        */
-
+        }, enemySpawnDelaySeconds));
     }
 
     @Subscribe
@@ -266,6 +280,7 @@ public class GameStageView extends Stage implements ContactListener {
     }
 
     private void spawnBoss(){
+
         this.addActor(actorFactory.createBoss(level));
         gameStateManager.setBossState(BossState.SPAWNING);
         //Events.get().post(new OnEnemySpawnedEvent());
@@ -276,15 +291,7 @@ public class GameStageView extends Stage implements ContactListener {
 
         Gdx.app.log(this.getClass().getName(), "Total game time = " + this.gameTime + " seconds");
 
-        if(this.enemySchedule.isPresent()){
-            this.enemySchedule.get().cancel();
-        }
-        if(this.enemySpawnTimeReduceTask.isPresent()){
-            enemySpawnTimeReduceTask.get().cancel();
-        }
-        if(gameTimeTask.isPresent()){
-            gameTimeTask.get().cancel();
-        }
+        cancelSchedules();
 
         for(RunnerActor runnerActor : runner.asSet()) {
             destroyActor(runnerActor);
@@ -298,6 +305,21 @@ public class GameStageView extends Stage implements ContactListener {
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();
+    }
+
+    private void cancelSchedules() {
+        if(this.enemySchedule.isPresent()){
+            this.enemySchedule.get().cancel();
+        }
+        if(this.enemySpawnTimeReduceTask.isPresent()){
+            enemySpawnTimeReduceTask.get().cancel();
+        }
+        if(gameTimeTask.isPresent()){
+            gameTimeTask.get().cancel();
+        }
+        if(bossFireSchedule.isPresent()){
+            bossFireSchedule.get().cancel();
+        }
     }
 
     private List<EnemyActor> getEnemyActors(){
