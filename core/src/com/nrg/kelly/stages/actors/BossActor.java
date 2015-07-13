@@ -10,8 +10,6 @@ import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.events.BossFiredEvent;
 import com.nrg.kelly.events.Events;
 
-import java.util.Set;
-
 
 public class BossActor extends EnemyActor{
 
@@ -44,10 +42,11 @@ public class BossActor extends EnemyActor{
 
     private void updatePosition(Body body, float pos) {
         if(pos < Gdx.graphics.getWidth()){
+            this.maintainPosition();
             body.setLinearVelocity(0f, 0f);
             this.isInFiringPosition = true;
         } else {
-            body.setLinearVelocity(linearVelocity);
+            body.setLinearVelocity(configuredLinearVelocity);
         }
     }
 

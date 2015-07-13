@@ -20,6 +20,7 @@ import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.EnemyBullet;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 import java.util.List;
@@ -131,16 +132,15 @@ public class ActorFactoryImpl implements ActorFactory{
         if(animations != null) {
             setupDefaultAnimation(boss, enemyActor, animations);
         }
-        enemyActor.setLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
+        enemyActor.setConfiguredLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
         return enemyActor;
     }
 
     @Override
-    public Actor createBossBullet(int level) {
+    public EnemyBullet createBossBullet(int level) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final Enemy bossBullet = levelConfig.getBossBullet();
-        final EnemyActor enemyActor = createEnemyActor(bossBullet);
-        return enemyActor;
+        return createEnemyBullet(bossBullet);
     }
 
     private EnemyActor createEnemyActor(final Enemy enemyConfig) {
@@ -149,8 +149,19 @@ public class ActorFactoryImpl implements ActorFactory{
         if(animations != null) {
             setupDefaultAnimation(enemyConfig, enemyActor, animations);
         }
-        enemyActor.setLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        enemyActor.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
         return enemyActor;
     }
+
+    private EnemyBullet createEnemyBullet(final Enemy enemyConfig) {
+        final EnemyBullet enemyBullet = new EnemyBullet(enemyConfig, cameraConfig);
+        final List<AtlasConfig> animations = enemyConfig.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(enemyConfig, enemyBullet, animations);
+        }
+        enemyBullet.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        return enemyBullet;
+    }
+
 
 }

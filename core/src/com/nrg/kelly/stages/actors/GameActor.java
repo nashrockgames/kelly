@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
@@ -15,6 +16,7 @@ import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.config.actors.ImageScale;
 
+import java.awt.Image;
 import java.util.List;
 
 public abstract class GameActor extends Actor {
@@ -29,6 +31,10 @@ public abstract class GameActor extends Actor {
     private float forcedTransformAngle = 0f;
     private Optional<Vector2> forcedPositionVector = Optional.absent();
     private CameraConfig cameraConfig;
+    private Optional<Float> textureRotation = Optional.absent();
+    private Float currentTextureRotation = 0f;
+    private Float currentBodyRotation = 0f;
+
 
     public CameraConfig getCameraConfig() {
         return cameraConfig;
@@ -42,8 +48,8 @@ public abstract class GameActor extends Actor {
         return forcedPositionVector;
     }
 
-    public void setForcedPositionVector(Optional<Vector2> hitVector) {
-        this.forcedPositionVector = hitVector;
+    public void setForcedPositionVector(Optional<Vector2> forcedPositionVector) {
+        this.forcedPositionVector = forcedPositionVector;
     }
 
     protected void setForcedTransform(Optional<Vector2> forcedTransform) {
@@ -81,11 +87,11 @@ public abstract class GameActor extends Actor {
             final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
             final ImageOffset imageOffset = defaultAtlasConfig.getImageOffset();
             final ImageScale imageScale = defaultAtlasConfig.getImageScale();
-            batch.draw(region,
-                    (Gdx.graphics.getWidth() / 2 + imageOffset.getX()) - (region.getRegionWidth() / 2),
-                    (Gdx.graphics.getHeight() / 2 + imageOffset.getY()) - (region.getRegionHeight() / 2),
-                    region.getRegionWidth() * imageScale.getX(),
-                    region.getRegionHeight() * imageScale.getY());
+            final float x = (Gdx.graphics.getWidth() / 2 + imageOffset.getX()) - (region.getRegionWidth() / 2);
+            final float y = (Gdx.graphics.getHeight() / 2 + imageOffset.getY()) - (region.getRegionHeight() / 2);
+            final float width = region.getRegionWidth() * imageScale.getX();
+            final float height = region.getRegionHeight() * imageScale.getY();
+            batch.draw(region, x, y, width, height);
         }
     }
 
@@ -119,6 +125,23 @@ public abstract class GameActor extends Actor {
         }
     }
 
+    protected void applyCollisionImpulse(Vector2 linearVelocity,
+                                         Vector2 linearImpulse,
+                                         Filter f, Body body,
+                                         Optional<Float> rotation) {
+        body.getFixtureList().get(0).setFilterData(f);
+        body.setLinearVelocity(linearVelocity);
+        body.applyLinearImpulse(linearImpulse, body.getPosition(), true);
+        for (Float angle : rotation.asSet()) {
+            this.currentBodyRotation += angle;
+            if(this.currentBodyRotation >= 360.0){
+                this.currentBodyRotation = 0.0f;
+            }
+            body.setTransform(body.getPosition(), this.currentBodyRotation);
+            this.setTextureRotation(rotation);
+        }
+        setActorState(ActorState.FALLING);
+    }
 
     public AtlasConfig getDefaultAtlasConfig() {
         return defaultAtlasConfig;
@@ -177,20 +200,29 @@ public abstract class GameActor extends Actor {
         float width = textureBounds.getWidth();
         float height = textureBounds.getHeight();
 
-        if (offsetOptional.isPresent()) {
-            final ImageOffset imageOffset = offsetOptional.get();
+        for(final ImageOffset imageOffset : offsetOptional.asSet()){
             x += imageOffset.getX();
             y += imageOffset.getY();
         }
-        if (scaleOptional.isPresent()) {
-            final ImageScale imageScale = scaleOptional.get();
+        for(final ImageScale imageScale : scaleOptional.asSet()){
             width *= imageScale.getX();
             height *= imageScale.getY();
         }
 
-        batch.draw(textureRegion, x, y, width, height);
+        if(this.textureRotation.isPresent()) {
+            final Float rotationDelta = textureRotation.get();
+            currentTextureRotation += rotationDelta;
+            final float originX = width / 2.0f;
+            final float originY = height / 2.0f;
+            batch.draw(textureRegion, x, y, originX , originY, width, height,
+                    1.0f, 1.0f, currentTextureRotation, false);
+            if(currentTextureRotation >= 360f){
+                currentTextureRotation = 0f;
+            }
+        }else {
+            batch.draw(textureRegion, x, y, width, height);
+        }
     }
-
 
     protected void updateTextureBounds(CameraConfig cameraConfig) {
         //get the screen width
@@ -241,4 +273,9 @@ public abstract class GameActor extends Actor {
     public void setActorState(ActorState actorState) {
         this.actorState = actorState;
     }
+
+    public void setTextureRotation(Optional<Float> textureRotation) {
+        this.textureRotation = textureRotation;
+    }
+
 }

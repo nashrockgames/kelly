@@ -57,9 +57,9 @@ public class GameStageView extends Stage implements ContactListener {
     private int level = 1;
     private Optional<RunnerActor> runner = Optional.absent();
     private float enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
-    private float enemyReduceSpawnDelaySeconds = 5.0f;
+    private float enemyReduceSpawnDelaySeconds= 5.0f;
     private float enemyReduceSpawnDelayPercentage = 0.1f;
-    private final float bossSpawnDelay = 10f;
+    private final int bossSpawnCount = 5;
     private Optional<Timer.Task> enemySpawnTimeReduceTask = Optional.absent();
     private Optional<Timer.Task> gameTimeTask = Optional.absent();
     private Optional<Timer.Task> bossFireSchedule = Optional.absent();
@@ -80,6 +80,8 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Inject
     PlayButtonActor playButtonActor;
+
+    private int enemiesSpawned = 0;
 
     @Inject
     public GameStageView() {
@@ -207,15 +209,10 @@ public class GameStageView extends Stage implements ContactListener {
                 !actorState.equals(ActorState.FALLING);
     }
 
-
     @Subscribe
     public void onBossFiredEvent(BossFiredEvent bossFiredEvent){
-
-        final Actor bossBullet = this.actorFactory.createBossBullet(this.level);
         final BossActor bossActor = bossFiredEvent.getBossActor();
-        bossFireSchedule = bossActor.getFireSchedule();
-        this.gameStateManager.setBossState(BossState.FIRING);
-        this.addActor(bossBullet);
+        spawnBossBullet(bossActor);
         for(RunnerActor runnerActor : runner.asSet()) {
             final int bulletsFired = bossActor.getBulletsFired();
             if (bulletsFired > 0 && bulletsFired % 5 == 0) {
@@ -226,10 +223,17 @@ public class GameStageView extends Stage implements ContactListener {
         }
     }
 
+    private void spawnBossBullet(BossActor bossActor) {
+        final Actor bossBullet = this.actorFactory.createBossBullet(this.level);
+        bossFireSchedule = bossActor.getFireSchedule();
+        this.gameStateManager.setBossState(BossState.FIRING);
+        this.addActor(bossBullet);
+    }
+
     @Subscribe
     public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){
 
-        if(this.gameTime > 0f && this.gameTime % bossSpawnDelay == 0){
+        if(enemiesSpawned == bossSpawnCount){
             if(canSpawnBoss()) {
                 spawnBoss();
             }
@@ -260,13 +264,6 @@ public class GameStageView extends Stage implements ContactListener {
     @Subscribe
     public void onArmourHitEvent(final HitArmourEvent hitArmourEvent){
 
-        gameStateManager.setGameState(GameState.HOLD_POSITION);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                gameStateManager.setGameState(GameState.PLAYING);
-            }
-        }, 0.25f);
 
     }
 
@@ -275,15 +272,14 @@ public class GameStageView extends Stage implements ContactListener {
     }
 
     private void spawnEnemy(){
-            this.addActor(actorFactory.createEnemy(level));
-            Events.get().post(new OnEnemySpawnedEvent());
-    }
+        this.addActor(actorFactory.createEnemy(level));
+        this.enemiesSpawned++;
+        Events.get().post(new OnEnemySpawnedEvent());
+}
 
     private void spawnBoss(){
-
         this.addActor(actorFactory.createBoss(level));
         gameStateManager.setBossState(BossState.SPAWNING);
-        //Events.get().post(new OnEnemySpawnedEvent());
     }
 
     @Subscribe
@@ -302,6 +298,7 @@ public class GameStageView extends Stage implements ContactListener {
             final EnemyActor enemyActor = enemyActorList.get(index);
             destroyActor(enemyActor);
         }
+        enemiesSpawned = 0;
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();

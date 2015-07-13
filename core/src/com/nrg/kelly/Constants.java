@@ -13,7 +13,9 @@ public class Constants {
     public static final short RUNNER_RUNNING_CATEGORY = 1;
     public static final short RUNNER_RUNNING_GROUP_INDEX = 0;
     public static final short RUNNER_RUNNING_MASK_INDEX = -1;
-
+    public static final short ENEMY_ARMOUR_HIT_CATEGORY = 2;
+    public static final short ENEMY_ARMOUR_HIT_GROUP_INDEX = 3;
+    public static final short ENEMY_ARMOUR_HIT_MASK_INDEX = 1;
     public enum MENU_ID {
         MAIN("main_menu");
         private String id;

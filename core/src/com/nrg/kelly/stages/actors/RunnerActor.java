@@ -23,7 +23,6 @@ import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.Runner;
 import com.nrg.kelly.events.game.RunnerHitEvent;
-import com.nrg.kelly.events.game.HitArmourEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
@@ -70,7 +69,6 @@ public class RunnerActor extends GameActor {
         armourJumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-jump");
         armourSlideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-slide");
         armourRunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-run");
-
 
         final String run = getDefaultAtlasConfig().getAtlas();
         final String jump = jumpAtlasConfig.getAtlas();
@@ -166,7 +164,6 @@ public class RunnerActor extends GameActor {
     }
 
     public void resetPosition(){
-        //
         final Filter f = new Filter();
         f.categoryBits = Constants.RUNNER_RUNNING_CATEGORY;
         f.groupIndex = Constants.RUNNER_RUNNING_GROUP_INDEX;
@@ -186,23 +183,28 @@ public class RunnerActor extends GameActor {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    //TODO: make this generic, add a rotation and use it for enemy deaths on armour hit
-                    final Filter f = new Filter();
-                    f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
-                    f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
-                    f.maskBits = Constants.RUNNER_HIT_MASK_INDEX;
-                    body.getFixtureList().get(0).setFilterData(f);
-                    body.setLinearVelocity(runnerConfig.getHitVelocityX(),
-                            runnerConfig.getHitVelocityY());
-                    body.applyLinearImpulse(runnerConfig.getHitImpulseX(),
-                            runnerConfig.getHitImpulseY(), body.getPosition().x,
-                            body.getPosition().y, true);
-                    setActorState(ActorState.FALLING);
+                    final float hitVelocityX = runnerConfig.getHitVelocityX();
+                    final float hitVelocityY = runnerConfig.getHitVelocityY();
+                    final float hitImpulseX = runnerConfig.getHitImpulseX();
+                    final float hitImpulseY = runnerConfig.getHitImpulseY();
+                    final Filter f = createDeathCollisionFilter();
+                    final Vector2 linearVelocity = new Vector2(hitVelocityX, hitVelocityY);
+                    final Vector2 impulseVector = new Vector2(hitImpulseX, hitImpulseY);
+                    final Optional<Float> rotationOptional = Optional.absent();
+                    applyCollisionImpulse(linearVelocity,impulseVector, f, body, rotationOptional);
                     clearTransform();
                 }
             }, runnerConfig.getHitPauseTime());
             deathScheduled = true;
         }
+    }
+
+    private Filter createDeathCollisionFilter() {
+        final Filter f = new Filter();
+        f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
+        f.groupIndex = Constants.RUNNER_HIT_GROUP_INDEX;
+        f.maskBits = Constants.RUNNER_HIT_MASK_INDEX;
+        return f;
     }
 
     private void clearTransform() {
@@ -244,13 +246,14 @@ public class RunnerActor extends GameActor {
         final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
         final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
         for(RunnerActor runnerActor : runnerActorOptional.asSet()){
+            final ActorState actorState = this.getActorState();
             for(EnemyActor enemyActor : enemyActorOptional.asSet()){
-                if(!this.getActorState().equals(ActorState.HIT)){
+                if(!actorState.equals(ActorState.HIT)){
                     this.hit(enemyActor);
                 }
             }
-            for(ArmourActor enemyActor : armourActorOptional.asSet()){
-                if(!this.getActorState().equals(ActorState.HIT)){
+            for(ArmourActor armourActor : armourActorOptional.asSet()){
+                if(!actorState.equals(ActorState.HIT)){
                     this.pickupArmour();
                 }
             }
@@ -339,23 +342,7 @@ public class RunnerActor extends GameActor {
    }
 
     public void hit(final EnemyActor enemyActor) {
-        if(getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
-            //TODO:
-
-            //temporarily keep all
-            Events.get().post(new HitArmourEvent(enemyActor));
-
-            enemyActor.setActorState(ActorState.HIT_BY_ARMOUR);
-            //fling the enemy spinning off the screen
-
-
-            //un pause everything
-
-            //flash the armour on / off until off
-
-            setAnimationState(AnimationState.DEFAULT);
-
-        }else{
+        if(!getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
             final Body body = getBody();
             setActorState(ActorState.HIT);
             scheduleDeath(body);

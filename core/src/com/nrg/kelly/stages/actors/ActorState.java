@@ -11,6 +11,6 @@ public enum ActorState {
     HIT_BY_ARMOUR,
     SLIDING,
     UPGRADING_ARMOUR,
-    JUMPING
+    HIT_WITH_ARMOUR_ON, JUMPING
 
 }
