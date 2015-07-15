@@ -191,7 +191,9 @@ public class RunnerActor extends GameActor {
                     final Vector2 linearVelocity = new Vector2(hitVelocityX, hitVelocityY);
                     final Vector2 impulseVector = new Vector2(hitImpulseX, hitImpulseY);
                     final Optional<Float> rotationOptional = Optional.absent();
-                    applyCollisionImpulse(linearVelocity,impulseVector, f, body, rotationOptional);
+                    final CollisionParams collisionParams = new CollisionParams(
+                            linearVelocity, impulseVector, f, body, rotationOptional);
+                    applyCollisionImpulse(collisionParams);
                     clearTransform();
                 }
             }, runnerConfig.getHitPauseTime());

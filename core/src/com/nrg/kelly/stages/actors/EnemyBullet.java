@@ -7,9 +7,7 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.physics.Box2dFactory;
 
-/**
- * Created by Andrew on 9/07/2015.
- */
+
 public class EnemyBullet extends EnemyActor implements RayCastCallback {
 
     public EnemyBullet(Enemy enemy, CameraConfig cameraConfig) {
@@ -29,7 +27,7 @@ public class EnemyBullet extends EnemyActor implements RayCastCallback {
     public void checkRayCast(){
 
         final Vector2 position = this.getBody().getPosition();
-        final Vector2 rayCastVector = new Vector2(position.x - 1.0f, position.y);
+        final Vector2 rayCastVector = new Vector2(position.x - 0.5f, position.y);
         Box2dFactory.getWorld().rayCast(this , position, rayCastVector);
 
     }

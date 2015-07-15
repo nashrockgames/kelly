@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
@@ -16,7 +15,6 @@ import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffset;
 import com.nrg.kelly.config.actors.ImageScale;
 
-import java.awt.Image;
 import java.util.List;
 
 public abstract class GameActor extends Actor {
@@ -125,20 +123,19 @@ public abstract class GameActor extends Actor {
         }
     }
 
-    protected void applyCollisionImpulse(Vector2 linearVelocity,
-                                         Vector2 linearImpulse,
-                                         Filter f, Body body,
-                                         Optional<Float> rotation) {
-        body.getFixtureList().get(0).setFilterData(f);
-        body.setLinearVelocity(linearVelocity);
-        body.applyLinearImpulse(linearImpulse, body.getPosition(), true);
-        for (Float angle : rotation.asSet()) {
+    protected void applyCollisionImpulse(CollisionParams collisionParams) {
+        final Body collisionParametersBody = collisionParams.getBody();
+        collisionParametersBody.getFixtureList().get(0).setFilterData(collisionParams.getFilter());
+        collisionParametersBody.setLinearVelocity(collisionParams.getLinearVelocity());
+        collisionParametersBody.applyLinearImpulse(collisionParams.getLinearImpulse(),
+                collisionParametersBody.getPosition(), true);
+        for (final Float angle : collisionParams.getRotation().asSet()) {
             this.currentBodyRotation += angle;
             if(this.currentBodyRotation >= 360.0){
                 this.currentBodyRotation = 0.0f;
             }
-            body.setTransform(body.getPosition(), this.currentBodyRotation);
-            this.setTextureRotation(rotation);
+            collisionParametersBody.setTransform(collisionParametersBody.getPosition(), this.currentBodyRotation);
+            this.setTextureRotation(collisionParams.getRotation());
         }
         setActorState(ActorState.FALLING);
     }

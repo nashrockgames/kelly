@@ -50,16 +50,16 @@ public class EnemyActor extends GameActor {
         final ActorState actorState = this.getActorState();
         if(actorState.equals(ActorState.HIT_BY_ARMOUR)||
                 actorState.equals(ActorState.FALLING)) {
-            //TODO: un hardcode this
-            final Filter armourCollisionFilter = createArmourCollisionFilter();
-            final Vector2 linearVelocity = new Vector2(5.0f, 10.0f);
-            final Vector2 impulseVector = new Vector2(5.0f, 8.0f);
-            //final float rotation = this.getRotation();
-            final Optional<Float> rotationOptional = Optional.of(15.0f);
-            this.applyCollisionImpulse(linearVelocity, impulseVector, armourCollisionFilter, body, rotationOptional);
-            for (ActorConfig actorConfig : this.getConfig().asSet()) {
-                if (Gdx.graphics.getWidth() -
-                        (actorConfig.getWidth() / 2 + body.getPosition().x) < 0) {
+            for(ActorConfig actorConfig : this.getConfig().asSet()) {
+                final Filter armourCollisionFilter = createArmourCollisionFilter();
+
+                final Vector2 linearVelocity = new Vector2(5.0f, 10.0f);
+                final Vector2 impulseVector = new Vector2(5.0f, 10.0f);
+                final Optional<Float> rotationOptional = Optional.of(15.0f);
+                final CollisionParams collisionParams = new CollisionParams(linearVelocity,
+                        impulseVector, armourCollisionFilter, body, rotationOptional);
+                this.applyCollisionImpulse(collisionParams);
+                if (!isWithinBounds(body, actorConfig)) {
                     Box2dFactory.destroyBody(body);
                     this.remove();
                 }
@@ -75,6 +75,28 @@ public class EnemyActor extends GameActor {
                 }
             }
         }
+    }
+
+    private boolean isWithinBounds(Body body, ActorConfig actorConfig) {
+            final CameraConfig cameraConfig = this.getCameraConfig();
+            return isWithinWidth(actorConfig, cameraConfig, body) &&
+                    isWithinHeight(actorConfig, cameraConfig, body);
+    }
+
+    private boolean isWithinHeight(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
+
+        final Vector2 position = body.getPosition();
+        final float y = position.y + (actorConfig.getHeight() / 2.0f);
+        return y > 0 && y < cameraConfig.getViewportHeight();
+
+    }
+
+    private boolean isWithinWidth(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
+
+        final Vector2 position = body.getPosition();
+        final float x = position.x + (actorConfig.getWidth() / 2.0f);
+        return x > 0 && x < cameraConfig.getViewportWidth();
+
     }
 
     protected Filter createArmourCollisionFilter() {

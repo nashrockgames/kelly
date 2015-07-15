@@ -8,6 +8,9 @@ import com.nrg.kelly.config.actors.ActorConfig;
 public class Enemy extends ActorConfig{
 
     private float velocityX;
+    private float armourHitVelocityX;
+    private float armourHitVelocityY;
+
 
     public float getVelocityX() {
         return velocityX;
@@ -16,4 +19,7 @@ public class Enemy extends ActorConfig{
     public void setVelocityX(float velocityX) {
         this.velocityX = velocityX;
     }
+
+
+
 }

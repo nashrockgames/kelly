@@ -36,8 +36,10 @@ public class ViewModule {
     }
 
     @Provides
-    CameraConfig provideCameraConfig(){
+    CameraConfig provideCameraConfig(Camera camera){
         final CameraConfig cameraConfig = new CameraConfig();
+        cameraConfig.setViewportWidth(camera.viewportWidth);
+        cameraConfig.setViewportHeight(camera.viewportHeight);
         final int screenHeight = Gdx.graphics.getHeight();
         final int scale = ((screenHeight / 6) / 64) * 64;
         if(scale < 64){
