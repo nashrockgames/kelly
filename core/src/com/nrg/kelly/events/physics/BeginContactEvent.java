@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.google.common.base.Optional;
 import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
@@ -14,6 +15,7 @@ public class BeginContactEvent {
     private Optional<RunnerActor> runnerActor = Optional.absent();
     private Optional<GroundActor> groundActor = Optional.absent();
     private Optional<ArmourActor> armourActor = Optional.absent();
+    private Optional<EnemyBulletActor> enemyBulletActor = Optional.absent();
 
 
     public BeginContactEvent(Contact contact) {
@@ -35,6 +37,8 @@ public class BeginContactEvent {
             this.groundActor = Optional.of((GroundActor)userData);
         } else if(userData instanceof ArmourActor ){
             this.armourActor = Optional.of((ArmourActor)userData);
+        } else if(userData instanceof EnemyBulletActor){
+            this.enemyBulletActor = Optional.of((EnemyBulletActor)userData);
         }
     }
 
@@ -56,5 +60,13 @@ public class BeginContactEvent {
 
     public Contact getContact() {
         return contact;
+    }
+
+    public Optional<EnemyBulletActor> getEnemyBulletActor() {
+        return enemyBulletActor;
+    }
+
+    public void setEnemyBulletActor(Optional<EnemyBulletActor> enemyBulletActor) {
+        this.enemyBulletActor = enemyBulletActor;
     }
 }

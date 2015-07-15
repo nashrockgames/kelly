@@ -20,7 +20,7 @@ import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
-import com.nrg.kelly.stages.actors.EnemyBullet;
+import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 import java.util.List;
@@ -137,7 +137,7 @@ public class ActorFactoryImpl implements ActorFactory{
     }
 
     @Override
-    public EnemyBullet createBossBullet(int level) {
+    public EnemyBulletActor createBossBullet(int level) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final Enemy bossBullet = levelConfig.getBossBullet();
         return createEnemyBullet(bossBullet);
@@ -153,14 +153,14 @@ public class ActorFactoryImpl implements ActorFactory{
         return enemyActor;
     }
 
-    private EnemyBullet createEnemyBullet(final Enemy enemyConfig) {
-        final EnemyBullet enemyBullet = new EnemyBullet(enemyConfig, cameraConfig);
+    private EnemyBulletActor createEnemyBullet(final Enemy enemyConfig) {
+        final EnemyBulletActor enemyBulletActor = new EnemyBulletActor(enemyConfig, cameraConfig);
         final List<AtlasConfig> animations = enemyConfig.getAnimations();
         if(animations != null) {
-            setupDefaultAnimation(enemyConfig, enemyBullet, animations);
+            setupDefaultAnimation(enemyConfig, enemyBulletActor, animations);
         }
-        enemyBullet.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
-        return enemyBullet;
+        enemyBulletActor.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        return enemyBulletActor;
     }
 
 

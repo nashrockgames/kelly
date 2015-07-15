@@ -8,9 +8,9 @@ import com.nrg.kelly.config.actors.Enemy;
 import com.nrg.kelly.physics.Box2dFactory;
 
 
-public class EnemyBullet extends EnemyActor implements RayCastCallback {
+public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
 
-    public EnemyBullet(Enemy enemy, CameraConfig cameraConfig) {
+    public EnemyBulletActor(Enemy enemy, CameraConfig cameraConfig) {
         super(enemy, cameraConfig);
     }
 
