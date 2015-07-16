@@ -1,10 +1,5 @@
 package com.nrg.kelly.config.actors;
 
-import com.nrg.kelly.config.actors.ActorConfig;
-
-/**
- * Created by Andrew on 27/05/2015.
- */
 public class Enemy extends ActorConfig{
 
     private float velocityX;
@@ -13,6 +8,7 @@ public class Enemy extends ActorConfig{
     private float armourHitImpulseX;
     private float armourHitImpulseY;
     private float armourHitRotationDelta;
+    private int armourSpawnInterval;
 
     public float getVelocityX() {
         return velocityX;
@@ -60,5 +56,13 @@ public class Enemy extends ActorConfig{
 
     public void setArmourHitRotationDelta(float armourHitRotationDelta) {
         this.armourHitRotationDelta = armourHitRotationDelta;
+    }
+
+    public int getArmourSpawnInterval() {
+        return armourSpawnInterval;
+    }
+
+    public void setArmourSpawnInterval(int armourSpawnInterval) {
+        this.armourSpawnInterval = armourSpawnInterval;
     }
 }

@@ -38,6 +38,7 @@ import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.AnimationState;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
@@ -213,11 +214,11 @@ public class GameStageView extends Stage implements ContactListener {
     public void onBossFiredEvent(BossFiredEvent bossFiredEvent){
         if(gameStateManager.getGameState().equals(GameState.PLAYING)) {
             final BossActor bossActor = bossFiredEvent.getBossActor();
-            spawnBossBullet(bossActor);
+            final EnemyBulletActor enemyBulletActor = spawnBossBullet(bossActor);
             for (RunnerActor runnerActor : runner.asSet()) {
                 final int bulletsFired = bossActor.getBulletsFired();
                 //TODO: externalise the 5
-                if (bulletsFired > 0 && bulletsFired % 5 == 0) {
+                if (bulletsFired > 0 && bulletsFired % enemyBulletActor.getArmourSpawnInterval() == 0) {
                     if (canSpawnArmour(runnerActor)) {
                         this.spawnArmour();
                     }
@@ -226,11 +227,12 @@ public class GameStageView extends Stage implements ContactListener {
         }
     }
 
-    private void spawnBossBullet(BossActor bossActor) {
-        final Actor bossBullet = this.actorFactory.createBossBullet(this.level);
+    private EnemyBulletActor spawnBossBullet(BossActor bossActor) {
+        final EnemyBulletActor bossBullet = this.actorFactory.createBossBullet(this.level);
         bossFireSchedule = bossActor.getFireSchedule();
         this.gameStateManager.setBossState(BossState.FIRING);
         this.addActor(bossBullet);
+        return bossBullet;
     }
 
     @Subscribe

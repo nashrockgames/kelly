@@ -12,9 +12,6 @@ import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 
-/**
- * Created by Andrew on 25/06/2015.
- */
 public class ArmourActor extends GameActor{
 
     private Vector2 linearVelocity;
@@ -52,14 +49,11 @@ public class ArmourActor extends GameActor{
         }
     }
 
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
         this.drawDefaultAnimation(batch);
     }
-
-
 
 }

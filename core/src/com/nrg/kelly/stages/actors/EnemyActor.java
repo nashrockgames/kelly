@@ -31,6 +31,7 @@ public class EnemyActor extends GameActor {
     private Vector2 armourHitLinearVelocityY;
     private Optional<Float> rotationOptional;
     private CollisionParams collisionParams;
+    private int armourSpawnInterval;
 
     public EnemyActor(Enemy enemy, CameraConfig cameraConfig) {
         super(enemy, cameraConfig);
@@ -40,7 +41,7 @@ public class EnemyActor extends GameActor {
         setWidth(enemy.getWidth());
         setHeight(enemy.getHeight());
         setUpCollisionVectors(enemy, body);
-
+        setArmourSpawnInterval(enemy.getArmourSpawnInterval());
         Events.get().register(this);
     }
 
@@ -151,4 +152,11 @@ public class EnemyActor extends GameActor {
     }
 
 
+    public int getArmourSpawnInterval() {
+        return armourSpawnInterval;
+    }
+
+    public void setArmourSpawnInterval(int armourSpawnInterval) {
+        this.armourSpawnInterval = armourSpawnInterval;
+    }
 }

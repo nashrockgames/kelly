@@ -54,6 +54,7 @@
       "armourHitImpulseX" : 5.0,
       "armourHitImpulseY" : 10.0,
       "armourHitRotationDelta" : 15.0
+      "armourSpawnInterval" : 3,
    },
   "enemies":[
     {
