@@ -12,8 +12,8 @@ import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
-import com.nrg.kelly.config.actors.ImageOffset;
-import com.nrg.kelly.config.actors.ImageScale;
+import com.nrg.kelly.config.actors.ImageOffsetConfig;
+import com.nrg.kelly.config.actors.ImageScaleConfig;
 
 import java.util.List;
 
@@ -83,12 +83,12 @@ public abstract class GameActor extends Actor {
             final TextureRegion region =
                     getDefaultAnimation().getKeyFrame(stateTime, true);
             final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
-            final ImageOffset imageOffset = defaultAtlasConfig.getImageOffset();
-            final ImageScale imageScale = defaultAtlasConfig.getImageScale();
-            final float x = (Gdx.graphics.getWidth() / 2 + imageOffset.getX()) - (region.getRegionWidth() / 2);
-            final float y = (Gdx.graphics.getHeight() / 2 + imageOffset.getY()) - (region.getRegionHeight() / 2);
-            final float width = region.getRegionWidth() * imageScale.getX();
-            final float height = region.getRegionHeight() * imageScale.getY();
+            final ImageOffsetConfig imageOffsetConfig = defaultAtlasConfig.getImageOffset();
+            final ImageScaleConfig imageScaleConfig = defaultAtlasConfig.getImageScale();
+            final float x = (Gdx.graphics.getWidth() / 2 + imageOffsetConfig.getX()) - (region.getRegionWidth() / 2);
+            final float y = (Gdx.graphics.getHeight() / 2 + imageOffsetConfig.getY()) - (region.getRegionHeight() / 2);
+            final float width = region.getRegionWidth() * imageScaleConfig.getX();
+            final float height = region.getRegionHeight() * imageScaleConfig.getY();
             batch.draw(region, x, y, width, height);
         }
     }
@@ -98,11 +98,11 @@ public abstract class GameActor extends Actor {
             final TextureRegion region =
                     getDefaultAnimation().getKeyFrame(stateTime, true);
             final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
-            final ImageOffset imageOffset = defaultAtlasConfig.getImageOffset();
-            final ImageScale imageScale = defaultAtlasConfig.getImageScale();
+            final ImageOffsetConfig imageOffsetConfig = defaultAtlasConfig.getImageOffset();
+            final ImageScaleConfig imageScaleConfig = defaultAtlasConfig.getImageScale();
             drawAnimation(batch, region,
-                    Optional.fromNullable(imageOffset),
-                    Optional.fromNullable(imageScale));
+                    Optional.fromNullable(imageOffsetConfig),
+                    Optional.fromNullable(imageScaleConfig));
         }
     }
 
@@ -189,21 +189,21 @@ public abstract class GameActor extends Actor {
 
     protected void drawAnimation(Batch batch,
                                  TextureRegion textureRegion,
-                                 Optional<ImageOffset> offsetOptional,
-                                 Optional<ImageScale> scaleOptional) {
+                                 Optional<ImageOffsetConfig> offsetOptional,
+                                 Optional<ImageScaleConfig> scaleOptional) {
 
         float x = textureBounds.x;
         float y = textureBounds.y;
         float width = textureBounds.getWidth();
         float height = textureBounds.getHeight();
 
-        for(final ImageOffset imageOffset : offsetOptional.asSet()){
-            x += imageOffset.getX();
-            y += imageOffset.getY();
+        for(final ImageOffsetConfig imageOffsetConfig : offsetOptional.asSet()){
+            x += imageOffsetConfig.getX();
+            y += imageOffsetConfig.getY();
         }
-        for(final ImageScale imageScale : scaleOptional.asSet()){
-            width *= imageScale.getX();
-            height *= imageScale.getY();
+        for(final ImageScaleConfig imageScaleConfig : scaleOptional.asSet()){
+            width *= imageScaleConfig.getX();
+            height *= imageScaleConfig.getY();
         }
 
         if(this.textureRotation.isPresent()) {

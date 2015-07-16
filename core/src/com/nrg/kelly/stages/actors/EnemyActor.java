@@ -10,7 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
-import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.physics.Box2dFactory;
@@ -33,24 +33,24 @@ public class EnemyActor extends GameActor {
     private CollisionParams collisionParams;
     private int armourSpawnInterval;
 
-    public EnemyActor(Enemy enemy, CameraConfig cameraConfig) {
-        super(enemy, cameraConfig);
-        final Body body = Box2dFactory.getInstance().createEnemy(enemy);
+    public EnemyActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
+        super(enemyConfig, cameraConfig);
+        final Body body = Box2dFactory.getInstance().createEnemy(enemyConfig);
         body.setUserData(this);
         setBody(body);
-        setWidth(enemy.getWidth());
-        setHeight(enemy.getHeight());
-        setUpCollisionVectors(enemy, body);
-        setArmourSpawnInterval(enemy.getArmourSpawnInterval());
+        setWidth(enemyConfig.getWidth());
+        setHeight(enemyConfig.getHeight());
+        setUpCollisionVectors(enemyConfig, body);
+        setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         Events.get().register(this);
     }
 
-    private void setUpCollisionVectors(Enemy enemy, Body body) {
-        this.armourHitVelocityX = enemy.getArmourHitVelocityX();
-        this.armourHitVelocityY = enemy.getArmourHitVelocityY();
-        this.armourHitImpulseX = enemy.getArmourHitImpulseX();
-        this.armourHitImpulseY = enemy.getArmourHitImpulseY();
-        this.armourHitRotationDelta = enemy.getArmourHitRotationDelta();
+    private void setUpCollisionVectors(EnemyConfig enemyConfig, Body body) {
+        this.armourHitVelocityX = enemyConfig.getArmourHitVelocityX();
+        this.armourHitVelocityY = enemyConfig.getArmourHitVelocityY();
+        this.armourHitImpulseX = enemyConfig.getArmourHitImpulseX();
+        this.armourHitImpulseY = enemyConfig.getArmourHitImpulseY();
+        this.armourHitRotationDelta = enemyConfig.getArmourHitRotationDelta();
         this.armourHitLinearVelocityX = new Vector2(armourHitVelocityX, armourHitVelocityY);
         this.armourHitLinearVelocityY = new Vector2(armourHitImpulseX, armourHitImpulseY);
         this.rotationOptional = Optional.of(armourHitRotationDelta);

@@ -12,12 +12,12 @@ import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
-import com.nrg.kelly.config.actors.Position;
+import com.nrg.kelly.config.actors.PositionConfig;
+import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.inject.ConfigFactory;
-import com.nrg.kelly.config.actors.Ground;
-import com.nrg.kelly.config.actors.Runner;
-import com.nrg.kelly.config.actors.WorldGravity;
-import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.config.actors.GroundConfig;
+import com.nrg.kelly.config.actors.WorldGravityConfig;
+import com.nrg.kelly.config.actors.EnemyConfig;
 
 public class Box2dFactory {
 
@@ -37,12 +37,12 @@ public class Box2dFactory {
     public static Box2dFactory getInstance(){
         if(instance==null) {
             final GameConfig gameConfig = ConfigFactory.getGameConfig();
-            final Runner runner = gameConfig.getActors().getRunner();
-            runnerJumpingLinearImpulse = new Vector2(runner.getJumpImpulseX(),
-                    runner.getJumpImpulseY());
+            final RunnerConfig runnerConfig = gameConfig.getActors().getRunner();
+            runnerJumpingLinearImpulse = new Vector2(runnerConfig.getJumpImpulseX(),
+                    runnerConfig.getJumpImpulseY());
             slideAngle = (float)(90f * (Math.PI / 180f));
-            final Position position = runner.getPosition();
-            slidePosition = new Vector2(position.getX(), position.getY() - runner.getWidth() / 2);
+            final PositionConfig positionConfig = runnerConfig.getPosition();
+            slidePosition = new Vector2(positionConfig.getX(), positionConfig.getY() - runnerConfig.getWidth() / 2);
             instance = new Box2dFactory();
         }
         return instance;
@@ -57,50 +57,50 @@ public class Box2dFactory {
 
     private void createWorld() {
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
-        final WorldGravity worldGravity = gameConfig.getActors().getWorldGravity();
-        world = new World(new Vector2(worldGravity.getX(), worldGravity.getY()), true);
+        final WorldGravityConfig worldGravityConfig = gameConfig.getActors().getWorldGravity();
+        world = new World(new Vector2(worldGravityConfig.getX(), worldGravityConfig.getY()), true);
     }
 
     public Body createGround() {
         final BodyDef bodyDef = new BodyDef();
-        final Ground ground = ConfigFactory.getGameConfig().getActors().getGround();
-        final Position position = ground.getPosition();
-        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
+        final GroundConfig groundConfig = ConfigFactory.getGameConfig().getActors().getGround();
+        final PositionConfig positionConfig = groundConfig.getPosition();
+        bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
         Body body = world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(ground.getWidth() / 2, ground.getHeight() / 2);
-        body.createFixture(shape, ground.getDensity());
+        shape.setAsBox(groundConfig.getWidth() / 2, groundConfig.getHeight() / 2);
+        body.createFixture(shape, groundConfig.getDensity());
         shape.dispose();
         return body;
     }
 
     public Body createRunner() {
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
-        final Runner runner = gameConfig.getActors().getRunner();
-        final Position position = runner.getPosition();
+        final RunnerConfig runnerConfig = gameConfig.getActors().getRunner();
+        final PositionConfig positionConfig = runnerConfig.getPosition();
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        runPosition = new Vector2(position.getX(), position.getY());
+        runPosition = new Vector2(positionConfig.getX(), positionConfig.getY());
         bodyDef.position.set(runPosition);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(runner.getWidth() / 2, runner.getHeight() / 2);
+        shape.setAsBox(runnerConfig.getWidth() / 2, runnerConfig.getHeight() / 2);
         Body body = world.createBody(bodyDef);
-        body.setGravityScale(runner.getGravityScale());
-        body.createFixture(shape, runner.getDensity());
+        body.setGravityScale(runnerConfig.getGravityScale());
+        body.createFixture(shape, runnerConfig.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;
     }
 
-    public Body createEnemy(Enemy enemy){
+    public Body createEnemy(EnemyConfig enemyConfig){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        final Position position = enemy.getPosition();
-        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
+        final PositionConfig positionConfig = enemyConfig.getPosition();
+        bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(enemy.getWidth() / 2, enemy.getHeight() / 2);
+        shape.setAsBox(enemyConfig.getWidth() / 2, enemyConfig.getHeight() / 2);
         Body body = world.createBody(bodyDef);
-        body.createFixture(shape, enemy.getDensity());
+        body.createFixture(shape, enemyConfig.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;
@@ -139,8 +139,8 @@ public class Box2dFactory {
     public Body createArmour(ArmourConfig armour) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        final Position position = armour.getPosition();
-        bodyDef.position.set(new Vector2(position.getX(), position.getY()));
+        final PositionConfig positionConfig = armour.getPosition();
+        bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(armour.getWidth() / 2, armour.getHeight() / 2);
         Body body = world.createBody(bodyDef);

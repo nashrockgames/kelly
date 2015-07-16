@@ -1,10 +1,7 @@
 package com.nrg.kelly.config;
 
-import com.nrg.kelly.config.actors.Actors;
-import com.nrg.kelly.config.actors.WorldGravity;
+import com.nrg.kelly.config.actors.ActorsConfig;
 import com.nrg.kelly.config.settings.Settings;
-
-import java.util.List;
 
 /**
  * Created by Andrew on 3/05/2015.
@@ -13,7 +10,7 @@ public class GameConfig {
 
     private Settings settings;
 
-    private Actors actors;
+    private ActorsConfig actors;
 
     private float viewPortWidth;
 
@@ -48,11 +45,11 @@ public class GameConfig {
         this.settings = settings;
     }
 
-    public Actors getActors() {
+    public ActorsConfig getActors() {
         return actors;
     }
 
-    public void setActors(Actors actors) {
+    public void setActors(ActorsConfig actors) {
         this.actors = actors;
     }
 

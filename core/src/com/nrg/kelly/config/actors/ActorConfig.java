@@ -10,7 +10,7 @@ public abstract class ActorConfig {
     private float height;
     private float width;
     private float density;
-    private Position position;
+    private PositionConfig position;
     private float frameRate;
 
     private List<AtlasConfig> animations;
@@ -23,11 +23,11 @@ public abstract class ActorConfig {
         this.animations = animations;
     }
 
-    public Position getPosition() {
+    public PositionConfig getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
+    public void setPosition(PositionConfig position) {
         this.position = position;
     }
 

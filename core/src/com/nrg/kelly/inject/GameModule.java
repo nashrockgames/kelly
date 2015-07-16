@@ -5,7 +5,7 @@ import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.GameStateManagerImpl;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
-import com.nrg.kelly.config.actors.Runner;
+import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.config.buttons.PlayButtonConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.physics.Box2dFactory;
@@ -47,7 +47,7 @@ public class GameModule {
         return new ActorFactoryImpl(levelsConfig, cameraConfig);
     }
     @Provides
-    Runner provideRunnerConfig(GameConfig gameConfig){
+    RunnerConfig provideRunnerConfig(GameConfig gameConfig){
         return gameConfig.getActors().getRunner();
     }
 

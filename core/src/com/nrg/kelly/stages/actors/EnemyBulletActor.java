@@ -4,14 +4,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.nrg.kelly.config.CameraConfig;
-import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.physics.Box2dFactory;
 
 
 public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
 
-    public EnemyBulletActor(Enemy enemy, CameraConfig cameraConfig) {
-        super(enemy, cameraConfig);
+    public EnemyBulletActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
+        super(enemyConfig, cameraConfig);
     }
 
     @Override

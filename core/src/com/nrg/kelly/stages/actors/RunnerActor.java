@@ -17,11 +17,11 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
-import com.nrg.kelly.config.actors.ImageOffset;
-import com.nrg.kelly.config.actors.ImageScale;
+import com.nrg.kelly.config.actors.ImageOffsetConfig;
+import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
-import com.nrg.kelly.config.actors.Runner;
+import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
@@ -40,7 +40,7 @@ public class RunnerActor extends GameActor {
     private AtlasConfig slideAtlasConfig;
     private AtlasConfig dieAtlasConfig;
     private boolean deathScheduled = false;
-    private Runner runnerConfig;
+    private RunnerConfig runnerConfig;
     private AtlasConfig armourJumpAtlasConfig;
     private AtlasConfig armourSlideAtlasConfig;
     private AtlasConfig armourRunAtlasConfig;
@@ -49,12 +49,12 @@ public class RunnerActor extends GameActor {
     private Animation armourRunAnimation;
     private AnimationState animationState = AnimationState.DEFAULT;
 
-    public RunnerActor(Runner runner, CameraConfig cameraConfig) {
-        super(runner, cameraConfig);
-        this.runnerConfig = runner;
+    public RunnerActor(RunnerConfig runnerConfig, CameraConfig cameraConfig) {
+        super(runnerConfig, cameraConfig);
+        this.runnerConfig = runnerConfig;
         Events.get().register(this);
-        setWidth(runner.getWidth());
-        setHeight(runner.getHeight());
+        setWidth(runnerConfig.getWidth());
+        setHeight(runnerConfig.getHeight());
         this.createTextures();
     }
 
@@ -221,20 +221,20 @@ public class RunnerActor extends GameActor {
         //swap width and height
         float width = textureBounds.getHeight();
         float height = textureBounds.getWidth();
-        final Optional<ImageOffset> offsetOptional =
+        final Optional<ImageOffsetConfig> offsetOptional =
                 Optional.fromNullable(this.slideAtlasConfig.getImageOffset());
-        final Optional<ImageScale> scaleOptional =
+        final Optional<ImageScaleConfig> scaleOptional =
                 Optional.fromNullable(this.slideAtlasConfig.getImageScale());
 
         if(offsetOptional.isPresent()){
-            final ImageOffset imageOffset = offsetOptional.get();
-            x += imageOffset.getX();
-            y += imageOffset.getY();
+            final ImageOffsetConfig imageOffsetConfig = offsetOptional.get();
+            x += imageOffsetConfig.getX();
+            y += imageOffsetConfig.getY();
         }
         if(scaleOptional.isPresent()){
-            final ImageScale imageScale = scaleOptional.get();
-            width *= imageScale.getX();
-            height *= imageScale.getY();
+            final ImageScaleConfig imageScaleConfig = scaleOptional.get();
+            width *= imageScaleConfig.getX();
+            height *= imageScaleConfig.getY();
         }
         batch.draw(textureRegion, x, y, width, height);
     }

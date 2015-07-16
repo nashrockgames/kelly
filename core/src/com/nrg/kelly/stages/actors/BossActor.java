@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
-import com.nrg.kelly.config.actors.Enemy;
+import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.events.BossFiredEvent;
 import com.nrg.kelly.events.Events;
 
@@ -19,8 +19,8 @@ public class BossActor extends EnemyActor{
 
     private int bulletsFired = 0;
 
-    public BossActor(Enemy enemy, CameraConfig cameraConfig) {
-        super(enemy, cameraConfig);
+    public BossActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
+        super(enemyConfig, cameraConfig);
     }
 
     public Optional<Timer.Task> getFireSchedule() {

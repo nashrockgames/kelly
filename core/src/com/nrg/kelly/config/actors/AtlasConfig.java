@@ -4,8 +4,8 @@ public class AtlasConfig {
 
     private String name;
     private String atlas;
-    private ImageOffset imageOffset;
-    private ImageScale imageScale;
+    private ImageOffsetConfig imageOffset;
+    private ImageScaleConfig imageScale;
 
     public AtlasConfig(){}
 
@@ -25,19 +25,19 @@ public class AtlasConfig {
         this.atlas = atlas;
     }
 
-    public ImageOffset getImageOffset() {
+    public ImageOffsetConfig getImageOffset() {
         return imageOffset;
     }
 
-    public void setImageOffset(ImageOffset imageOffset) {
+    public void setImageOffset(ImageOffsetConfig imageOffset) {
         this.imageOffset = imageOffset;
     }
 
-    public ImageScale getImageScale() {
+    public ImageScaleConfig getImageScale() {
         return imageScale;
     }
 
-    public void setImageScale(ImageScale imageScale) {
+    public void setImageScale(ImageScaleConfig imageScale) {
         this.imageScale = imageScale;
     }
 }
