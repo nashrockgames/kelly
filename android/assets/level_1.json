@@ -48,7 +48,12 @@
         "y": 2.25
       },
       "density": 0.5,
-      "velocityX" : -15.0
+      "velocityX" : -15.0,
+      "armourHitVelocityX" : 5.0,
+      "armourHitVelocityY" : 10.0,
+      "armourHitImpulseX" : 5.0,
+      "armourHitImpulseY" : 10.0,
+      "armourHitRotationDelta" : 15.0
    },
   "enemies":[
     {

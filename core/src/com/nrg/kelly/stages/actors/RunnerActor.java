@@ -247,7 +247,6 @@ public class RunnerActor extends GameActor {
         final Optional<EnemyActor> enemyActorOptional = beginContactEvent.getEnemyActor();
         final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
         final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
-        final Optional<EnemyBulletActor> enemyBulletActorOptional = beginContactEvent.getEnemyBulletActor();
         for(RunnerActor runnerActor : runnerActorOptional.asSet()){
             final ActorState actorState = this.getActorState();
             for(EnemyActor enemyActor : enemyActorOptional.asSet()){
@@ -262,12 +261,6 @@ public class RunnerActor extends GameActor {
             }
             for(GroundActor groundActor : groundActorOptional.asSet()){
                 this.setLanded();
-            }
-
-            for(EnemyBulletActor enemyBulletActor : enemyBulletActorOptional.asSet()){
-                if(!enemyBulletActor.getActorState().equals(ActorState.HIT_BY_ARMOUR)){
-                    this.hit(enemyBulletActor);
-                }
             }
 
         }
@@ -351,7 +344,8 @@ public class RunnerActor extends GameActor {
    }
 
     public void hit(final EnemyActor enemyActor) {
-        if(!getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
+        if(enemyActor instanceof EnemyBulletActor ||
+                !getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
             final Body body = getBody();
             setActorState(ActorState.HIT);
             scheduleDeath(body);

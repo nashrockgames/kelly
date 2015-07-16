@@ -15,8 +15,6 @@ public class BeginContactEvent {
     private Optional<RunnerActor> runnerActor = Optional.absent();
     private Optional<GroundActor> groundActor = Optional.absent();
     private Optional<ArmourActor> armourActor = Optional.absent();
-    private Optional<EnemyBulletActor> enemyBulletActor = Optional.absent();
-
 
     public BeginContactEvent(Contact contact) {
         this.contact = contact;
@@ -37,8 +35,6 @@ public class BeginContactEvent {
             this.groundActor = Optional.of((GroundActor)userData);
         } else if(userData instanceof ArmourActor ){
             this.armourActor = Optional.of((ArmourActor)userData);
-        } else if(userData instanceof EnemyBulletActor){
-            this.enemyBulletActor = Optional.of((EnemyBulletActor)userData);
         }
     }
 
@@ -62,11 +58,4 @@ public class BeginContactEvent {
         return contact;
     }
 
-    public Optional<EnemyBulletActor> getEnemyBulletActor() {
-        return enemyBulletActor;
-    }
-
-    public void setEnemyBulletActor(Optional<EnemyBulletActor> enemyBulletActor) {
-        this.enemyBulletActor = enemyBulletActor;
-    }
 }

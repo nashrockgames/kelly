@@ -211,13 +211,16 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onBossFiredEvent(BossFiredEvent bossFiredEvent){
-        final BossActor bossActor = bossFiredEvent.getBossActor();
-        spawnBossBullet(bossActor);
-        for(RunnerActor runnerActor : runner.asSet()) {
-            final int bulletsFired = bossActor.getBulletsFired();
-            if (bulletsFired > 0 && bulletsFired % 5 == 0) {
-                if (canSpawnArmour(runnerActor)) {
-                    this.spawnArmour();
+        if(gameStateManager.getGameState().equals(GameState.PLAYING)) {
+            final BossActor bossActor = bossFiredEvent.getBossActor();
+            spawnBossBullet(bossActor);
+            for (RunnerActor runnerActor : runner.asSet()) {
+                final int bulletsFired = bossActor.getBulletsFired();
+                //TODO: externalise the 5
+                if (bulletsFired > 0 && bulletsFired % 5 == 0) {
+                    if (canSpawnArmour(runnerActor)) {
+                        this.spawnArmour();
+                    }
                 }
             }
         }

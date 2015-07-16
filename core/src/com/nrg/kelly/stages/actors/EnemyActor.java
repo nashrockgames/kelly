@@ -22,6 +22,16 @@ public class EnemyActor extends GameActor {
     public boolean runnerHit = false;
     private Optional<RunnerActor> runnerActorOptional = Optional.absent();
 
+    private float armourHitVelocityX;
+    private float armourHitVelocityY;
+    private float armourHitImpulseX;
+    private float armourHitImpulseY;
+    private float armourHitRotationDelta;
+    private Vector2 armourHitLinearVelocityX;
+    private Vector2 armourHitLinearVelocityY;
+    private Optional<Float> rotationOptional;
+    private CollisionParams collisionParams;
+
     public EnemyActor(Enemy enemy, CameraConfig cameraConfig) {
         super(enemy, cameraConfig);
         final Body body = Box2dFactory.getInstance().createEnemy(enemy);
@@ -29,7 +39,25 @@ public class EnemyActor extends GameActor {
         setBody(body);
         setWidth(enemy.getWidth());
         setHeight(enemy.getHeight());
+        setUpCollisionVectors(enemy, body);
+
         Events.get().register(this);
+    }
+
+    private void setUpCollisionVectors(Enemy enemy, Body body) {
+        this.armourHitVelocityX = enemy.getArmourHitVelocityX();
+        this.armourHitVelocityY = enemy.getArmourHitVelocityY();
+        this.armourHitImpulseX = enemy.getArmourHitImpulseX();
+        this.armourHitImpulseY = enemy.getArmourHitImpulseY();
+        this.armourHitRotationDelta = enemy.getArmourHitRotationDelta();
+        this.armourHitLinearVelocityX = new Vector2(armourHitVelocityX, armourHitVelocityY);
+        this.armourHitLinearVelocityY = new Vector2(armourHitImpulseX, armourHitImpulseY);
+        this.rotationOptional = Optional.of(armourHitRotationDelta);
+        final Filter armourCollisionFilter = createArmourCollisionFilter();
+        collisionParams = new CollisionParams(armourHitLinearVelocityX,
+                armourHitLinearVelocityY, armourCollisionFilter, body, rotationOptional);
+
+
     }
 
     public void setConfiguredLinearVelocity(Vector2 configuredLinearVelocity){
@@ -51,13 +79,6 @@ public class EnemyActor extends GameActor {
         if(actorState.equals(ActorState.HIT_BY_ARMOUR)||
                 actorState.equals(ActorState.FALLING)) {
             for(ActorConfig actorConfig : this.getConfig().asSet()) {
-                final Filter armourCollisionFilter = createArmourCollisionFilter();
-
-                final Vector2 linearVelocity = new Vector2(5.0f, 10.0f);
-                final Vector2 impulseVector = new Vector2(5.0f, 10.0f);
-                final Optional<Float> rotationOptional = Optional.of(15.0f);
-                final CollisionParams collisionParams = new CollisionParams(linearVelocity,
-                        impulseVector, armourCollisionFilter, body, rotationOptional);
                 this.applyCollisionImpulse(collisionParams);
                 if (!isWithinBounds(body, actorConfig)) {
                     Box2dFactory.destroyBody(body);
