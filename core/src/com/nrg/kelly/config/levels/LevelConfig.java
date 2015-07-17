@@ -1,5 +1,7 @@
 package com.nrg.kelly.config.levels;
 
+import com.nrg.kelly.config.actors.BossBulletConfig;
+import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
 
 import java.util.List;
@@ -13,14 +15,14 @@ public class LevelConfig {
     private List<EnemyConfig> enemies;
     private String background;
     private String ground;
-    private EnemyConfig boss;
-    private EnemyConfig bossBullet;
+    private EnemyBossConfig boss;
+    private BossBulletConfig bossBullet;
 
-    public EnemyConfig getBossBullet() {
+    public BossBulletConfig getBossBullet() {
         return bossBullet;
     }
 
-    public void setBossBullet(EnemyConfig bossBullet) {
+    public void setBossBullet(BossBulletConfig bossBullet) {
         this.bossBullet = bossBullet;
     }
 
@@ -56,11 +58,11 @@ public class LevelConfig {
         this.background = background;
     }
 
-    public EnemyConfig getBoss() {
+    public EnemyBossConfig getBoss() {
         return boss;
     }
 
-    public void setBoss(EnemyConfig boss) {
+    public void setBoss(EnemyBossConfig boss) {
         this.boss = boss;
     }
 }

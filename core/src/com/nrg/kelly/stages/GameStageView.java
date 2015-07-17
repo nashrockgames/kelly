@@ -24,7 +24,6 @@ import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnTouchDownGestureEvent;
 import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
-import com.nrg.kelly.events.game.HitArmourEvent;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
 import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
@@ -50,6 +49,7 @@ import javax.inject.Inject;
 
 public class GameStageView extends Stage implements ContactListener {
 
+    //TODO: externalise to config
     public static final int VELOCITY_ITERATIONS = 6;
     public static final int POSITION_ITERATIONS = 2;
     public static final float ENEMY_SPAWN_DELAY = 4.0f;
@@ -217,7 +217,6 @@ public class GameStageView extends Stage implements ContactListener {
             final EnemyBulletActor enemyBulletActor = spawnBossBullet(bossActor);
             for (RunnerActor runnerActor : runner.asSet()) {
                 final int bulletsFired = bossActor.getBulletsFired();
-                //TODO: externalise the 5
                 if (bulletsFired > 0 && bulletsFired % enemyBulletActor.getArmourSpawnInterval() == 0) {
                     if (canSpawnArmour(runnerActor)) {
                         this.spawnArmour();
@@ -266,11 +265,7 @@ public class GameStageView extends Stage implements ContactListener {
         }, enemySpawnDelaySeconds));
     }
 
-    @Subscribe
-    public void onArmourHitEvent(final HitArmourEvent hitArmourEvent){
 
-
-    }
 
     private void spawnArmour() {
         this.addActor(actorFactory.createArmour());

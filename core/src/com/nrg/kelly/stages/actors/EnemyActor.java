@@ -19,19 +19,7 @@ public class EnemyActor extends GameActor {
 
     protected Vector2 configuredLinearVelocity;
 
-    public boolean runnerHit = false;
     private Optional<RunnerActor> runnerActorOptional = Optional.absent();
-
-    private float armourHitVelocityX;
-    private float armourHitVelocityY;
-    private float armourHitImpulseX;
-    private float armourHitImpulseY;
-    private float armourHitRotationDelta;
-    private Vector2 armourHitLinearVelocityX;
-    private Vector2 armourHitLinearVelocityY;
-    private Optional<Float> rotationOptional;
-    private CollisionParams collisionParams;
-    private int armourSpawnInterval;
 
     public EnemyActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
@@ -40,26 +28,10 @@ public class EnemyActor extends GameActor {
         setBody(body);
         setWidth(enemyConfig.getWidth());
         setHeight(enemyConfig.getHeight());
-        setUpCollisionVectors(enemyConfig, body);
-        setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         Events.get().register(this);
     }
 
-    private void setUpCollisionVectors(EnemyConfig enemyConfig, Body body) {
-        this.armourHitVelocityX = enemyConfig.getArmourHitVelocityX();
-        this.armourHitVelocityY = enemyConfig.getArmourHitVelocityY();
-        this.armourHitImpulseX = enemyConfig.getArmourHitImpulseX();
-        this.armourHitImpulseY = enemyConfig.getArmourHitImpulseY();
-        this.armourHitRotationDelta = enemyConfig.getArmourHitRotationDelta();
-        this.armourHitLinearVelocityX = new Vector2(armourHitVelocityX, armourHitVelocityY);
-        this.armourHitLinearVelocityY = new Vector2(armourHitImpulseX, armourHitImpulseY);
-        this.rotationOptional = Optional.of(armourHitRotationDelta);
-        final Filter armourCollisionFilter = createArmourCollisionFilter();
-        collisionParams = new CollisionParams(armourHitLinearVelocityX,
-                armourHitLinearVelocityY, armourCollisionFilter, body, rotationOptional);
 
-
-    }
 
     public void setConfiguredLinearVelocity(Vector2 configuredLinearVelocity){
         this.configuredLinearVelocity = configuredLinearVelocity;
@@ -68,7 +40,6 @@ public class EnemyActor extends GameActor {
     @Subscribe
     public void runnerHit(RunnerHitEvent runnerHitEvent){
         runnerActorOptional = Optional.of(runnerHitEvent.getRunnerActor());
-        this.runnerHit = true;
     }
 
     @Override
@@ -76,33 +47,25 @@ public class EnemyActor extends GameActor {
 
         super.act(delta);
         final Body body = this.getBody();
-        final ActorState actorState = this.getActorState();
-        if(actorState.equals(ActorState.HIT_BY_ARMOUR)||
-                actorState.equals(ActorState.FALLING)) {
-            for(ActorConfig actorConfig : this.getConfig().asSet()) {
-                this.applyCollisionImpulse(collisionParams);
-                if (!isWithinBounds(body, actorConfig)) {
+        body.setLinearVelocity(configuredLinearVelocity);
+        for (final ActorConfig actorConfig : this.getConfig().asSet()) {
+            if (!isWithinLeftBounds(body, actorConfig)) {
                     Box2dFactory.destroyBody(body);
                     this.remove();
-                }
-            }
-        }else{
-            body.setLinearVelocity(configuredLinearVelocity);
-            for (ActorConfig actorConfig : this.getConfig().asSet()) {
-                if (!(body.getPosition().x + actorConfig.getWidth() / 2 > 0)) {
-                    if (!runnerHit) {
-                        Box2dFactory.destroyBody(body);
-                        this.remove();
-                    }
-                }
             }
         }
+
+
     }
 
-    private boolean isWithinBounds(Body body, ActorConfig actorConfig) {
+    private boolean isWithinLeftBounds(Body body, ActorConfig actorConfig) {
+        return (body.getPosition().x + actorConfig.getWidth() / 2 > 0);
+    }
+
+    protected boolean isWithinBounds(ActorConfig actorConfig) {
             final CameraConfig cameraConfig = this.getCameraConfig();
-            return isWithinWidth(actorConfig, cameraConfig, body) &&
-                    isWithinHeight(actorConfig, cameraConfig, body);
+            return isWithinWidth(actorConfig, cameraConfig, this.getBody()) &&
+                    isWithinHeight(actorConfig, cameraConfig, this.getBody());
     }
 
     private boolean isWithinHeight(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
@@ -133,8 +96,7 @@ public class EnemyActor extends GameActor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         stateTime += Gdx.graphics.getDeltaTime();
-        final boolean hasArmour = hasRunnerArmour();
-        if(!hasArmour && runnerHit) {
+        if(!hasRunnerArmour() && isRunnerHit()) {
             this.maintainPosition();
             this.drawFirstFrame(batch);
         } else {
@@ -151,12 +113,17 @@ public class EnemyActor extends GameActor {
         return false;
     }
 
-
-    public int getArmourSpawnInterval() {
-        return armourSpawnInterval;
+    private boolean isRunnerHit() {
+        for(RunnerActor runner : runnerActorOptional.asSet()){
+            if(runner.getActorState().equals(ActorState.HIT) ||
+            runner.getActorState().equals(ActorState.FALLING)){
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void setArmourSpawnInterval(int armourSpawnInterval) {
-        this.armourSpawnInterval = armourSpawnInterval;
-    }
+
+
+
 }

@@ -1,11 +1,14 @@
 package com.nrg.kelly.stages.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
+import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.events.BossFiredEvent;
 import com.nrg.kelly.events.Events;
@@ -19,7 +22,9 @@ public class BossActor extends EnemyActor{
 
     private int bulletsFired = 0;
 
-    public BossActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
+
+
+    public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
     }
 

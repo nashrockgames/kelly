@@ -344,8 +344,12 @@ public class RunnerActor extends GameActor {
    }
 
     public void hit(final EnemyActor enemyActor) {
-        if(enemyActor instanceof EnemyBulletActor ||
-                !getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
+
+        if(enemyActor.getActorState().equals(ActorState.HIT_BY_ARMOUR))
+            return;
+
+        if(!getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)||
+                enemyActor instanceof EnemyBulletActor){
             final Body body = getBody();
             setActorState(ActorState.HIT);
             scheduleDeath(body);

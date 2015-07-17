@@ -10,6 +10,8 @@ import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.BossBulletConfig;
+import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.config.levels.LevelConfig;
@@ -126,20 +128,20 @@ public class ActorFactoryImpl implements ActorFactory{
     @Override
     public Actor createBoss(int level) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
-        final EnemyConfig boss = levelConfig.getBoss();
-        final BossActor enemyActor = new BossActor(boss, cameraConfig);
+        final EnemyBossConfig boss = levelConfig.getBoss();
+        final BossActor bossActor = new BossActor(boss, cameraConfig);
         final List<AtlasConfig> animations = boss.getAnimations();
         if(animations != null) {
-            setupDefaultAnimation(boss, enemyActor, animations);
+            setupDefaultAnimation(boss, bossActor, animations);
         }
-        enemyActor.setConfiguredLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
-        return enemyActor;
+        bossActor.setConfiguredLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
+        return bossActor;
     }
 
     @Override
     public EnemyBulletActor createBossBullet(int level) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
-        final EnemyConfig bossBullet = levelConfig.getBossBullet();
+        final BossBulletConfig bossBullet = levelConfig.getBossBullet();
         return createEnemyBullet(bossBullet);
     }
 
@@ -153,7 +155,7 @@ public class ActorFactoryImpl implements ActorFactory{
         return enemyActor;
     }
 
-    private EnemyBulletActor createEnemyBullet(final EnemyConfig enemyConfig) {
+    private EnemyBulletActor createEnemyBullet(final BossBulletConfig enemyConfig) {
         final EnemyBulletActor enemyBulletActor = new EnemyBulletActor(enemyConfig, cameraConfig);
         final List<AtlasConfig> animations = enemyConfig.getAnimations();
         if(animations != null) {
