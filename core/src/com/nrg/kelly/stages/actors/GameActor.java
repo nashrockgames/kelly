@@ -32,7 +32,7 @@ public abstract class GameActor extends Actor {
     private Optional<Float> textureRotation = Optional.absent();
     private Float currentTextureRotation = 0f;
     private Float currentBodyRotation = 0f;
-
+    private Rectangle textureBounds = new Rectangle();
 
     public CameraConfig getCameraConfig() {
         return cameraConfig;
@@ -123,19 +123,19 @@ public abstract class GameActor extends Actor {
         }
     }
 
-    protected void applyCollisionImpulse(CollisionParams collisionParams) {
-        final Body collisionParametersBody = collisionParams.getBody();
-        collisionParametersBody.getFixtureList().get(0).setFilterData(collisionParams.getFilter());
-        collisionParametersBody.setLinearVelocity(collisionParams.getLinearVelocity());
-        collisionParametersBody.applyLinearImpulse(collisionParams.getLinearImpulse(),
-                collisionParametersBody.getPosition(), true);
-        for (final Float angle : collisionParams.getRotation().asSet()) {
+    protected void applyCollisionImpulse(CollisionParams params) {
+        final Body paramsBody = params.getBody();
+        paramsBody.getFixtureList().get(0).setFilterData(params.getFilter());
+        paramsBody.setLinearVelocity(params.getLinearVelocity());
+        paramsBody.applyLinearImpulse(params.getLinearImpulse(),
+                paramsBody.getPosition(), true);
+        for (final Float angle : params.getRotation().asSet()) {
             this.currentBodyRotation += angle;
             if(this.currentBodyRotation >= 360.0){
                 this.currentBodyRotation = 0.0f;
             }
-            collisionParametersBody.setTransform(collisionParametersBody.getPosition(), this.currentBodyRotation);
-            this.setTextureRotation(collisionParams.getRotation());
+            paramsBody.setTransform(paramsBody.getPosition(), this.currentBodyRotation);
+            this.setTextureRotation(params.getRotation());
         }
         setActorState(ActorState.FALLING);
     }
@@ -147,9 +147,6 @@ public abstract class GameActor extends Actor {
     public void setDefaultAtlasConfig(AtlasConfig defaultAtlasConfig) {
         this.defaultAtlasConfig = defaultAtlasConfig;
     }
-
-    private Rectangle textureBounds
-            = new Rectangle();
 
     public GameActor(ActorConfig config, CameraConfig cameraConfig) {
         this.config = Optional.fromNullable(config);

@@ -31,8 +31,6 @@ public class EnemyActor extends GameActor {
         Events.get().register(this);
     }
 
-
-
     public void setConfiguredLinearVelocity(Vector2 configuredLinearVelocity){
         this.configuredLinearVelocity = configuredLinearVelocity;
     }
@@ -44,7 +42,6 @@ public class EnemyActor extends GameActor {
 
     @Override
     public void act(float delta) {
-
         super.act(delta);
         final Body body = this.getBody();
         body.setLinearVelocity(configuredLinearVelocity);
@@ -54,8 +51,6 @@ public class EnemyActor extends GameActor {
                     this.remove();
             }
         }
-
-
     }
 
     private boolean isWithinLeftBounds(Body body, ActorConfig actorConfig) {
@@ -69,19 +64,15 @@ public class EnemyActor extends GameActor {
     }
 
     private boolean isWithinHeight(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
-
         final Vector2 position = body.getPosition();
         final float y = position.y + (actorConfig.getHeight() / 2.0f);
         return y > 0 && y < cameraConfig.getViewportHeight();
-
     }
 
     private boolean isWithinWidth(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
-
         final Vector2 position = body.getPosition();
         final float x = position.x + (actorConfig.getWidth() / 2.0f);
         return x > 0 && x < cameraConfig.getViewportWidth();
-
     }
 
     protected Filter createArmourCollisionFilter() {
@@ -122,8 +113,4 @@ public class EnemyActor extends GameActor {
         }
         return false;
     }
-
-
-
-
 }
