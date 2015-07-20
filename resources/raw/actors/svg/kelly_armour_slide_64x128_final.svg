@@ -15,9 +15,9 @@
    viewBox="0 0 128 64"
    id="svg3343"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="kelly_armour_slide_64x128_final.svg"
-   inkscape:export-filename="C:\dev\kelly\libgdx\resources\raw\actors\kelly\sheets\armour-slide\kelly_armour_slide_128_64.png"
+   inkscape:export-filename="C:\dev\kelly\libgdx\kelly\resources\raw\actors\kelly\sheets\armour-slide\kelly_armour_slide_128_64.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -82,15 +82,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.2682927"
-     inkscape:cx="58"
+     inkscape:cx="34.149806"
      inkscape:cy="33.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      showborder="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="988"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -104,7 +104,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -245,8 +245,7 @@
          cy="788.78729"
          cx="-324.3681"
          id="path4177-4"
-         style="fill:#ffe0bd;fill-opacity:1;stroke:none"
-         d="m -320.42419,788.78729 c 0,1.17095 -1.76575,2.12018 -3.94391,2.12018 -2.17816,0 -3.94391,-0.94923 -3.94391,-2.12018 0,-1.17094 1.76575,-2.12018 3.94391,-2.12018 2.17816,0 3.94391,0.94924 3.94391,2.12018 z" />
+         style="fill:#ffe0bd;fill-opacity:1;stroke:none" />
     </g>
     <path
        style="fill:#800000;fill-opacity:1;stroke:none"
@@ -294,7 +293,6 @@
          cy="926.9444"
          rx="14"
          ry="2.4021382"
-         d="m 117.40133,926.9444 c 0,1.32666 -6.26801,2.40214 -14,2.40214 -7.731987,0 -14.000001,-1.07548 -14.000001,-2.40214 0,-1.32667 6.268014,-2.40214 14.000001,-2.40214 7.73199,0 14,1.07547 14,2.40214 z"
          sodipodi:cx="103.40133"
          sodipodi:cy="926.9444"
          sodipodi:rx="14"
@@ -313,8 +311,7 @@
        rx="1.2563673"
        cy="94.996338"
        cx="-1027.1383"
-       transform="matrix(0.03030424,-0.99954072,0.99974263,0.02268652,0,0)"
-       d="m -1025.8819,94.996338 c 0,1.832187 -0.5625,3.317469 -1.2564,3.317469 -0.6939,0 -1.2564,-1.485282 -1.2564,-3.317469 0,-1.832188 0.5625,-3.317469 1.2564,-3.317469 0.6939,0 1.2564,1.485281 1.2564,3.317469 z" />
+       transform="matrix(0.03030424,-0.99954072,0.99974263,0.02268652,0,0)" />
     <g
        id="g4720"
        transform="matrix(0,-1,1.4982943,0,-1467.3153,1066.1305)">
@@ -382,16 +379,14 @@
          cy="850.39783"
          cx="83.75"
          id="path4268-4"
-         style="fill:#000000;fill-opacity:1;stroke:none"
-         d="m 87.5,850.39783 c 0,3.15591 -1.678932,5.71428 -3.75,5.71428 -2.071068,0 -3.75,-2.55837 -3.75,-5.71428 0,-3.15592 1.678932,-5.71429 3.75,-5.71429 2.071068,0 3.75,2.55837 3.75,5.71429 z" />
+         style="fill:#000000;fill-opacity:1;stroke:none" />
       <ellipse
          ry="1.9642856"
          rx="1.25"
          cy="848.07635"
          cx="82.321426"
          id="path4270-9"
-         style="fill:#ffffff;fill-opacity:1;stroke:none"
-         d="m 83.571426,848.07635 c 0,1.08485 -0.559644,1.96429 -1.25,1.96429 -0.690356,0 -1.25,-0.87944 -1.25,-1.96429 0,-1.08484 0.559644,-1.96428 1.25,-1.96428 0.690356,0 1.25,0.87944 1.25,1.96428 z" />
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
     </g>
     <g
        id="g4286-9"
@@ -402,16 +397,30 @@
          cx="94.017853"
          cy="848.16571"
          rx="2.5892856"
-         ry="4.0178571"
-         d="m 96.607138,848.16571 c 0,2.219 -1.159262,4.01786 -2.589285,4.01786 -1.430023,0 -2.589286,-1.79886 -2.589286,-4.01786 0,-2.219 1.159263,-4.01786 2.589286,-4.01786 1.430023,0 2.589285,1.79886 2.589285,4.01786 z" />
+         ry="4.0178571" />
       <ellipse
          style="fill:#ffffff;fill-opacity:1;stroke:none"
          id="ellipse4280-8"
          cx="92.954926"
          cy="846.43719"
          rx="0.78656453"
-         ry="1.2848772"
-         d="m 93.74149,846.43719 c 0,0.70962 -0.352157,1.28488 -0.786564,1.28488 -0.434408,0 -0.786565,-0.57526 -0.786565,-1.28488 0,-0.70961 0.352157,-1.28487 0.786565,-1.28487 0.434407,0 0.786564,0.57526 0.786564,1.28487 z" />
+         ry="1.2848772" />
+    </g>
+    <g
+       id="g4440"
+       transform="matrix(-0.24868685,-0.96858394,0.96858394,-0.24868685,-778.23185,1317.8441)">
+      <path
+         style="opacity:1;fill:#917c6f;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 65.2306,885.13136 c 5.778122,0 10.369994,-1.30179 10.429824,-1.19807 4.131726,7.16267 0.502867,14.32535 0,21.48802 -0.0084,0.11946 -4.651702,1.80714 -10.429824,1.80714 -5.778123,0 -10.460437,-1.69137 -10.429825,-1.80714 1.856201,-7.01989 4.086534,-14.011 0,-21.48802 -0.05743,-0.10507 4.651702,1.19807 10.429825,1.19807 z"
+         id="path4438"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="sssssss" />
+      <path
+         sodipodi:nodetypes="sssssss"
+         inkscape:connector-curvature="0"
+         id="rect4421"
+         d="m 66.079056,885.83847 c 5.464707,0 9.807509,-1.30179 9.864094,-1.19807 3.907614,7.16267 0.47559,14.32535 0,21.48802 -0.008,0.11946 -4.399387,1.80714 -9.864094,1.80714 -5.464709,0 -9.893047,-1.69137 -9.864095,-1.80714 1.755517,-7.01989 3.864873,-14.011 0,-21.48802 -0.05432,-0.10507 4.399386,1.19807 9.864095,1.19807 z"
+         style="opacity:1;fill:#483e37;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
   </g>
 </svg>
