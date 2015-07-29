@@ -5,6 +5,13 @@ package com.nrg.kelly.config.actors;
  */
 public class EnemyBossConfig extends EnemyConfig {
 
+    private int armourSpawnInterval;
 
+    public int getArmourSpawnInterval() {
+        return armourSpawnInterval;
+    }
 
+    public void setArmourSpawnInterval(int armourSpawnInterval) {
+        this.armourSpawnInterval = armourSpawnInterval;
+    }
 }

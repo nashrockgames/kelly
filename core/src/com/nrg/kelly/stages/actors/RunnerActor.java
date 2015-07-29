@@ -59,7 +59,7 @@ public class RunnerActor extends GameActor {
     }
 
     public void createTextures(){
-
+        //TODO: this is repetitive and should be abstracted
         final List<AtlasConfig> atlasConfigList = runnerConfig.getAnimations();
         setDefaultAtlasConfig(this.getAtlasConfigByName(atlasConfigList, "default"));
         jumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump");
@@ -348,13 +348,22 @@ public class RunnerActor extends GameActor {
         if(enemyActor.getActorState().equals(ActorState.HIT_BY_ARMOUR))
             return;
 
-        if(!getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)||
-                enemyActor instanceof EnemyBulletActor){
-            final Body body = getBody();
-            setActorState(ActorState.HIT);
-            scheduleDeath(body);
-            Events.get().post(new RunnerHitEvent(this));
+
+        if(enemyActor instanceof EnemyBulletActor){
+            if(getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)) {
+                return;
+            }
         }
+
+        killRunner();
+
+    }
+
+    private void killRunner() {
+        final Body body = getBody();
+        setActorState(ActorState.HIT);
+        scheduleDeath(body);
+        Events.get().post(new RunnerHitEvent(this));
     }
 
     public boolean canJump(){

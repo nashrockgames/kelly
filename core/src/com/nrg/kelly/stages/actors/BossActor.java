@@ -1,35 +1,38 @@
 package com.nrg.kelly.stages.actors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
-import com.nrg.kelly.config.actors.EnemyConfig;
-import com.nrg.kelly.events.BossFiredEvent;
+import com.nrg.kelly.events.BombDroppedEvent;
+import com.nrg.kelly.events.BulletFiredEvent;
 import com.nrg.kelly.events.Events;
-
 
 public class BossActor extends EnemyActor{
 
     private boolean isInFiringPosition = false;
-    private Optional<Timer.Task> fireSchedule = Optional.absent();
-    public static final float FIRE_DELAY_SECONDS = 1.2f;
+    private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
+    private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
+    public static final float FIRE_BULLET_DELAY_SECONDS = 1.2f;
+
+    public static final int FIRE_BULLET_INTERVAL_COUNT = 3;
+    public static final float FIRE_BULLETS_INTERVAL = 3.5f;
+
+    public static final float DROP_BOMB_DELAY_SECONDS = 2.0f;
 
     private int bulletsFired = 0;
-
-
+    private int armourSpawnInterval;
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
+        this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
     }
 
-    public Optional<Timer.Task> getFireSchedule() {
-        return fireSchedule;
+    public Optional<Timer.Task> getFireBulletSchedule() {
+        return fireBulletSchedule;
     }
 
     @Override
@@ -39,8 +42,8 @@ public class BossActor extends EnemyActor{
         for (ActorConfig actorConfig : this.getConfig().asSet()) {
             final float pos = this.getTextureBounds().getX() + this.getTextureBounds().getWidth();
             updatePosition(body, pos);
-            if(canFireBullet()){
-                fireBullet();
+            if(canFireWeapon()){
+                fireWeapon();
             }
         }
     }
@@ -54,10 +57,26 @@ public class BossActor extends EnemyActor{
             body.setLinearVelocity(configuredLinearVelocity);
         }
     }
+/*
+    private boolean canDropBomb(){
 
-    private boolean canFireBullet() {
+        boolean canDropBomb = isInFiringPosition;
+        for(Timer.Task task : dropBombSchedule.asSet()){
+            if(task.isScheduled()){
+                canDropBomb = false;
+            }
+        }
+        return canDropBomb;
+    }
+*/
+    private boolean canFireWeapon() {
         boolean canFire = isInFiringPosition;
-        for(Timer.Task task : fireSchedule.asSet()) {
+        for(final Timer.Task intervalTask : fireIntervalSchedule.asSet()){
+            if(intervalTask.isScheduled()){
+                canFire = false;
+            }
+        }
+        for(final Timer.Task task : fireBulletSchedule.asSet()) {
             if(task.isScheduled()){
                 canFire = false;
             }
@@ -65,18 +84,49 @@ public class BossActor extends EnemyActor{
         return canFire;
     }
 
-    private void fireBullet() {
+    private void fireWeapon() {
+
         final BossActor instance = this;
-        fireSchedule = Optional.of(Timer.schedule(new Timer.Task() {
+        fireBulletSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Events.get().post(new BossFiredEvent(instance));
+                Events.get().post(new BulletFiredEvent(instance));
             }
-        }, FIRE_DELAY_SECONDS));
+        }, FIRE_BULLET_DELAY_SECONDS));
+
         this.bulletsFired+=1;
+
+        if(this.bulletsFired % FIRE_BULLET_INTERVAL_COUNT == 0){
+            this.dropBomb();
+            fireIntervalSchedule = Optional.of(Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+
+                }
+            }, FIRE_BULLETS_INTERVAL));
+        }
+
+    }
+
+    private void dropBomb() {
+        final BossActor instance = this;
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+               Events.get().post(new BombDroppedEvent(instance));
+            }
+        }, DROP_BOMB_DELAY_SECONDS);
     }
 
     public int getBulletsFired() {
         return bulletsFired;
+    }
+
+    public void setArmourSpawnInterval(int armourSpawnInterval) {
+        this.armourSpawnInterval = armourSpawnInterval;
+    }
+
+    public int getArmourSpawnInterval() {
+        return armourSpawnInterval;
     }
 }

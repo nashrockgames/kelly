@@ -12,6 +12,7 @@ public abstract class ActorConfig {
     private float density;
     private PositionConfig position;
     private float frameRate;
+    private float hitBoxScale = 1.0f;
 
     private List<AtlasConfig> animations;
 
@@ -63,5 +64,11 @@ public abstract class ActorConfig {
         this.frameRate = frameRate;
     }
 
+    public float getHitBoxScale() {
+        return hitBoxScale;
+    }
 
+    public void setHitBoxScale(float hitBoxScale) {
+        this.hitBoxScale = hitBoxScale;
+    }
 }

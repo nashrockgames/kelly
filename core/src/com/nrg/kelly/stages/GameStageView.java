@@ -16,7 +16,8 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
-import com.nrg.kelly.events.BossFiredEvent;
+import com.nrg.kelly.events.BombDroppedEvent;
+import com.nrg.kelly.events.BulletFiredEvent;
 import com.nrg.kelly.events.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
@@ -37,6 +38,7 @@ import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.AnimationState;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
@@ -211,13 +213,21 @@ public class GameStageView extends Stage implements ContactListener {
     }
 
     @Subscribe
-    public void onBossFiredEvent(BossFiredEvent bossFiredEvent){
+    public void onBossDroppedBombEvent(BombDroppedEvent bombDroppedEvent) {
+        if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
+            for(RunnerActor runnerActor : runner.asSet()) {
+                this.spawnBossBomb(runnerActor);
+            }
+        }
+    }
+    @Subscribe
+    public void onBossFiredEvent(BulletFiredEvent bulletFiredEvent){
         if(gameStateManager.getGameState().equals(GameState.PLAYING)) {
-            final BossActor bossActor = bossFiredEvent.getBossActor();
-            final EnemyBulletActor enemyBulletActor = spawnBossBullet(bossActor);
+            final BossActor bossActor = bulletFiredEvent.getBossActor();
+            spawnBossBullet(bossActor);
             for (RunnerActor runnerActor : runner.asSet()) {
                 final int bulletsFired = bossActor.getBulletsFired();
-                if (bulletsFired > 0 && bulletsFired % enemyBulletActor.getArmourSpawnInterval() == 0) {
+                if (bulletsFired > 0 && bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
                     if (canSpawnArmour(runnerActor)) {
                         this.spawnArmour();
                     }
@@ -226,13 +236,20 @@ public class GameStageView extends Stage implements ContactListener {
         }
     }
 
-    private EnemyBulletActor spawnBossBullet(BossActor bossActor) {
+    private void spawnBossBullet(BossActor bossActor) {
         final EnemyBulletActor bossBullet = this.actorFactory.createBossBullet(this.level);
-        bossFireSchedule = bossActor.getFireSchedule();
+        bossFireSchedule = bossActor.getFireBulletSchedule();
         this.gameStateManager.setBossState(BossState.FIRING);
         this.addActor(bossBullet);
-        return bossBullet;
     }
+
+    private EnemyBombActor spawnBossBomb(RunnerActor runnerActor) {
+        final EnemyBombActor enemyBombActor = this.actorFactory.createBossBomb(this.level, runnerActor);
+        this.gameStateManager.setBossState(BossState.DROPPING_BOMB);
+        this.addActor(enemyBombActor);
+        return enemyBombActor;
+     }
+
 
     @Subscribe
     public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){

@@ -96,9 +96,11 @@ public class Box2dFactory {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         final PositionConfig positionConfig = enemyConfig.getPosition();
+        final float hitBoxScale = enemyConfig.getHitBoxScale();
         bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(enemyConfig.getWidth() / 2, enemyConfig.getHeight() / 2);
+        shape.setAsBox((enemyConfig.getWidth() / 2) * hitBoxScale,
+                (enemyConfig.getHeight() / 2) * hitBoxScale);
         Body body = world.createBody(bodyDef);
         body.createFixture(shape, enemyConfig.getDensity());
         body.resetMassData();
@@ -148,6 +150,5 @@ public class Box2dFactory {
         body.resetMassData();
         shape.dispose();
         return body;
-
     }
 }

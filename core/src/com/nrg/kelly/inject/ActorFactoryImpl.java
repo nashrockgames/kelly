@@ -10,6 +10,7 @@ import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.BossBombConfig;
 import com.nrg.kelly.config.actors.BossBulletConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
@@ -22,6 +23,7 @@ import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
+import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
@@ -143,6 +145,25 @@ public class ActorFactoryImpl implements ActorFactory{
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final BossBulletConfig bossBullet = levelConfig.getBossBullet();
         return createEnemyBullet(bossBullet);
+    }
+
+    @Override
+    public EnemyBombActor createBossBomb(int level, RunnerActor runnerActor) {
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
+        final BossBombConfig bossBombConfig = levelConfig.getBossBomb();
+        return createEnemyBombActor(bossBombConfig,
+                runnerActor.getBody().getPosition().x + runnerActor.getWidth());
+    }
+
+    private EnemyBombActor createEnemyBombActor(BossBombConfig bossBombConfig, float explosionPositionX) {
+        final EnemyBombActor enemyActor = new EnemyBombActor(bossBombConfig, cameraConfig);
+        final List<AtlasConfig> animations = bossBombConfig.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(bossBombConfig, enemyActor, animations);
+        }
+        enemyActor.setConfiguredLinearVelocity(new Vector2(bossBombConfig.getVelocityX(), 0f));
+        enemyActor.setExplosionPositionX(explosionPositionX);
+        return enemyActor;
     }
 
     private EnemyActor createEnemyActor(final EnemyConfig enemyConfig) {

@@ -2,6 +2,7 @@ package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.nrg.kelly.stages.actors.ArmourActor;
+import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
@@ -18,6 +19,7 @@ public interface ActorFactory {
     ArmourActor createArmour();
     Actor createBoss(int level);
     EnemyBulletActor createBossBullet(int level);
+    EnemyBombActor createBossBomb(int level, RunnerActor runnerActor);
     void reset();
 
 

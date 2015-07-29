@@ -16,34 +16,26 @@ import com.nrg.kelly.physics.Box2dFactory;
 
 public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
 
-    private float armourHitVelocityX;
-    private float armourHitVelocityY;
-    private float armourHitImpulseX;
-    private float armourHitImpulseY;
-    private float armourHitRotationDelta;
-    private Vector2 armourHitLinearVelocityX;
-    private Vector2 armourHitLinearVelocityY;
-    private Optional<Float> rotationOptional;
     private CollisionParams collisionParams;
-    private int armourSpawnInterval;
 
 
     public EnemyBulletActor(BossBulletConfig bossBulletConfig, CameraConfig cameraConfig) {
         super(bossBulletConfig, cameraConfig);
         setUpCollisionVectors(bossBulletConfig, this.getBody());
-        setArmourSpawnInterval(bossBulletConfig.getArmourSpawnInterval());
     }
 
 
     private void setUpCollisionVectors(BossBulletConfig enemyConfig, Body body) {
-        this.armourHitVelocityX = enemyConfig.getArmourHitVelocityX();
-        this.armourHitVelocityY = enemyConfig.getArmourHitVelocityY();
-        this.armourHitImpulseX = enemyConfig.getArmourHitImpulseX();
-        this.armourHitImpulseY = enemyConfig.getArmourHitImpulseY();
-        this.armourHitRotationDelta = enemyConfig.getArmourHitRotationDelta();
-        this.armourHitLinearVelocityX = new Vector2(armourHitVelocityX, armourHitVelocityY);
-        this.armourHitLinearVelocityY = new Vector2(armourHitImpulseX, armourHitImpulseY);
-        this.rotationOptional = Optional.of(armourHitRotationDelta);
+        final float armourHitVelocityX = enemyConfig.getArmourHitVelocityX();
+        final float armourHitVelocityY = enemyConfig.getArmourHitVelocityY();
+        final float armourHitImpulseX = enemyConfig.getArmourHitImpulseX();
+        final float armourHitImpulseY = enemyConfig.getArmourHitImpulseY();
+        final float armourHitRotationDelta = enemyConfig.getArmourHitRotationDelta();
+        final Vector2 armourHitLinearVelocityX =
+                new Vector2(armourHitVelocityX, armourHitVelocityY);
+        final Vector2 armourHitLinearVelocityY =
+                new Vector2(armourHitImpulseX, armourHitImpulseY);
+        Optional<Float> rotationOptional = Optional.of(armourHitRotationDelta);
         final Filter armourCollisionFilter = createArmourCollisionFilter();
         collisionParams = new CollisionParams(armourHitLinearVelocityX,
                 armourHitLinearVelocityY, armourCollisionFilter, body, rotationOptional);
@@ -92,12 +84,5 @@ public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
         return 1;
     }
 
-    public int getArmourSpawnInterval() {
-        return armourSpawnInterval;
-    }
-
-    public void setArmourSpawnInterval(int armourSpawnInterval) {
-        this.armourSpawnInterval = armourSpawnInterval;
-    }
 
 }

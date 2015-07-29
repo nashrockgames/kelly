@@ -24,7 +24,8 @@
         "y": 2.01
       },
       "density": 0.5,
-      "velocityX" : -5
+      "velocityX" : -5,
+      "armourSpawnInterval" : 3
     },
     "bossBullet":{
       "animations":[
@@ -54,7 +55,43 @@
       "armourHitImpulseX" : 5.0,
       "armourHitImpulseY" : 10.0,
       "armourHitRotationDelta" : 15.0
-      "armourSpawnInterval" : 5,
+   },
+   "bossBomb":{
+     "animations":[
+       {
+         "name":"default",
+         "atlas":"dynamite.atlas",
+         "imageOffset":{
+           "x":0,
+           "y":0
+         },
+         "imageScale":{
+           "x":1.0,
+           "y":1.0
+         }
+     },
+       {
+        "name":"explosion",
+        "atlas":"explosion.atlas",
+        "imageOffset":{
+          "x":0,
+          "y":0
+        },
+        "imageScale":{
+          "x":1.0,
+          "y":1.0
+        }
+     }],
+     "frameRate": 0.125,
+     "width": 2.0,
+     "height": 2.0,
+     "position":{
+       "x": 14.0,
+       "y": 2.25
+     },
+     "density": 0.5,
+     "velocityX" : -10.0,
+     "hitBoxScale" : 0.80
    },
   "enemies":[
     {
@@ -79,7 +116,8 @@
         "y": 3.01
       },
       "density": 0.5,
-      "velocityX" : -10
+      "velocityX" : -10,
+      "hitBoxScale" : 0.80
     }
     ,
     {
@@ -104,7 +142,8 @@
         "y": 2.01
       },
       "density": 0.5,
-      "velocityX" : -10
+      "velocityX" : -10,
+      "hitBoxScale" : 0.80
     },
     {
      "animations":[
@@ -128,7 +167,8 @@
         "y": 2.01
       },
       "density": 0.5,
-      "velocityX" : -10
+      "velocityX" : -10,
+      "hitBoxScale" : 0.80
     }
     ,
     {
@@ -153,7 +193,8 @@
         "y": 1.51
       },
       "density": 0.5,
-      "velocityX" : -10
+      "velocityX" : -10,
+      "hitBoxScale" : 0.80
     }
     ,
     {
@@ -178,7 +219,8 @@
         "y": 3.01
       },
       "density": 0.5,
-      "velocityX" : -10
+      "velocityX" : -10,
+      "hitBoxScale" : 0.80
     }
   ]
 }
