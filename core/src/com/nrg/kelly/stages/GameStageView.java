@@ -23,6 +23,7 @@ import com.nrg.kelly.events.FlingDirection;
 import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnTouchDownGestureEvent;
+import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
@@ -304,7 +305,8 @@ public class GameStageView extends Stage implements ContactListener {
 
         Gdx.app.log(this.getClass().getName(), "Total game time = " + this.gameTime + " seconds");
 
-        cancelSchedules();
+        Events.get().post(new CancelSchedulesEvent());
+
 
         for(RunnerActor runnerActor : runner.asSet()) {
             destroyActor(runnerActor);
@@ -315,13 +317,14 @@ public class GameStageView extends Stage implements ContactListener {
             final EnemyActor enemyActor = enemyActorList.get(index);
             destroyActor(enemyActor);
         }
-        enemiesSpawned = 0;
+        this.enemiesSpawned = 0;
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();
     }
 
-    private void cancelSchedules() {
+    @Subscribe
+    public void cancelSchedules(CancelSchedulesEvent cancelSchedulesEvent) {
         if(this.enemySchedule.isPresent()){
             this.enemySchedule.get().cancel();
         }
