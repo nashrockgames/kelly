@@ -16,6 +16,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.events.BombDroppedEvent;
 import com.nrg.kelly.events.BulletFiredEvent;
 import com.nrg.kelly.events.EnemySpawnTimeReducedEvent;
@@ -49,26 +50,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
+//TODO should probably externalise contact listener to reduce file size
 public class GameStageView extends Stage implements ContactListener {
 
-    //TODO: externalise to config
-    public static final int VELOCITY_ITERATIONS = 6;
-    public static final int POSITION_ITERATIONS = 2;
-    public static final float ENEMY_SPAWN_DELAY = 4.0f;
-    private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
     private int level = 1;
     private Optional<RunnerActor> runner = Optional.absent();
-    private float enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
-    private float enemyReduceSpawnDelaySeconds= 5.0f;
-    private float enemyReduceSpawnDelayPercentage = 0.1f;
-    private final int bossSpawnCount = 5;
+    private float enemySpawnDelaySeconds;
+    private float reduceEnemySpawnIntervalSeconds;
+    private float reduceEnemySpawnDelayPercentage;
+    private int spawnBossOnEnemyCount;
     private Optional<Timer.Task> enemySpawnTimeReduceTask = Optional.absent();
     private Optional<Timer.Task> gameTimeTask = Optional.absent();
     private Optional<Timer.Task> bossFireSchedule = Optional.absent();
     private Optional<Timer.Task> enemySchedule = Optional.absent();
     private float gameTime = 0f;
+
+    @Inject
+    GameConfig gameConfig;
 
     @Inject
     GameStateManager gameStateManager;
@@ -85,6 +84,8 @@ public class GameStageView extends Stage implements ContactListener {
     @Inject
     PlayButtonActor playButtonActor;
 
+    private float timeStep;
+
     private int enemiesSpawned = 0;
 
     @Inject
@@ -99,10 +100,10 @@ public class GameStageView extends Stage implements ContactListener {
             @Override
             public void run() {
                 enemySpawnDelaySeconds = enemySpawnDelaySeconds -
-                        (enemySpawnDelaySeconds * enemyReduceSpawnDelayPercentage);
+                        (enemySpawnDelaySeconds * reduceEnemySpawnDelayPercentage);
                 Events.get().post(new EnemySpawnTimeReducedEvent());
             }
-        }, enemyReduceSpawnDelaySeconds));
+        }, reduceEnemySpawnIntervalSeconds));
     }
 
 /*
@@ -180,9 +181,9 @@ public class GameStageView extends Stage implements ContactListener {
             // Fixed timestep
             accumulator += delta;
             while (accumulator >= delta) {
-                Box2dFactory.getWorld().step(TIME_STEP,
-                        VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-                accumulator -= TIME_STEP;
+                Box2dFactory.getWorld().step(timeStep,
+                        gameConfig.getWorldVelocityIterations(), gameConfig.getWorldPositionIterations());
+                accumulator -= timeStep;
             }
         }
     }
@@ -255,7 +256,7 @@ public class GameStageView extends Stage implements ContactListener {
     @Subscribe
     public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){
 
-        if(enemiesSpawned == bossSpawnCount){
+        if(enemiesSpawned == spawnBossOnEnemyCount){
             if(canSpawnBoss()) {
                 spawnBoss();
             }
@@ -360,6 +361,11 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void postBuildGame(PostBuildGameModuleEvent postBuildGameModuleEvent) {
+        this.timeStep = 1 / gameConfig.getWorldTimeStepDenominator();
+        this.enemySpawnDelaySeconds = gameConfig.getEnemySpawnDelaySeconds();
+        this.reduceEnemySpawnIntervalSeconds = gameConfig.getReduceEnemySpawnIntervalSeconds();
+        this.reduceEnemySpawnDelayPercentage = gameConfig.getReduceEnemySpawnDelayPercentage();
+        this.spawnBossOnEnemyCount = gameConfig.getSpawnBossOnEnemyCount();
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         this.gameStateManager.setBossState(BossState.NONE);
@@ -371,7 +377,7 @@ public class GameStageView extends Stage implements ContactListener {
         for(RunnerActor runnerActor : runner.asSet()) {
             this.addActor(runnerActor);
         }
-        this.enemySpawnDelaySeconds = ENEMY_SPAWN_DELAY;
+        this.enemySpawnDelaySeconds = this.gameConfig.getEnemySpawnDelaySeconds();
         this.gameTime = 0f;
         this.gameStateManager.setBossState(BossState.NONE);
         onPlayTimeUpdated(new OnPlayTimeUpdatedEvent());

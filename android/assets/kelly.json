@@ -1,6 +1,13 @@
 {
   "viewPortWidth": 20.0,
   "viewPortHeight": 13.0,
+  "worldVelocityIterations": 6,
+  "worldPositionIterations" : 2,
+  "worldTimeStepDenominator" : 300.0,
+  "enemySpawnDelaySeconds":4.0,
+  "reduceEnemySpawnIntervalSeconds":5.0,
+  "reduceEnemySpawnDelayPercentage":0.1,
+  "spawnBossOnEnemyCount":10,
   "levelCount":1,
   "actors":{
     "worldGravity": {
