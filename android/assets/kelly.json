@@ -67,11 +67,46 @@
       "height": 2.0,
       "width": 1.0
     },
+    "gun":{
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"get_gun.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }}],
+      "position":{
+            "x": 25.0,
+            "y": 2.01
+      },
+      "density": 0.0,
+      "velocityX" : -10,
+      "frameRate" : 0.125,
+      "height": 2.0,
+      "width": 1.0
+    },
     "runner": {
       "animations":[
         {
           "name":"default",
           "atlas":"kelly_run.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+        },
+        {
+          "name":"run-gun",
+          "atlas":"kelly_run_gun.atlas",
           "imageOffset":{
             "x":0,
             "y":0
@@ -94,6 +129,18 @@
           }
         },
         {
+          "name":"armour-run-gun",
+          "atlas":"kelly_armour_run_gun.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+        },
+        {
           "name" : "jump",
           "atlas":"kelly_jump.atlas",
           "imageOffset":{
@@ -106,8 +153,32 @@
           }
         },
         {
+          "name" : "jump-gun",
+          "atlas":"kelly_jump_gun.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+        },
+        {
           "name" : "armour-jump",
           "atlas":"kelly_armour_jump.atlas",
+          "imageOffset":{
+           "x":0,
+           "y":0
+          },
+          "imageScale":{
+           "x":1.0,
+           "y":1.0
+          }
+        },
+        {
+          "name" : "armour-jump-gun",
+          "atlas":"kelly_armour_jump_gun.atlas",
           "imageOffset":{
            "x":0,
            "y":0
@@ -142,8 +213,32 @@
           }
         },
         {
+          "name": "slide-gun",
+          "atlas": "kelly_slide_gun.atlas",
+          "imageOffset": {
+            "x": 0,
+            "y": 0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+        },
+        {
           "name": "armour-slide",
           "atlas": "kelly_armour_slide.atlas",
+          "imageOffset": {
+           "x": 0,
+           "y": 0
+          },
+          "imageScale":{
+           "x":1.0,
+           "y":1.0
+          }
+        },
+        {
+          "name": "armour-slide-gun",
+          "atlas": "kelly_armour_slide_gun.atlas",
           "imageOffset": {
            "x": 0,
            "y": 0

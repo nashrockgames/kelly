@@ -17,6 +17,16 @@ public class ActorsConfig {
 
     private ArmourConfig armour;
 
+    private GunConfig gun;
+
+    public GunConfig getGun() {
+        return gun;
+    }
+
+    public void setGun(GunConfig gun) {
+        this.gun = gun;
+    }
+
     public ArmourConfig getArmour() {
         return armour;
     }
