@@ -3,25 +3,49 @@ clean resources/raw/actors/kelly/frames/run
 split resources/raw/actors/kelly/sheets/run *.png 64 128 resources/raw/actors/kelly/frames/run
 pack resources/raw/actors/kelly/frames/run android/assets kelly_run
 
+clean resources/raw/actors/kelly/frames/run-gun
+split resources/raw/actors/kelly/sheets/run-gun *.png 64 128 resources/raw/actors/kelly/frames/run-gun
+pack resources/raw/actors/kelly/frames/run-gun android/assets kelly_run_gun
+
 clean resources/raw/actors/kelly/frames/armour-run
 split resources/raw/actors/kelly/sheets/armour-run *.png 64 128 resources/raw/actors/kelly/frames/armour-run
 pack resources/raw/actors/kelly/frames/armour-run android/assets kelly_armour_run
+
+clean resources/raw/actors/kelly/frames/armour-run-gun
+split resources/raw/actors/kelly/sheets/armour-run-gun *.png 64 128 resources/raw/actors/kelly/frames/armour-run-gun
+pack resources/raw/actors/kelly/frames/armour-run-gun android/assets kelly_armour_run_gun
 
 clean resources/raw/actors/kelly/frames/jump
 split resources/raw/actors/kelly/sheets/jump *.png 64 128 resources/raw/actors/kelly/frames/jump
 pack resources/raw/actors/kelly/frames/jump android/assets kelly_jump
 
+clean resources/raw/actors/kelly/frames/jump-gun
+split resources/raw/actors/kelly/sheets/jump-gun *.png 64 128 resources/raw/actors/kelly/frames/jump-gun
+pack resources/raw/actors/kelly/frames/jump-gun android/assets kelly_jump_gun
+
 clean resources/raw/actors/kelly/frames/armour-jump
 split resources/raw/actors/kelly/sheets/armour-jump *.png 64 128 resources/raw/actors/kelly/frames/armour-jump
 pack resources/raw/actors/kelly/frames/armour-jump android/assets kelly_armour_jump
+
+clean resources/raw/actors/kelly/frames/armour-jump-gun
+split resources/raw/actors/kelly/sheets/armour-jump-gun *.png 64 128 resources/raw/actors/kelly/frames/armour-jump-gun
+pack resources/raw/actors/kelly/frames/armour-jump-gun android/assets kelly_armour_jump_gun
 
 clean resources/raw/actors/kelly/frames/slide
 split resources/raw/actors/kelly/sheets/slide *.png 128 64 resources/raw/actors/kelly/frames/slide
 pack resources/raw/actors/kelly/frames/slide android/assets kelly_slide
 
+clean resources/raw/actors/kelly/frames/slide-gun
+split resources/raw/actors/kelly/sheets/slide-gun *.png 128 64 resources/raw/actors/kelly/frames/slide-gun
+pack resources/raw/actors/kelly/frames/slide-gun android/assets kelly_slide_gun
+
 clean resources/raw/actors/kelly/frames/armour-slide
 split resources/raw/actors/kelly/sheets/armour-slide *.png 128 64 resources/raw/actors/kelly/frames/armour-slide
 pack resources/raw/actors/kelly/frames/armour-slide android/assets kelly_armour_slide
+
+clean resources/raw/actors/kelly/frames/armour-slide-gun
+split resources/raw/actors/kelly/sheets/armour-slide-gun *.png 128 64 resources/raw/actors/kelly/frames/armour-slide-gun
+pack resources/raw/actors/kelly/frames/armour-slide-gun android/assets kelly_armour_slide_gun
 
 clean resources/raw/actors/kelly/frames/die
 split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/frames/die
@@ -56,6 +80,10 @@ pack resources/raw/buttons/play android/assets play
 clean resources/raw/actors/objects/frames/get-armour
 split resources/raw/actors/objects/sheets/get-armour *.png 64 128 resources/raw/actors/objects/frames/get-armour
 pack resources/raw/actors/objects/frames/get-armour android/assets get_armour
+
+clean resources/raw/actors/objects/frames/get-gun
+split resources/raw/actors/objects/sheets/get-gun *.png 64 128 resources/raw/actors/objects/frames/get-gun
+pack resources/raw/actors/objects/frames/get-gun android/assets get_gun
 
 clean resources/raw/actors/objects/frames/cart-boss-bullet
 split resources/raw/actors/objects/sheets/cart-boss-bullet *.png 16 16 resources/raw/actors/objects/frames/cart-boss-bullet
