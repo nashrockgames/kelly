@@ -14,6 +14,7 @@ import com.nrg.kelly.config.actors.BossBombConfig;
 import com.nrg.kelly.config.actors.BossBulletConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
+import com.nrg.kelly.config.actors.GunConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
@@ -26,6 +27,7 @@ import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
+import com.nrg.kelly.stages.actors.GunActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 import java.util.List;
 import java.util.Random;
@@ -126,6 +128,22 @@ public class ActorFactoryImpl implements ActorFactory{
         armourActor.setLinearVelocity(new Vector2(armourConfig.getVelocityX(), 0f));
         return armourActor;
     }
+
+
+    @Override
+    public Actor createGun() {
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final GunConfig gunConfig = gameConfig.getActors().getGun();
+        final GunActor gunActor = new GunActor(gunConfig, cameraConfig);
+        final List<AtlasConfig> atlasConfigList = gunConfig.getAnimations();
+        gunActor.setDefaultAtlasConfig(gunActor.getAtlasConfigByName(atlasConfigList, "default"));
+        final String armour = gunActor.getDefaultAtlasConfig().getAtlas();
+        final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(armour));
+        gunActor.setDefaultAnimation(new Animation(gunConfig.getFrameRate(), defaultAtlas.getRegions()));
+        gunActor.setLinearVelocity(new Vector2(gunConfig.getVelocityX(), 0f));
+        return gunActor;
+    }
+
 
     @Override
     public Actor createBoss(int level) {

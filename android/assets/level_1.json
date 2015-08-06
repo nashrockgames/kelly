@@ -25,7 +25,8 @@
       },
       "density": 0.5,
       "velocityX" : -5,
-      "armourSpawnInterval" : 3
+      "armourSpawnInterval" : 3,
+      "gunSpawnInterval" : 9
     },
     "bossBullet":{
       "animations":[

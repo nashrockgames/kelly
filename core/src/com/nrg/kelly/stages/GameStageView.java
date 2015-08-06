@@ -229,13 +229,37 @@ public class GameStageView extends Stage implements ContactListener {
             spawnBossBullet(bossActor);
             for (RunnerActor runnerActor : runner.asSet()) {
                 final int bulletsFired = bossActor.getBulletsFired();
-                if (bulletsFired > 0 && bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
-                    if (canSpawnArmour(runnerActor)) {
-                        this.spawnArmour();
+                if (bulletsFired > 0) {
+                    if (bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
+                        if (canSpawnArmour(runnerActor)) {
+                            this.spawnArmour();
+                        }
+                    }
+                    if (bulletsFired % bossActor.getGunSpawnInterval() == 0) {
+                        if (canSpawnGun(runnerActor)) {
+                            this.spawnGun();
+                        }
                     }
                 }
             }
         }
+    }
+
+    private void spawnGun() {
+        this.addActor(actorFactory.createGun());
+    }
+
+    private boolean canSpawnGun(RunnerActor runnerActor) {
+
+        final ActorState actorState = runnerActor.getActorState();
+        final BossState bossState = gameStateManager.getBossState();
+        final AnimationState animationState = runnerActor.getAnimationState();
+
+        return !bossState.equals(BossState.SPAWNING) &&
+                !actorState.equals(ActorState.HIT) &&
+                !animationState.equals(AnimationState.GUN_EQUIPPED) &&
+                !actorState.equals(ActorState.FALLING);
+
     }
 
     private void spawnBossBullet(BossActor bossActor) {
@@ -387,7 +411,6 @@ public class GameStageView extends Stage implements ContactListener {
 
     @Subscribe
     public void onPlayTimeUpdated(OnPlayTimeUpdatedEvent onPlayTimeUpdatedEvent) {
-
         gameTimeTask = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -395,8 +418,6 @@ public class GameStageView extends Stage implements ContactListener {
                 Events.get().post(new OnPlayTimeUpdatedEvent());
             }
         }, 1.0f));
-
-
     }
 
     public void show() {

@@ -27,10 +27,12 @@ public class BossActor extends EnemyActor {
 
     private int bulletsFired = 0;
     private int armourSpawnInterval;
+    private int gunSpawnInterval;
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
+        this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
 
     public Optional<Timer.Task> getFireBulletSchedule() {
@@ -136,5 +138,11 @@ public class BossActor extends EnemyActor {
     }
 
 
+    public void setGunSpawnInterval(int gunSpawnInterval) {
+        this.gunSpawnInterval = gunSpawnInterval;
+    }
 
+    public int getGunSpawnInterval() {
+        return gunSpawnInterval;
+    }
 }

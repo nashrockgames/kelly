@@ -12,6 +12,7 @@ import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
+import com.nrg.kelly.config.actors.GunConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.inject.ConfigFactory;
@@ -147,6 +148,20 @@ public class Box2dFactory {
         shape.setAsBox(armour.getWidth() / 2, armour.getHeight() / 2);
         Body body = world.createBody(bodyDef);
         body.createFixture(shape, armour.getDensity());
+        body.resetMassData();
+        shape.dispose();
+        return body;
+    }
+
+    public Body createGun(GunConfig config) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        final PositionConfig positionConfig = config.getPosition();
+        bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(config.getWidth() / 2, config.getHeight() / 2);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, config.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;
