@@ -6,6 +6,7 @@ import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
+import com.nrg.kelly.stages.actors.GunActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
 
@@ -15,6 +16,7 @@ public class BeginContactEvent {
     private Optional<RunnerActor> runnerActor = Optional.absent();
     private Optional<GroundActor> groundActor = Optional.absent();
     private Optional<ArmourActor> armourActor = Optional.absent();
+    private Optional<GunActor> gunActor = Optional.absent();
 
     public BeginContactEvent(Contact contact) {
         this.contact = contact;
@@ -35,6 +37,8 @@ public class BeginContactEvent {
             this.groundActor = Optional.of((GroundActor)userData);
         } else if(userData instanceof ArmourActor ){
             this.armourActor = Optional.of((ArmourActor)userData);
+        } else if(userData instanceof GunActor){
+            this.gunActor = Optional.of((GunActor)userData);
         }
     }
 
@@ -58,4 +62,11 @@ public class BeginContactEvent {
         return contact;
     }
 
+    public Optional<GunActor> getGunActor() {
+        return gunActor;
+    }
+
+    public void setGunActor(Optional<GunActor> gunActor) {
+        this.gunActor = gunActor;
+    }
 }

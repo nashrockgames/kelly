@@ -5,5 +5,6 @@ package com.nrg.kelly.stages.actors;
  */
 public enum AnimationState {
     ARMOUR_EQUIPPED,
-    GUN_EQUIPPED, DEFAULT
+    GUN_EQUIPPED,
+    ARMOUR_AND_GUN_EQUIPPED, DEFAULT
 }

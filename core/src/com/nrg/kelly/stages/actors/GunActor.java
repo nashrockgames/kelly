@@ -30,7 +30,7 @@ public class GunActor extends GameActor{
     }
 
     @Subscribe
-    public void pickedUp(GunPickedUpEvent armourPickedUpEvent){
+    public void pickedUp(GunPickedUpEvent gunPickedUpEvent){
         this.pickedUp = true;
     }
 

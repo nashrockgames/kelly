@@ -7,7 +7,7 @@
   "enemySpawnDelaySeconds":4.0,
   "reduceEnemySpawnIntervalSeconds":5.0,
   "reduceEnemySpawnDelayPercentage":0.1,
-  "spawnBossOnEnemyCount":10,
+  "spawnBossOnEnemyCount":3,
   "levelCount":1,
   "actors":{
     "worldGravity": {

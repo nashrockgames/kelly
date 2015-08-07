@@ -211,6 +211,7 @@ public class GameStageView extends Stage implements ContactListener {
         return !bossState.equals(BossState.SPAWNING) &&
                 !actorState.equals(ActorState.HIT) &&
                 !animationState.equals(AnimationState.ARMOUR_EQUIPPED) &&
+                !animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED) &&
                 !actorState.equals(ActorState.FALLING);
     }
 
@@ -258,6 +259,7 @@ public class GameStageView extends Stage implements ContactListener {
         return !bossState.equals(BossState.SPAWNING) &&
                 !actorState.equals(ActorState.HIT) &&
                 !animationState.equals(AnimationState.GUN_EQUIPPED) &&
+                !animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED) &&
                 !actorState.equals(ActorState.FALLING);
 
     }

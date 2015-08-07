@@ -22,6 +22,7 @@ import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.RunnerConfig;
+import com.nrg.kelly.events.game.GunPickedUpEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
@@ -48,6 +49,18 @@ public class RunnerActor extends GameActor {
     private Animation armourSlideAnimation;
     private Animation armourRunAnimation;
     private AnimationState animationState = AnimationState.DEFAULT;
+    private AtlasConfig runGunAtlasConfig;
+    private AtlasConfig jumpGunAtlasConfig;
+    private AtlasConfig armourRunGunAtlasConfig;
+    private AtlasConfig slideGunAtlasConfig;
+    private AtlasConfig armourSlideGunAtlasConfig;
+    private AtlasConfig armourJumpGunAtlasConfig;
+    private Animation runGunAnimation;
+    private Animation jumpGunAnimation;
+    private Animation slideGunAnimation;
+    private Animation armourJumpGunAnimation;
+    private Animation armourSlideGunAnimation;
+    private Animation armourRunGunAnimation;
 
     public RunnerActor(RunnerConfig runnerConfig, CameraConfig cameraConfig) {
         super(runnerConfig, cameraConfig);
@@ -62,37 +75,85 @@ public class RunnerActor extends GameActor {
         //TODO: this is repetitive and should be abstracted
         final List<AtlasConfig> atlasConfigList = runnerConfig.getAnimations();
         setDefaultAtlasConfig(this.getAtlasConfigByName(atlasConfigList, "default"));
+        runGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "run-gun");
+
         jumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump");
+        jumpGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "jump-gun");
+
         slideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide");
+        slideGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "slide-gun");
+
         dieAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "die");
 
         armourJumpAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-jump");
+        armourJumpGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-jump-gun");
+
         armourSlideAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-slide");
+        armourSlideGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-slide-gun");
+
         armourRunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-run");
+        armourRunGunAtlasConfig = this.getAtlasConfigByName(atlasConfigList, "armour-run-gun");
 
         final String run = getDefaultAtlasConfig().getAtlas();
+        final String runGun = runGunAtlasConfig.getAtlas();
+
         final String jump = jumpAtlasConfig.getAtlas();
+        final String jumpGun = jumpGunAtlasConfig.getAtlas();
+
         final String slide = slideAtlasConfig.getAtlas();
+        final String slideGun = slideGunAtlasConfig.getAtlas();
+
         final String die = dieAtlasConfig.getAtlas();
+
         final String armourRun = armourRunAtlasConfig.getAtlas();
+        final String armourRunGun = armourRunGunAtlasConfig.getAtlas();
+
         final String armourJump = armourJumpAtlasConfig.getAtlas();
+        final String armourJumpGun = armourJumpGunAtlasConfig.getAtlas();
+
         final String armourSlide = armourSlideAtlasConfig.getAtlas();
+        final String armourSlideGun = armourSlideGunAtlasConfig.getAtlas();
 
         final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(run));
+        final TextureAtlas runGunAtlas = new TextureAtlas(Gdx.files.internal(runGun));
+
         final TextureAtlas jumpAtlas = new TextureAtlas(Gdx.files.internal(jump));
+        final TextureAtlas jumpGunAtlas = new TextureAtlas(Gdx.files.internal(jumpGun));
+
         final TextureAtlas slideAtlas = new TextureAtlas(Gdx.files.internal(slide));
+        final TextureAtlas slideGunAtlas = new TextureAtlas(Gdx.files.internal(slideGun));
+
         final TextureAtlas dieAtlas = new TextureAtlas(Gdx.files.internal(die));
+
         final TextureAtlas armourJumpAtlas = new TextureAtlas(Gdx.files.internal(armourJump));
+        final TextureAtlas armourJumpGunAtlas = new TextureAtlas(Gdx.files.internal(armourJumpGun));
+
         final TextureAtlas armourSlideAtlas = new TextureAtlas(Gdx.files.internal(armourSlide));
+        final TextureAtlas armourSlideGunAtlas = new TextureAtlas(Gdx.files.internal(armourSlideGun));
+
         final TextureAtlas armourRunAtlas = new TextureAtlas(Gdx.files.internal(armourRun));
+        final TextureAtlas armourRunGunAtlas = new TextureAtlas(Gdx.files.internal(armourRunGun));
 
         setDefaultAnimation(new Animation(runnerConfig.getFrameRate(), defaultAtlas.getRegions()));
+        runGunAnimation = new Animation(runnerConfig.getFrameRate(), runGunAtlas.getRegions());
+
         jumpAnimation = new Animation(runnerConfig.getFrameRate(), jumpAtlas.getRegions());
+        jumpGunAnimation = new Animation(runnerConfig.getFrameRate(), jumpGunAtlas.getRegions());
+
         slideAnimation = new Animation(runnerConfig.getFrameRate(), slideAtlas.getRegions());
+        slideGunAnimation = new Animation(runnerConfig.getFrameRate(), slideGunAtlas.getRegions());
+
         dieAnimation = new Animation(runnerConfig.getFrameRate(), dieAtlas.getRegions());
+
         armourJumpAnimation = new Animation(runnerConfig.getFrameRate(), armourJumpAtlas.getRegions());
+        armourJumpGunAnimation = new Animation(runnerConfig.getFrameRate(), armourJumpGunAtlas.getRegions());
+
         armourSlideAnimation = new Animation(runnerConfig.getFrameRate(), armourSlideAtlas.getRegions());
+        armourSlideGunAnimation = new Animation(runnerConfig.getFrameRate(), armourSlideGunAtlas.getRegions());
+
         armourRunAnimation = new Animation(runnerConfig.getFrameRate(), armourRunAtlas.getRegions());
+        armourRunGunAnimation = new Animation(runnerConfig.getFrameRate(), armourRunGunAtlas.getRegions());
+
 
     }
 
@@ -105,29 +166,27 @@ public class RunnerActor extends GameActor {
         final ActorState state = this.getActorState();
         final AnimationState animationState = this.getAnimationState();
         final Animation animation;
+        final AtlasConfig atlasConfig;
         switch(state){
             case UPGRADING_ARMOUR:
-                maintainPosition();
-                region = armourRunAnimation.getKeyFrame(stateTime, true);
-                drawAnimation(batch,
-                        region,
-                        Optional.of(armourRunAtlasConfig.getImageOffset()),
-                        Optional.of(armourRunAtlasConfig.getImageScale()));
+                drawUpgradingAnimation(batch, animationState);
+                break;
+            case UPGRADING_GUN:
+                drawUpgradingAnimation(batch, animationState);
                 break;
             case SLIDING:
-                animation = animationState.equals(AnimationState.ARMOUR_EQUIPPED) ?
-                        armourSlideAnimation : slideAnimation;
+                animation = getSlideAnimation(animationState);
                 region = animation.getKeyFrame(stateTime, true);
                 drawSlideAnimation(batch, region);
                 break;
             case JUMPING:
-                animation = animationState.equals(AnimationState.ARMOUR_EQUIPPED) ?
-                        armourJumpAnimation : jumpAnimation;
+                animation = getJumpAnimation(animationState);
                 region = animation.getKeyFrame(stateTime, true);
+                atlasConfig = getJumpAtlasConfig(animationState);
                 drawAnimation(batch,
                         region,
-                        Optional.of(jumpAtlasConfig.getImageOffset()),
-                        Optional.of(jumpAtlasConfig.getImageScale()));
+                        Optional.of(atlasConfig.getImageOffset()),
+                        Optional.of(atlasConfig.getImageScale()));
                 break;
             case HIT:
                 maintainPosition();
@@ -149,16 +208,110 @@ public class RunnerActor extends GameActor {
                 }
                 break;
             case RUNNING:
-                if(animationState.equals(AnimationState.ARMOUR_EQUIPPED)){
-                    region = armourRunAnimation.getKeyFrame(stateTime, true);
-                    drawAnimation(batch,
-                            region,
-                            Optional.of(jumpAtlasConfig.getImageOffset()),
-                            Optional.of(jumpAtlasConfig.getImageScale()));
-                } else {
-                    drawDefaultAnimation(batch);
-                }
+                animation = getRunAnimation(animationState);
+                region = animation.getKeyFrame(stateTime, true);
+                atlasConfig = getRunAtlasConfig(animationState);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(atlasConfig.getImageOffset()),
+                        Optional.of(atlasConfig.getImageScale()));
                 break;
+        }
+
+    }
+
+    private AtlasConfig getRunAtlasConfig(final AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourRunAtlasConfig;
+            case ARMOUR_AND_GUN_EQUIPPED:
+                return armourRunGunAtlasConfig;
+            case GUN_EQUIPPED:
+                return runGunAtlasConfig;
+            default:
+                return getDefaultAtlasConfig();
+        }
+    }
+
+    private Animation getRunAnimation(final AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourRunAnimation;
+            case ARMOUR_AND_GUN_EQUIPPED:
+                return armourRunGunAnimation;
+            case GUN_EQUIPPED:
+                return runGunAnimation;
+            default:
+                return getDefaultAnimation();
+        }
+    }
+
+    private AtlasConfig getJumpAtlasConfig(final AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourJumpAtlasConfig;
+            case ARMOUR_AND_GUN_EQUIPPED:
+                return armourJumpGunAtlasConfig;
+            case GUN_EQUIPPED:
+                return armourJumpAtlasConfig;
+            default:
+                return jumpAtlasConfig;
+        }
+    }
+
+    private Animation getJumpAnimation(final AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourJumpAnimation;
+            case ARMOUR_AND_GUN_EQUIPPED:
+                return armourJumpGunAnimation;
+            case GUN_EQUIPPED:
+                return armourJumpAnimation;
+            default:
+                return jumpAnimation;
+        }
+    }
+
+    private void drawUpgradingAnimation(Batch batch, AnimationState animationState) {
+        Animation animation;
+        TextureRegion region;
+        maintainPosition();
+        animation = getUpgradingAnimation(animationState);
+        final AtlasConfig atlasConfig = getAtlasConfig(animationState);
+        region = animation.getKeyFrame(stateTime, true);
+        drawAnimation(batch,
+                region,
+                Optional.of(atlasConfig.getImageOffset()),
+                Optional.of(atlasConfig.getImageScale()));
+    }
+
+    private AtlasConfig getAtlasConfig(AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourRunGunAtlasConfig;
+            default:
+                return armourRunAtlasConfig;
+        }
+    }
+
+    private Animation getUpgradingAnimation(final AnimationState animationState) {
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourRunGunAnimation;
+            default:
+                return armourRunAnimation;
+        }
+    }
+
+    private Animation getSlideAnimation(final AnimationState animationState) {
+
+        switch(animationState){
+            case ARMOUR_EQUIPPED:
+                return armourSlideAnimation;
+            case ARMOUR_AND_GUN_EQUIPPED:
+                return armourSlideGunAnimation;
+            default:
+                return slideAnimation;
         }
 
     }
@@ -247,6 +400,7 @@ public class RunnerActor extends GameActor {
         final Optional<EnemyActor> enemyActorOptional = beginContactEvent.getEnemyActor();
         final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
         final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
+        final Optional<GunActor> gunActorOptional = beginContactEvent.getGunActor();
         for(RunnerActor runnerActor : runnerActorOptional.asSet()){
             final ActorState actorState = this.getActorState();
             for(EnemyActor enemyActor : enemyActorOptional.asSet()){
@@ -259,9 +413,15 @@ public class RunnerActor extends GameActor {
                     this.pickupArmour();
                 }
             }
+            for(GunActor gunActor : gunActorOptional.asSet()){
+                if(!actorState.equals(ActorState.HIT)){
+                    this.pickupGun();
+                }
+            }
             for(GroundActor groundActor : groundActorOptional.asSet()){
                 this.setLanded();
             }
+
 
         }
 
@@ -274,6 +434,26 @@ public class RunnerActor extends GameActor {
             @Override
             public void run() {
                 setAnimationState(AnimationState.ARMOUR_EQUIPPED);
+                unMaintainPosition();
+                clearTransform();
+                setActorState(ActorState.RUNNING);
+                resetPosition();
+                getBody().setLinearVelocity(0f, 0f);
+            }
+        }, 0.1f);
+    }
+
+    private void pickupGun() {
+        Events.get().post(new GunPickedUpEvent());
+        this.setActorState(ActorState.UPGRADING_GUN);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if(getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)) {
+                    setAnimationState(AnimationState.ARMOUR_AND_GUN_EQUIPPED);
+                } else {
+                    setAnimationState(AnimationState.GUN_EQUIPPED);
+                }
                 unMaintainPosition();
                 clearTransform();
                 setActorState(ActorState.RUNNING);

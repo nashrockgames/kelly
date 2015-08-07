@@ -97,7 +97,9 @@ public class EnemyActor extends GameActor {
 
     private boolean hasRunnerArmour() {
         for(RunnerActor runner : runnerActorOptional.asSet()){
-            if(runner.getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)){
+            final AnimationState animationState = runner.getAnimationState();
+            if(animationState.equals(AnimationState.ARMOUR_EQUIPPED)
+                    || animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED)){
                 return true;
             }
         }

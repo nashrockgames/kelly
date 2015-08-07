@@ -76,7 +76,9 @@ public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
         final Object userData = fixture.getBody().getUserData();
         if(userData instanceof RunnerActor){
             RunnerActor runnerActor = (RunnerActor)userData;
-            if(runnerActor.getAnimationState().equals(AnimationState.ARMOUR_EQUIPPED)) {
+            final AnimationState animationState = runnerActor.getAnimationState();
+            if(animationState.equals(AnimationState.ARMOUR_EQUIPPED)
+                    ||animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED)) {
                 this.setActorState(ActorState.HIT_BY_ARMOUR);
             }
             return 0;
