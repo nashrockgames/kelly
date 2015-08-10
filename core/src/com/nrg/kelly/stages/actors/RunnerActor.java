@@ -19,6 +19,7 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
+import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.events.ArmourPickedUpEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.config.actors.RunnerConfig;
@@ -253,7 +254,7 @@ public class RunnerActor extends GameActor {
             case ARMOUR_AND_GUN_EQUIPPED:
                 return armourJumpGunAtlasConfig;
             case GUN_EQUIPPED:
-                return armourJumpAtlasConfig;
+                return jumpGunAtlasConfig;
             default:
                 return jumpAtlasConfig;
         }
@@ -266,7 +267,7 @@ public class RunnerActor extends GameActor {
             case ARMOUR_AND_GUN_EQUIPPED:
                 return armourJumpGunAnimation;
             case GUN_EQUIPPED:
-                return armourJumpAnimation;
+                return jumpGunAnimation;
             default:
                 return jumpAnimation;
         }
@@ -275,6 +276,9 @@ public class RunnerActor extends GameActor {
     private void drawUpgradingAnimation(Batch batch, AnimationState animationState) {
         Animation animation;
         TextureRegion region;
+        final PositionConfig positionConfig = this.runnerConfig.getPosition();
+        final Vector2 defaultPosition = new Vector2(positionConfig.getX(), positionConfig.getY());
+        this.setForcedPositionVector(Optional.of(defaultPosition));
         maintainPosition();
         animation = getUpgradingAnimation(animationState);
         final AtlasConfig atlasConfig = getAtlasConfig(animationState);
@@ -310,6 +314,8 @@ public class RunnerActor extends GameActor {
                 return armourSlideAnimation;
             case ARMOUR_AND_GUN_EQUIPPED:
                 return armourSlideGunAnimation;
+            case GUN_EQUIPPED:
+                return slideGunAnimation;
             default:
                 return slideAnimation;
         }
@@ -421,8 +427,6 @@ public class RunnerActor extends GameActor {
             for(GroundActor groundActor : groundActorOptional.asSet()){
                 this.setLanded();
             }
-
-
         }
 
     }
@@ -433,7 +437,11 @@ public class RunnerActor extends GameActor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                setAnimationState(AnimationState.ARMOUR_EQUIPPED);
+                if(getAnimationState().equals(AnimationState.GUN_EQUIPPED)){
+                    setAnimationState(AnimationState.ARMOUR_AND_GUN_EQUIPPED);
+                } else {
+                    setAnimationState(AnimationState.ARMOUR_EQUIPPED);
+                }
                 unMaintainPosition();
                 clearTransform();
                 setActorState(ActorState.RUNNING);
