@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.common.base.Optional;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
@@ -146,7 +147,7 @@ public class ActorFactoryImpl implements ActorFactory{
 
 
     @Override
-    public Actor createBoss(int level) {
+    public Actor createBoss(Optional<RunnerActor> runner, int level) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
         final EnemyBossConfig boss = levelConfig.getBoss();
         final BossActor bossActor = new BossActor(boss, cameraConfig);
@@ -155,6 +156,7 @@ public class ActorFactoryImpl implements ActorFactory{
             setupDefaultAnimation(boss, bossActor, animations);
         }
         bossActor.setConfiguredLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
+        bossActor.setRunnerActor(runner);
         return bossActor;
     }
 

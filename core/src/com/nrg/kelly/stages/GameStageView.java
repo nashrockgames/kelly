@@ -22,9 +22,12 @@ import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnStageTouchDownEvent;
 import com.nrg.kelly.events.OnTouchDownGestureEvent;
 import com.nrg.kelly.events.SpawnEnemyEvent;
+import com.nrg.kelly.events.SpawnGunEvent;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
+import com.nrg.kelly.events.game.SpawnArmourEvent;
+import com.nrg.kelly.events.game.SpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnBossEvent;
 import com.nrg.kelly.events.screen.OnStageTouchUpEvent;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
@@ -64,8 +67,6 @@ public class GameStageView extends Stage {
     @Inject
     GameStateManager gameStateManager;
 
-
-
     @Inject
     DirectionGestureAdapter directionGestureAdapter;
 
@@ -85,7 +86,6 @@ public class GameStageView extends Stage {
     GameStageTouchListener gameStageTouchListener;
 
     private float timeStep;
-
 
     @Inject
     public GameStageView() {
@@ -115,20 +115,6 @@ public class GameStageView extends Stage {
         }
     }
 
-
-
-    private boolean canSpawnArmour(RunnerActor runnerActor){
-        final ActorState actorState = runnerActor.getActorState();
-        final BossState bossState = gameStateManager.getBossState();
-        final AnimationState animationState = runnerActor.getAnimationState();
-
-        return !bossState.equals(BossState.SPAWNING) &&
-                !actorState.equals(ActorState.HIT) &&
-                !animationState.equals(AnimationState.ARMOUR_EQUIPPED) &&
-                !animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED) &&
-                !actorState.equals(ActorState.FALLING);
-    }
-
     @Subscribe
     public void onBossDroppedBombEvent(BombDroppedEvent bombDroppedEvent) {
         if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
@@ -137,50 +123,21 @@ public class GameStageView extends Stage {
             }
         }
     }
+
     @Subscribe
-    public void onBossFiredEvent(BulletFiredEvent bulletFiredEvent){
-        if(gameStateManager.getGameState().equals(GameState.PLAYING)) {
-            final BossActor bossActor = bulletFiredEvent.getBossActor();
-            spawnBossBullet(bossActor);
-            for (RunnerActor runnerActor : runner.asSet()) {
-                final int bulletsFired = bossActor.getBulletsFired();
-                if (bulletsFired > 0) {
-                    if (bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
-                        if (canSpawnArmour(runnerActor)) {
-                            this.spawnArmour();
-                        }
-                    }
-                    if (bulletsFired % bossActor.getGunSpawnInterval() == 0) {
-                        if (canSpawnGun(runnerActor)) {
-                            this.spawnGun();
-                        }
-                    }
-                }
-            }
-        }
+    public void spawnArmour(SpawnArmourEvent spawnArmourEvent) {
+        this.addActor(actorFactory.createArmour());
     }
 
-    private void spawnGun() {
+    @Subscribe
+    public void spawnGun(SpawnGunEvent spawnGunEvent) {
         this.addActor(actorFactory.createGun());
     }
 
-    private boolean canSpawnGun(RunnerActor runnerActor) {
-
-        final ActorState actorState = runnerActor.getActorState();
-        final BossState bossState = gameStateManager.getBossState();
-        final AnimationState animationState = runnerActor.getAnimationState();
-
-        return !bossState.equals(BossState.SPAWNING) &&
-                !actorState.equals(ActorState.HIT) &&
-                !animationState.equals(AnimationState.GUN_EQUIPPED) &&
-                !animationState.equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED) &&
-                !actorState.equals(ActorState.FALLING);
-
-    }
-
-    private void spawnBossBullet(BossActor bossActor) {
+    @Subscribe
+    public void spawnBossBullet(SpawnBossBulletEvent spawnBossBulletEvent) {
         final EnemyBulletActor bossBullet = this.actorFactory.createBossBullet(this.level);
-        bossFireSchedule = bossActor.getFireBulletSchedule();
+        bossFireSchedule = spawnBossBulletEvent.getBossActor().getFireBulletSchedule();
         this.gameStateManager.setBossState(BossState.FIRING);
         this.addActor(bossBullet);
     }
@@ -192,9 +149,6 @@ public class GameStageView extends Stage {
         return enemyBombActor;
      }
 
-    private void spawnArmour() {
-        this.addActor(actorFactory.createArmour());
-    }
 
     @Subscribe
     public void spawnEnemy(SpawnEnemyEvent spawnEnemyEvent){
@@ -203,7 +157,7 @@ public class GameStageView extends Stage {
     }
     @Subscribe
     public void spawnBoss(SpawnBossEvent spawnBossEvent){
-        this.addActor(actorFactory.createBoss(level));
+        this.addActor(actorFactory.createBoss(runner, level));
     }
 
     @Subscribe
@@ -337,7 +291,5 @@ public class GameStageView extends Stage {
         return false;
     }
     */
-
-
 
 }

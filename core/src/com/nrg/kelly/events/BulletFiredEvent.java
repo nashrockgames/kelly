@@ -1,6 +1,8 @@
 package com.nrg.kelly.events;
 
+import com.google.common.base.Optional;
 import com.nrg.kelly.stages.actors.BossActor;
+import com.nrg.kelly.stages.actors.RunnerActor;
 
 /**
  * Created by Andrew on 6/07/2015.
@@ -8,12 +10,18 @@ import com.nrg.kelly.stages.actors.BossActor;
 public class BulletFiredEvent {
 
     private final BossActor bossActor;
+    private final Optional<RunnerActor> runnerActor;
 
-    public BulletFiredEvent(BossActor bossActor) {
+    public BulletFiredEvent(BossActor bossActor, Optional<RunnerActor> runnerActor) {
         this.bossActor = bossActor;
+        this.runnerActor = runnerActor;
     }
 
     public BossActor getBossActor() {
         return bossActor;
+    }
+
+    public Optional<RunnerActor> getRunnerActor() {
+        return runnerActor;
     }
 }

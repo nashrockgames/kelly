@@ -28,6 +28,7 @@ public class BossActor extends EnemyActor {
     private int bulletsFired = 0;
     private int armourSpawnInterval;
     private int gunSpawnInterval;
+    private Optional<RunnerActor> runnerActor;
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
@@ -83,7 +84,7 @@ public class BossActor extends EnemyActor {
         fireBulletSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Events.get().post(new BulletFiredEvent(instance));
+                Events.get().post(new BulletFiredEvent(instance, runnerActor));
             }
         }, FIRE_BULLET_DELAY_SECONDS));
 
@@ -144,5 +145,13 @@ public class BossActor extends EnemyActor {
 
     public int getGunSpawnInterval() {
         return gunSpawnInterval;
+    }
+
+    public void setRunnerActor(Optional<RunnerActor> runnerActor) {
+        this.runnerActor = runnerActor;
+    }
+
+    public Optional<RunnerActor> getRunnerActor() {
+        return runnerActor;
     }
 }
