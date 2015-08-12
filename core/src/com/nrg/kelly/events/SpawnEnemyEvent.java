@@ -7,13 +7,10 @@ import com.nrg.kelly.stages.actors.RunnerActor;
  * Created by Andrew on 10/08/2015.
  */
 public class SpawnEnemyEvent {
-    private final Optional<RunnerActor> runner;
 
-    public SpawnEnemyEvent(Optional<RunnerActor> runner) {
-        this.runner = runner;
+    public SpawnEnemyEvent() {
+
     }
 
-    public Optional<RunnerActor> getRunner() {
-        return runner;
-    }
+
 }

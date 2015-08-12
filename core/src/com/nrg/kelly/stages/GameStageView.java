@@ -2,11 +2,9 @@ package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
@@ -14,33 +12,23 @@ import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.events.BombDroppedEvent;
-import com.nrg.kelly.events.BulletFiredEvent;
 import com.nrg.kelly.events.EnemySpawnTimeReducedEvent;
-import com.nrg.kelly.events.FlingDirection;
-import com.nrg.kelly.events.OnFlingGestureEvent;
 import com.nrg.kelly.events.GameOverEvent;
 import com.nrg.kelly.events.OnStageTouchDownEvent;
-import com.nrg.kelly.events.OnTouchDownGestureEvent;
 import com.nrg.kelly.events.SpawnEnemyEvent;
 import com.nrg.kelly.events.SpawnGunEvent;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
+import com.nrg.kelly.events.game.OnSpawnBossBulletEvent;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
 import com.nrg.kelly.events.game.SpawnArmourEvent;
-import com.nrg.kelly.events.game.SpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnBossEvent;
 import com.nrg.kelly.events.screen.OnStageTouchUpEvent;
-import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
-import com.nrg.kelly.events.screen.LeftSideScreenTouchUpEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
-import com.nrg.kelly.events.screen.JumpControlInvokedEvent;
 import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.actors.ActorState;
-import com.nrg.kelly.stages.actors.AnimationState;
-import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
@@ -57,9 +45,6 @@ public class GameStageView extends Stage {
     private float accumulator = 0f;
     private int level = 1;
     private Optional<RunnerActor> runner = Optional.absent();
-    private Optional<Timer.Task> gameTimeTask = Optional.absent();
-    private Optional<Timer.Task> bossFireSchedule = Optional.absent();
-    private float gameTime = 0f;
 
     @Inject
     GameConfig gameConfig;
@@ -119,7 +104,9 @@ public class GameStageView extends Stage {
     public void onBossDroppedBombEvent(BombDroppedEvent bombDroppedEvent) {
         if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
             for(RunnerActor runnerActor : runner.asSet()) {
-                this.spawnBossBomb(runnerActor);
+                final EnemyBombActor enemyBombActor = this.actorFactory.createBossBomb(this.level, runnerActor);
+                this.gameStateManager.setBossState(BossState.DROPPING_BOMB);
+                this.addActor(enemyBombActor);
             }
         }
     }
@@ -135,25 +122,15 @@ public class GameStageView extends Stage {
     }
 
     @Subscribe
-    public void spawnBossBullet(SpawnBossBulletEvent spawnBossBulletEvent) {
+    public void spawnBossBullet(OnSpawnBossBulletEvent onSpawnBossBulletEvent){
         final EnemyBulletActor bossBullet = this.actorFactory.createBossBullet(this.level);
-        bossFireSchedule = spawnBossBulletEvent.getBossActor().getFireBulletSchedule();
-        this.gameStateManager.setBossState(BossState.FIRING);
         this.addActor(bossBullet);
     }
-
-    private EnemyBombActor spawnBossBomb(RunnerActor runnerActor) {
-        final EnemyBombActor enemyBombActor = this.actorFactory.createBossBomb(this.level, runnerActor);
-        this.gameStateManager.setBossState(BossState.DROPPING_BOMB);
-        this.addActor(enemyBombActor);
-        return enemyBombActor;
-     }
-
 
     @Subscribe
     public void spawnEnemy(SpawnEnemyEvent spawnEnemyEvent){
         this.addActor(actorFactory.createEnemy(level));
-        Events.get().post(new OnEnemySpawnedEvent(spawnEnemyEvent.getRunner()));
+        Events.get().post(new OnEnemySpawnedEvent(runner));
     }
     @Subscribe
     public void spawnBoss(SpawnBossEvent spawnBossEvent){
@@ -163,7 +140,8 @@ public class GameStageView extends Stage {
     @Subscribe
     public void onGameOver(GameOverEvent gameOverEvent){
 
-        Gdx.app.log(this.getClass().getName(), "Total game time = " + this.gameTime + " seconds");
+        Gdx.app.log(this.getClass().getName(),
+                "Total game time = " + this.gameStageController.getGameTime() + " seconds");
 
         Events.get().post(new CancelSchedulesEvent());
 
@@ -181,17 +159,6 @@ public class GameStageView extends Stage {
         this.addActor(playButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();
-    }
-
-    @Subscribe
-    public void cancelSchedules(CancelSchedulesEvent cancelSchedulesEvent) {
-
-        if(gameTimeTask.isPresent()){
-            gameTimeTask.get().cancel();
-        }
-        if(bossFireSchedule.isPresent()){
-            bossFireSchedule.get().cancel();
-        }
     }
 
     private List<EnemyActor> getEnemyActors(){
@@ -227,7 +194,6 @@ public class GameStageView extends Stage {
 
     }
 
-
     @Subscribe
     public void onPlayButtonClicked(PlayButtonClickedEvent playButtonClickedEvent){
         runner = Optional.of(actorFactory.createRunner());
@@ -235,22 +201,11 @@ public class GameStageView extends Stage {
             this.addActor(runnerActor);
         }
         this.gameStageController.setEnemySpawnDelaySeconds(this.gameConfig.getEnemySpawnDelaySeconds());
-        this.gameTime = 0f;
+        this.gameStageController.resetGameTime();
         this.gameStateManager.setBossState(BossState.NONE);
-        onPlayTimeUpdated(new OnPlayTimeUpdatedEvent());
-        spawnEnemy(new SpawnEnemyEvent(runner));
+        Events.get().post(new OnPlayTimeUpdatedEvent());
+        Events.get().post(new SpawnEnemyEvent());
         Events.get().post(new EnemySpawnTimeReducedEvent());
-    }
-
-    @Subscribe
-    public void onPlayTimeUpdated(OnPlayTimeUpdatedEvent onPlayTimeUpdatedEvent) {
-        gameTimeTask = Optional.of(Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                gameTime += 1f;
-                Events.get().post(new OnPlayTimeUpdatedEvent());
-            }
-        }, 1.0f));
     }
 
     @Override

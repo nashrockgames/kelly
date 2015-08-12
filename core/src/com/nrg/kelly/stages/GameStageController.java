@@ -13,11 +13,14 @@ import com.nrg.kelly.events.SpawnEnemyEvent;
 import com.nrg.kelly.events.SpawnGunEvent;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
+import com.nrg.kelly.events.game.OnPlayTimeUpdatedEvent;
+import com.nrg.kelly.events.game.OnSpawnBossBulletEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.game.SpawnArmourEvent;
 import com.nrg.kelly.events.game.SpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnBossEvent;
 import com.nrg.kelly.stages.actors.BossActor;
+import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
 import javax.inject.Inject;
@@ -35,9 +38,12 @@ public class GameStageController {
     private float enemySpawnDelaySeconds;
     private float reduceEnemySpawnIntervalSeconds;
     private float reduceEnemySpawnDelayPercentage;
+    private Optional<Timer.Task> bossFireSchedule = Optional.absent();
     private int spawnBossOnEnemyCount;
+    private Optional<Timer.Task> gameTimeTask = Optional.absent();
     private Optional<Timer.Task> enemySpawnTimeReduceTask = Optional.absent();
     private int enemiesSpawned = 0;
+    private float gameTime = 0f;
 
     @Inject
     public GameStageController(){
@@ -52,6 +58,30 @@ public class GameStageController {
         if(this.enemySpawnTimeReduceTask.isPresent()){
             enemySpawnTimeReduceTask.get().cancel();
         }
+        if(gameTimeTask.isPresent()){
+            gameTimeTask.get().cancel();
+        }
+        if(bossFireSchedule.isPresent()){
+            bossFireSchedule.get().cancel();
+        }
+    }
+
+    @Subscribe
+    public void spawnBossBullet(SpawnBossBulletEvent spawnBossBulletEvent) {
+        bossFireSchedule = spawnBossBulletEvent.getBossActor().getFireBulletSchedule();
+        this.gameStateManager.setBossState(BossState.FIRING);
+        Events.get().post(new OnSpawnBossBulletEvent());
+    }
+
+    @Subscribe
+    public void onPlayTimeUpdated(OnPlayTimeUpdatedEvent onPlayTimeUpdatedEvent) {
+        gameTimeTask = Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                gameTime += 1f;
+                Events.get().post(new OnPlayTimeUpdatedEvent());
+            }
+        }, 1.0f));
     }
 
     @Subscribe
@@ -77,8 +107,6 @@ public class GameStageController {
         }
     }
 
-
-
     @Subscribe
     public void onEnemySpawned(OnEnemySpawnedEvent onEnemySpawnedEvent){
 
@@ -103,7 +131,7 @@ public class GameStageController {
                 if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
                     for (final RunnerActor runnerActor : runner.asSet()) {
                         if (gameStateManager.canSpawnEnemy(runnerActor)) {
-                            Events.get().post(new SpawnEnemyEvent(runner));
+                            Events.get().post(new SpawnEnemyEvent());
                             enemiesSpawned++;
                         }
                     }
@@ -164,5 +192,13 @@ public class GameStageController {
 
     public int getSpawnBossOnEnemyCount() {
         return spawnBossOnEnemyCount;
+    }
+
+    public float getGameTime() {
+        return gameTime;
+    }
+
+    public void resetGameTime() {
+        this.gameTime = 0f;
     }
 }
