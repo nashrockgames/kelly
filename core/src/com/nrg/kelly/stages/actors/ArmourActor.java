@@ -8,7 +8,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
-import com.nrg.kelly.events.ArmourPickedUpEvent;
+import com.nrg.kelly.events.game.ArmourPickedUpEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
 

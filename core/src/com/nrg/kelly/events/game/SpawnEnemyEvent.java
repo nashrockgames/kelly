@@ -1,4 +1,4 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.game;
 
 import com.google.common.base.Optional;
 import com.nrg.kelly.stages.actors.RunnerActor;

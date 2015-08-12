@@ -3,8 +3,8 @@ package com.nrg.kelly.screens.game;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.OnFlingGestureEvent;
-import com.nrg.kelly.events.OnTouchDownGestureEvent;
+import com.nrg.kelly.events.screen.OnFlingGestureEvent;
+import com.nrg.kelly.events.screen.OnTouchDownGestureEvent;
 
 import javax.inject.Inject;
 

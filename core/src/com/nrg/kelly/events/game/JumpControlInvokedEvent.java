@@ -1,4 +1,6 @@
-package com.nrg.kelly.events.screen;
+package com.nrg.kelly.events.game;
+
+import com.nrg.kelly.events.screen.ScreenTouchedEvent;
 
 /**
  * Created by Andrew on 10/05/2015.

@@ -1,4 +1,4 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.screen;
 
 /**
  * Created by Andrew on 24/06/2015.

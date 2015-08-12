@@ -1,4 +1,4 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.game;
 
 /**
  * Created by Andrew on 12/08/2015.

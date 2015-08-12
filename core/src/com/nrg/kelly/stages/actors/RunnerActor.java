@@ -20,15 +20,15 @@ import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
-import com.nrg.kelly.events.ArmourPickedUpEvent;
-import com.nrg.kelly.events.GameOverEvent;
+import com.nrg.kelly.events.game.ArmourPickedUpEvent;
+import com.nrg.kelly.events.game.GameOverEvent;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.events.game.GunPickedUpEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.screen.SlideControlInvokedEvent;
-import com.nrg.kelly.events.screen.JumpControlInvokedEvent;
+import com.nrg.kelly.events.game.JumpControlInvokedEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
 import java.util.List;

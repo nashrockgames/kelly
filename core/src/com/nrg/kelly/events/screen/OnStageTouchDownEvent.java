@@ -1,14 +1,14 @@
-package com.nrg.kelly.events;
+package com.nrg.kelly.events.screen;
 
 /**
  * Created by Andrew on 24/06/2015.
  */
-public class OnTouchDownGestureEvent {
+public class OnStageTouchDownEvent {
 
     private final float x;
     private final float y;
 
-    public OnTouchDownGestureEvent(float x, float y) {
+    public OnStageTouchDownEvent(float x, float y) {
         this.x = x;
         this.y = y;
     }

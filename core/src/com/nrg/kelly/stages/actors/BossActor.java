@@ -8,8 +8,8 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
-import com.nrg.kelly.events.BombDroppedEvent;
-import com.nrg.kelly.events.BulletFiredEvent;
+import com.nrg.kelly.events.game.BombDroppedEvent;
+import com.nrg.kelly.events.game.BulletFiredEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 
