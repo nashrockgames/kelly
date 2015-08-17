@@ -12,7 +12,6 @@ public class RunnerConfig extends ActorConfig {
     private float hitPauseTime;
     private float slideTime;
 
-
     public float getJumpImpulseX() {
         return jumpImpulseX;
     }

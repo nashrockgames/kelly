@@ -16,6 +16,7 @@ import com.nrg.kelly.config.actors.BossBulletConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.config.actors.GunConfig;
+import com.nrg.kelly.config.actors.RunnerBulletConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.config.levels.LevelConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
@@ -30,6 +31,8 @@ import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.GunActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
+import com.nrg.kelly.stages.actors.RunnerBulletActor;
+
 import java.util.List;
 import java.util.Random;
 
@@ -78,11 +81,10 @@ public class ActorFactoryImpl implements ActorFactory{
         final int max = size - 1;
         final int enemyIndex = random.nextInt((max - 1) + 1) + 1;
         final EnemyConfig enemyConfig = enemies.get(enemyIndex);
-        final EnemyActor enemyActor = createEnemyActor(enemyConfig);
-        return enemyActor;
-    }
+        return createEnemyActor(enemyConfig);
+     }
 
-    private void setupDefaultAnimation(EnemyConfig enemyConfig, EnemyActor enemyActor, List<AtlasConfig> animations) {
+    private void  setupDefaultAnimation(EnemyConfig enemyConfig, EnemyActor enemyActor, List<AtlasConfig> animations) {
         final AtlasConfig defaultAtlasConfig = enemyActor
                 .getAtlasConfigByName(animations, "default");
         enemyActor.setDefaultAtlasConfig(defaultAtlasConfig);
@@ -167,6 +169,15 @@ public class ActorFactoryImpl implements ActorFactory{
         return createEnemyBullet(bossBullet);
     }
 
+
+    @Override
+    public Actor createRunnerBullet(RunnerActor runnerActor) {
+        final GameConfig gameConfig = ConfigFactory.getGameConfig();
+        final RunnerBulletConfig runnerBulletConfig = gameConfig.getActors().getRunnerBullet();
+        return this.createRunnerBullet(runnerBulletConfig);
+    }
+
+
     @Override
     public EnemyBombActor createBossBomb(int level, RunnerActor runnerActor) {
         final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
@@ -194,6 +205,16 @@ public class ActorFactoryImpl implements ActorFactory{
         }
         enemyActor.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
         return enemyActor;
+    }
+
+    private RunnerBulletActor createRunnerBullet(final RunnerBulletConfig runnerBulletConfig) {
+        final RunnerBulletActor runnerBulletActor = new RunnerBulletActor(runnerBulletConfig, cameraConfig);
+        final List<AtlasConfig> animations = runnerBulletConfig.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(runnerBulletConfig, runnerBulletActor, animations);
+        }
+        runnerBulletActor.setConfiguredLinearVelocity(new Vector2(runnerBulletConfig.getVelocityX(), 0f));
+        return runnerBulletActor;
     }
 
     private EnemyBulletActor createEnemyBullet(final BossBulletConfig enemyConfig) {

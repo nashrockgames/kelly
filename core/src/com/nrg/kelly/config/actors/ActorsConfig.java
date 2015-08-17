@@ -13,6 +13,8 @@ public class ActorsConfig {
 
     private RunnerConfig runner;
 
+    private RunnerBulletConfig runnerBullet;
+
     private PlayButtonConfig playButton;
 
     private ArmourConfig armour;
@@ -67,4 +69,11 @@ public class ActorsConfig {
         this.worldGravity = worldGravity;
     }
 
+    public RunnerBulletConfig getRunnerBullet() {
+        return runnerBullet;
+    }
+
+    public void setRunnerBullet(RunnerBulletConfig runnerBullet) {
+        this.runnerBullet = runnerBullet;
+    }
 }

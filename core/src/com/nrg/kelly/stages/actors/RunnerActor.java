@@ -221,6 +221,12 @@ public class RunnerActor extends GameActor {
 
     }
 
+    public boolean canFireWeapon() {
+        return getAnimationState().equals(AnimationState.ARMOUR_AND_GUN_EQUIPPED)||
+                getAnimationState().equals(AnimationState.GUN_EQUIPPED);
+    }
+
+
     private AtlasConfig getRunAtlasConfig(final AnimationState animationState) {
         switch(animationState){
             case ARMOUR_EQUIPPED:

@@ -15,9 +15,9 @@
    viewBox="0 0 512 128"
    id="svg3343"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="cart_run_128x128_final.svg"
-   inkscape:export-filename="C:\dev\kelly\libgdx\resources\raw\actors\enemies\sheets\cartboss\cart_boss_run_128x128.png"
+   inkscape:export-filename="C:\dev\kelly\libgdx\kelly\resources\raw\actors\enemies\sheets\cart-boss\cart_boss_run_128x128.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -320,16 +320,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="266.87347"
-     inkscape:cy="74.485691"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="252.00792"
+     inkscape:cy="91.396568"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      showborder="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1018"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -885,16 +885,14 @@
            cx="83.75"
            cy="850.39783"
            rx="3.75"
-           ry="5.7142859"
-           d="m 87.5,850.39783 c 0,3.15591 -1.678932,5.71428 -3.75,5.71428 -2.071068,0 -3.75,-2.55837 -3.75,-5.71428 0,-3.15592 1.678932,-5.71429 3.75,-5.71429 2.071068,0 3.75,2.55837 3.75,5.71429 z" />
+           ry="5.7142859" />
         <ellipse
            style="fill:#ffffff;fill-opacity:1;stroke:none"
            id="path4270-9-2-8-8-0"
            cx="82.321426"
            cy="848.07635"
            rx="1.25"
-           ry="1.9642856"
-           d="m 83.571426,848.07635 c 0,1.08485 -0.559644,1.96429 -1.25,1.96429 -0.690356,0 -1.25,-0.87944 -1.25,-1.96429 0,-1.08484 0.559644,-1.96428 1.25,-1.96428 0.690356,0 1.25,0.87944 1.25,1.96428 z" />
+           ry="1.9642856" />
       </g>
       <g
          transform="matrix(-0.38846408,0.08551064,0.08222633,0.40398023,-78.572873,616.03752)"
@@ -905,16 +903,14 @@
            cy="848.16571"
            cx="94.017853"
            id="ellipse4278-7-9-2-6-4"
-           style="fill:#000000;fill-opacity:1;stroke:none"
-           d="m 96.607138,848.16571 c 0,2.219 -1.159262,4.01786 -2.589285,4.01786 -1.430023,0 -2.589286,-1.79886 -2.589286,-4.01786 0,-2.219 1.159263,-4.01786 2.589286,-4.01786 1.430023,0 2.589285,1.79886 2.589285,4.01786 z" />
+           style="fill:#000000;fill-opacity:1;stroke:none" />
         <ellipse
            ry="1.2848772"
            rx="0.78656453"
            cy="846.43719"
            cx="92.954926"
            id="ellipse4280-8-2-2-0-4"
-           style="fill:#ffffff;fill-opacity:1;stroke:none"
-           d="m 93.74149,846.43719 c 0,0.70962 -0.352157,1.28488 -0.786564,1.28488 -0.434408,0 -0.786565,-0.57526 -0.786565,-1.28488 0,-0.70961 0.352157,-1.28487 0.786565,-1.28487 0.434407,0 0.786564,0.57526 0.786564,1.28487 z" />
+           style="fill:#ffffff;fill-opacity:1;stroke:none" />
       </g>
       <path
          style="fill:#6c5d53;fill-opacity:1;stroke:none"
@@ -964,8 +960,7 @@
          cy="960.79205"
          cx="-41.533176"
          id="path4458"
-         style="opacity:1;fill:#000080;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m -23.875183,960.79205 c 0,0.96016 -7.905753,1.73852 -17.657993,1.73852 -9.752241,0 -17.657994,-0.77836 -17.657994,-1.73852 0,-0.96016 7.905753,-1.73852 17.657994,-1.73852 9.75224,0 17.657993,0.77836 17.657993,1.73852 z" />
+         style="opacity:1;fill:#000080;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <path
          sodipodi:nodetypes="sssssssss"
          inkscape:connector-curvature="0"
@@ -1018,8 +1013,7 @@
            cy="788.78729"
            rx="3.9439082"
            ry="2.1201811"
-           transform="matrix(0.88500782,-0.46557615,0.43875165,0.89860836,0,0)"
-           d="m -320.42419,788.78729 c 0,1.17095 -1.76575,2.12018 -3.94391,2.12018 -2.17816,0 -3.94391,-0.94923 -3.94391,-2.12018 0,-1.17094 1.76575,-2.12018 3.94391,-2.12018 2.17816,0 3.94391,0.94924 3.94391,2.12018 z" />
+           transform="matrix(0.88500782,-0.46557615,0.43875165,0.89860836,0,0)" />
       </g>
     </g>
     <rect

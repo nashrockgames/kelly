@@ -1,6 +1,9 @@
 package com.nrg.kelly.stages;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
+import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
@@ -28,6 +31,7 @@ public class GameStageTouchListener {
 
     @Inject
     GameStateManager gameStateManager;
+
 
     @Inject
     public GameStageTouchListener(){
@@ -70,6 +74,14 @@ public class GameStageTouchListener {
                     Events.get().post(new PlayButtonClickedEvent());
                 }
         }
+    }
+
+    private Optional<Timer.Task> scheduleDoubleTouch() {
+        return Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+            }
+        }, 0.5f));
     }
 
     @Subscribe

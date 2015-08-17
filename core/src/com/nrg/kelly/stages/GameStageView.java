@@ -2,6 +2,7 @@ package com.nrg.kelly.stages;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,7 +14,9 @@ import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.events.game.BombDroppedEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
+import com.nrg.kelly.events.game.FireRunnerWeaponEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
+import com.nrg.kelly.events.game.JumpControlInvokedEvent;
 import com.nrg.kelly.events.screen.OnStageTouchDownEvent;
 import com.nrg.kelly.events.game.SpawnEnemyEvent;
 import com.nrg.kelly.events.game.SpawnGunEvent;
@@ -29,6 +32,8 @@ import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.actors.ActorState;
+import com.nrg.kelly.stages.actors.AnimationState;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
@@ -39,6 +44,7 @@ import com.nrg.kelly.stages.actors.RunnerActor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 
 public class GameStageView extends Stage {
 
@@ -70,6 +76,9 @@ public class GameStageView extends Stage {
     @Inject
     GameStageTouchListener gameStageTouchListener;
 
+    @Inject
+    Box2dGameStageView box2dGameStageView;
+
     private float timeStep;
 
     @Inject
@@ -84,7 +93,6 @@ public class GameStageView extends Stage {
         this.box2dGameStageView.debugGameStage();
     }
 */
-
     @Override
     public void act(float delta) {
         final GameState gameState = this.gameStateManager.getGameState();
@@ -119,6 +127,13 @@ public class GameStageView extends Stage {
     @Subscribe
     public void spawnGun(SpawnGunEvent spawnGunEvent) {
         this.addActor(actorFactory.createGun());
+    }
+
+    @Subscribe
+    public void spawnRunnerBullet(FireRunnerWeaponEvent fireRunnerWeaponEvent){
+        for(RunnerActor runnerActor :  runner.asSet()) {
+            this.addActor(this.actorFactory.createRunnerBullet(runnerActor));
+        }
     }
 
     @Subscribe
@@ -237,14 +252,19 @@ public class GameStageView extends Stage {
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
     }
-/*
+
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.BACK){
-            Gdx.app.exit();
+        if(keycode == Input.Keys.SPACE){
+            for(RunnerActor runnerActor : runner.asSet()) {
+                if(runnerActor.canFireWeapon()) {
+                    Events.get().post(new FireRunnerWeaponEvent());
+                }
+            }
         }
-        return false;
+        return super.keyDown(keycode);
     }
-    */
+
+
 
 }

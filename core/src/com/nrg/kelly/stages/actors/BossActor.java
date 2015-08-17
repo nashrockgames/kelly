@@ -18,11 +18,11 @@ public class BossActor extends EnemyActor {
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
     private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
-    public static final float FIRE_BULLET_DELAY_SECONDS = 1.2f;
 
+    //TODO: make configurable
+    public static final float FIRE_BULLET_DELAY_SECONDS = 1.2f;
     public static final int FIRE_BULLET_INTERVAL_COUNT = 3;
     public static final float FIRE_BULLETS_INTERVAL = 3.5f;
-
     public static final float DROP_BOMB_DELAY_SECONDS = 2.0f;
 
     private int bulletsFired = 0;
