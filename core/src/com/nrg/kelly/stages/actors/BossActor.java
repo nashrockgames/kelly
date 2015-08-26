@@ -1,17 +1,27 @@
 package com.nrg.kelly.stages.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
+import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
+import com.nrg.kelly.events.BossHitEvent;
 import com.nrg.kelly.events.game.BombDroppedEvent;
 import com.nrg.kelly.events.game.BulletFiredEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
+import com.nrg.kelly.events.game.GameOverEvent;
+import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
+
+import java.util.List;
 
 public class BossActor extends EnemyActor {
 
@@ -29,9 +39,18 @@ public class BossActor extends EnemyActor {
     private int armourSpawnInterval;
     private int gunSpawnInterval;
     private Optional<RunnerActor> runnerActor;
+    private final Animation hitAnimation;
+    private final AtlasConfig hitAtlasConfig;
+    private boolean paused;
+
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
+
+        final List<AtlasConfig> animations = enemyConfig.getAnimations();
+        hitAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_hit");
+        final TextureAtlas hitAtlas = new TextureAtlas(Gdx.files.internal(hitAtlasConfig.getAtlas()));
+        hitAnimation = new Animation(enemyConfig.getFrameRate(), hitAtlas.getRegions());
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
@@ -43,18 +62,71 @@ public class BossActor extends EnemyActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        maybeFireWeapon();
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+
+        //super.draw(batch, parentAlpha);
+        stateTime += Gdx.graphics.getDeltaTime();
+        final TextureRegion region;
+        final ActorState state = this.getActorState();
+        switch(state){
+            case HIT:
+                region = this.hitAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(hitAtlasConfig.getImageOffset()),
+                        Optional.of(hitAtlasConfig.getImageScale()));
+                break;
+            case RUNNING:
+                drawDefaultAnimation(batch);
+                break;
+            default:
+                drawDefaultAnimation(batch);
+                break;
+        }
+    }
+
+    private void maybeFireWeapon() {
+
         final Body body = this.getBody();
         for (final ActorConfig actorConfig : this.getConfig().asSet()) {
-            final float pos = this.getTextureBounds().getX() + this.getTextureBounds().getWidth();
-            updatePosition(body, pos);
+            holdPositionWhenInView(body);
             if (canFireWeapon()) {
                 fireWeapon();
             }
         }
     }
 
-    private void updatePosition(Body body, float pos) {
-        if (pos < Gdx.graphics.getWidth()) {
+    @Subscribe
+    public void onHit(BossHitEvent bossHitEvent){
+        this.setActorState(ActorState.HIT);
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+                setActorState(ActorState.RUNNING);
+            }
+        }, 1.5f);
+    }
+
+    @Subscribe
+    public void onGameOver(GameOverEvent gameOverEvent){
+        paused = true;
+    }
+
+    @Subscribe
+    public void onGameStart(PlayButtonClickedEvent playButtonClickedEvent){
+        paused = false;
+    }
+
+    private void holdPositionWhenInView(Body body) {
+
+        final CameraConfig cameraConfig = this.getCameraConfig();
+        float finalBodyPosition = cameraConfig.getViewportWidth() - (this.getWidth() / 2f);
+        float currentPosition = body.getPosition().x;
+        if (currentPosition < finalBodyPosition) {
             this.maintainPosition();
             body.setLinearVelocity(0f, 0f);
             this.isInFiringPosition = true;
@@ -64,6 +136,9 @@ public class BossActor extends EnemyActor {
     }
 
     private boolean canFireWeapon() {
+        if(paused)
+            return false;
+
         boolean canFire = isInFiringPosition;
         for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
             if (intervalTask.isScheduled()) {
@@ -150,6 +225,8 @@ public class BossActor extends EnemyActor {
     public void setRunnerActor(Optional<RunnerActor> runnerActor) {
         this.runnerActor = runnerActor;
     }
+
+
 
     public Optional<RunnerActor> getRunnerActor() {
         return runnerActor;

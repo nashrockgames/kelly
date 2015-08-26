@@ -71,6 +71,11 @@ clean resources/raw/actors/enemies/frames/cart-boss
 split resources/raw/actors/enemies/sheets/cart-boss *.png 128 128 resources/raw/actors/enemies/frames/cart-boss
 pack resources/raw/actors/enemies/frames/cart-boss android/assets cart_boss
 
+
+clean resources/raw/actors/enemies/frames/cart-boss-hit
+split resources/raw/actors/enemies/sheets/cart-boss-hit *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-hit
+pack resources/raw/actors/enemies/frames/cart-boss-hit android/assets cart_boss_hit
+
 #Buttons
 clean resources/raw/buttons/play
 split resources/raw/buttons/sheets/play *.png 128 128 resources/raw/buttons/play

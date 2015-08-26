@@ -404,7 +404,6 @@ public class RunnerActor extends GameActor {
         batch.draw(textureRegion, x, y, width, height);
     }
 
-
     @Subscribe
     public void beginContact(BeginContactEvent beginContactEvent){
 

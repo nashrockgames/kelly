@@ -85,7 +85,6 @@ public class GameStageView extends Stage {
     public GameStageView() {
         Events.get().register(this);
     }
-
 /*
     @Override
     public void draw(){

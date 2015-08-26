@@ -8,7 +8,18 @@
           "name":"default",
           "atlas":"cart_boss.atlas",
           "imageOffset":{
-            "x":0,
+            "x":0.0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
+      },{
+          "name":"cart_boss_hit",
+          "atlas":"cart_boss_hit.atlas",
+          "imageOffset":{
+            "x":0.0,
             "y":0
           },
           "imageScale":{
@@ -20,11 +31,11 @@
       "width": 2.0,
       "height": 2.0,
       "position":{
-        "x": 25.0,
+        "x": 22.0,
         "y": 2.01
       },
       "density": 0.5,
-      "velocityX" : -5,
+      "velocityX" : -2.5,
       "armourSpawnInterval" : 9,
       "gunSpawnInterval" : 3
     },
@@ -46,7 +57,7 @@
       "width": 0.25,
       "height": 0.25,
       "position":{
-        "x": 14.0,
+        "x": 17.0,
         "y": 2.25
       },
       "density": 0.5,
@@ -87,7 +98,7 @@
      "width": 2.0,
      "height": 2.0,
      "position":{
-       "x": 14.0,
+       "x": 25.0,
        "y": 2.01
      },
      "density": 0.5,

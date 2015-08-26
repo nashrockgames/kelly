@@ -219,13 +219,26 @@ public abstract class GameActor extends Actor {
     }
 
     protected void updateTextureBounds(CameraConfig cameraConfig) {
+
+
         //get the screen width
+
+
         final Rectangle textureBounds = this.getTextureBounds();
         final float worldToScreenScale = cameraConfig.getWorldToScreenScale();
         final float bodyWidth = getWidth();
         final float bodyHeight = getHeight();
-        textureBounds.x = transformToScreen(getBody().getPosition().x - bodyWidth / 2, worldToScreenScale);
-        textureBounds.y = transformToScreen(getBody().getPosition().y - bodyHeight / 2, worldToScreenScale);
+        final Vector2 position = getBody().getPosition();
+
+
+        final float xRatio = (position.x - bodyWidth) / cameraConfig.getViewportWidth();
+        final float screenX = Gdx.graphics.getWidth() * xRatio;
+
+       // final float yRatio = position.y / cameraConfig.getViewportHeight();
+       // final float screenY = Gdx.graphics.getHeight() * yRatio;
+
+        textureBounds.x = screenX;//transformToScreen(position.x - bodyWidth / 2, worldToScreenScale);
+        textureBounds.y = transformToScreen(position.y - bodyHeight / 2, worldToScreenScale);
         textureBounds.width = transformToScreen(bodyWidth, worldToScreenScale);
         textureBounds.height = transformToScreen(bodyHeight, worldToScreenScale);
     }
