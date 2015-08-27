@@ -191,7 +191,6 @@ public class GameStageView extends Stage {
         body.setUserData(null);
         Box2dFactory.destroyBody(body);
         gameActor.remove();
-
     }
 
     @Subscribe
@@ -205,7 +204,6 @@ public class GameStageView extends Stage {
         this.gameStateManager.setGameState(GameState.PAUSED);
         this.gameStateManager.setBossState(BossState.NONE);
         Box2dFactory.getWorld().setContactListener(this.gameStageContactListener);
-
     }
 
     @Subscribe
@@ -224,7 +222,16 @@ public class GameStageView extends Stage {
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
-        Events.get().post(new OnStageTouchDownEvent(x, y));
+        //TODO: make this work for IOS - no RIGHT button
+        if(Input.Buttons.RIGHT == button){
+            for(RunnerActor runnerActor : runner.asSet()) {
+                if(runnerActor.canFireWeapon()) {
+                    Events.get().post(new FireRunnerWeaponEvent());
+                }
+            }
+        } else {
+            Events.get().post(new OnStageTouchDownEvent(x, y));
+        }
         return super.touchDown(x, y, pointer, button);
     }
 
@@ -251,19 +258,19 @@ public class GameStageView extends Stage {
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
     }
-
+/*
     @Override
+    //THESE BUTTONS SEEM TO CONFLICT WITH THE OTHER LISTENERS
+    //MAYBE ONLY USE FOR BACK BUTTON??
     public boolean keyDown(int keycode) {
+        Gdx.app.log("Debug:", "KeyDown entered");
         if(keycode == Input.Keys.SPACE){
-            for(RunnerActor runnerActor : runner.asSet()) {
-                if(runnerActor.canFireWeapon()) {
-                    Events.get().post(new FireRunnerWeaponEvent());
-                }
-            }
-        }
-        return super.keyDown(keycode);
-    }
 
+        }
+        Gdx.app.log("Debug:", "KeyDown exit");
+        return true;
+    }
+*/
 
 
 }
