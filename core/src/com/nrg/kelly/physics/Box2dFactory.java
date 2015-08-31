@@ -103,14 +103,7 @@ public class Box2dFactory {
         final BodyDef bodyDef = createEnemyBodyDef(positionVector);
         shape.setAsBox((enemyConfig.getWidth() / 2) * hitBoxScale,
                 (enemyConfig.getHeight() / 2) * hitBoxScale);
-
-        //Gdx.app.log(this.getClass().getName(), "Creating body " + enemyConfig.getClass().getName());
-
         final Body body = world.createBody(bodyDef);
-
-        //Gdx.app.log(this.getClass().getName(), "Body created " + enemyConfig.getClass().getName());
-
-
         body.createFixture(shape, enemyConfig.getDensity());
         body.resetMassData();
         shape.dispose();
