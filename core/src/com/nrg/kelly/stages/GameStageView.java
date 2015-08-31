@@ -16,7 +16,6 @@ import com.nrg.kelly.events.game.BombDroppedEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.game.FireRunnerWeaponEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
-import com.nrg.kelly.events.game.JumpControlInvokedEvent;
 import com.nrg.kelly.events.screen.OnStageTouchDownEvent;
 import com.nrg.kelly.events.game.SpawnEnemyEvent;
 import com.nrg.kelly.events.game.SpawnGunEvent;
@@ -32,8 +31,6 @@ import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.actors.ActorState;
-import com.nrg.kelly.stages.actors.AnimationState;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
@@ -44,7 +41,6 @@ import com.nrg.kelly.stages.actors.RunnerActor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.print.attribute.standard.ReferenceUriSchemesSupported;
 
 public class GameStageView extends Stage {
 
@@ -187,10 +183,7 @@ public class GameStageView extends Stage {
 
     private void destroyActor(GameActor gameActor){
 
-        final Body body = gameActor.getBody();
-        body.setUserData(null);
-        Box2dFactory.destroyBody(body);
-        gameActor.remove();
+        Box2dFactory.destroyAndRemove(gameActor);
     }
 
     @Subscribe

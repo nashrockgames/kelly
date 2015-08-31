@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.BossBombConfig;
+import com.nrg.kelly.physics.Box2dFactory;
 
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class EnemyBombActor extends EnemyActor {
     private float explosionPositionX;
 
     private boolean exploded = false;
+    private boolean dead = false;
 
     public EnemyBombActor(BossBombConfig bossBombConfig, CameraConfig cameraConfig) {
         super(bossBombConfig, cameraConfig);
@@ -34,6 +38,19 @@ public class EnemyBombActor extends EnemyActor {
 
     public void explode(){
         this.exploded = true;
+        /*
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                final Body body = getBody();
+                if(body!=null) {
+                    body.setUserData(null);
+                    Box2dFactory.destroyBody(body);
+                }
+                dead = true;
+            }
+        },0.35f);
+        */
     }
 
     @Override
@@ -44,7 +61,6 @@ public class EnemyBombActor extends EnemyActor {
             this.setDefaultAnimation(explodeAnimation);
         }
         this.drawDefaultAnimation(batch);
-
     }
 
     @Override
@@ -55,6 +71,9 @@ public class EnemyBombActor extends EnemyActor {
         if(this.getBody().getPosition().x  <= this.getExplosionPositionX() ){
             if(!exploded)
             this.explode();
+        }
+        if(this.dead){
+            remove();
         }
 
     }

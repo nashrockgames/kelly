@@ -1,6 +1,7 @@
 package com.nrg.kelly.physics;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -19,6 +20,7 @@ import com.nrg.kelly.inject.ConfigFactory;
 import com.nrg.kelly.config.actors.GroundConfig;
 import com.nrg.kelly.config.actors.WorldGravityConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
+import com.nrg.kelly.stages.actors.GameActor;
 
 public class Box2dFactory {
 
@@ -93,20 +95,33 @@ public class Box2dFactory {
         return body;
     }
 
-    public Body createEnemy(EnemyConfig enemyConfig){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+    public synchronized Body createEnemy(final EnemyConfig enemyConfig){
         final PositionConfig positionConfig = enemyConfig.getPosition();
+        final PolygonShape shape = new PolygonShape();
         final float hitBoxScale = enemyConfig.getHitBoxScale();
-        bodyDef.position.set(new Vector2(positionConfig.getX(), positionConfig.getY()));
-        PolygonShape shape = new PolygonShape();
+        final Vector2 positionVector = new Vector2(positionConfig.getX(), positionConfig.getY());
+        final BodyDef bodyDef = createEnemyBodyDef(positionVector);
         shape.setAsBox((enemyConfig.getWidth() / 2) * hitBoxScale,
                 (enemyConfig.getHeight() / 2) * hitBoxScale);
-        Body body = world.createBody(bodyDef);
+
+        //Gdx.app.log(this.getClass().getName(), "Creating body " + enemyConfig.getClass().getName());
+
+        final Body body = world.createBody(bodyDef);
+
+        //Gdx.app.log(this.getClass().getName(), "Body created " + enemyConfig.getClass().getName());
+
+
         body.createFixture(shape, enemyConfig.getDensity());
         body.resetMassData();
         shape.dispose();
         return body;
+    }
+
+    private final BodyDef createEnemyBodyDef(Vector2 positionVector) {
+        final BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(positionVector);
+        return bodyDef;
     }
 
     public Vector2 getRunnerLinerImpulse(){
@@ -131,12 +146,19 @@ public class Box2dFactory {
         return slideAngle;
     }
 
-    public static void destroyBody(Body body) {
+    private static void destroyBody(final Body body) {
         final Array<JointEdge> jointList = body.getJointList();
         for(JointEdge jointEdge : jointList){
             getWorld().destroyJoint(jointEdge.joint);
         }
         getWorld().destroyBody(body);
+    }
+
+    public static void destroyAndRemove(final GameActor actor){
+        final Body body = actor.getBody();
+        body.setUserData(null);
+        destroyBody(body);
+        actor.remove();
     }
 
     public Body createArmour(ArmourConfig armour) {

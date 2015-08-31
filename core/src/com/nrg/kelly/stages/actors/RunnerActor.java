@@ -345,6 +345,7 @@ public class RunnerActor extends GameActor {
 
     private void scheduleDeath(final Body body) {
         if(!deathScheduled) {
+            Gdx.app.log(this.getClass().getName(),"Scheduling death");
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {

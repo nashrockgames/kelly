@@ -47,8 +47,7 @@ public class EnemyActor extends GameActor {
         body.setLinearVelocity(configuredLinearVelocity);
         for (final ActorConfig actorConfig : this.getConfig().asSet()) {
             if (!isWithinLeftBounds(body, actorConfig)) {
-                    Box2dFactory.destroyBody(body);
-                    this.remove();
+                Box2dFactory.destroyAndRemove(this);
             }
         }
     }

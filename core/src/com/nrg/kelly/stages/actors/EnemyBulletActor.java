@@ -53,9 +53,7 @@ public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
             for(ActorConfig actorConfig : this.getConfig().asSet()) {
                 this.applyCollisionImpulse(collisionParams);
                 if (!isWithinBounds(actorConfig)) {
-                    final Body body = this.getBody();
-                    Box2dFactory.destroyBody(body);
-                    this.remove();
+                    Box2dFactory.destroyAndRemove(this);
                 }
             }
         } else {

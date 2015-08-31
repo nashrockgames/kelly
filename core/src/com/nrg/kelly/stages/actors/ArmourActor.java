@@ -43,8 +43,7 @@ public class ArmourActor extends GameActor{
         final Body body = this.getBody();
         for(ActorConfig actorConfig : this.getConfig().asSet()) {
             if (pickedUp || !(body.getPosition().x + actorConfig.getWidth() / 2 > 0)) {
-                    Box2dFactory.destroyBody(body);
-                    this.remove();
+                    Box2dFactory.destroyAndRemove(this);
             }
         }
     }

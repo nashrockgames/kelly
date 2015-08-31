@@ -182,7 +182,9 @@ public class BossActor extends EnemyActor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Events.get().post(new BombDroppedEvent(instance));
+                if(instance.getActorState().equals(ActorState.RUNNING)) {
+                    Events.get().post(new BombDroppedEvent(instance));
+                }
             }
         }, DROP_BOMB_DELAY_SECONDS);
     }
@@ -226,7 +228,11 @@ public class BossActor extends EnemyActor {
         this.runnerActor = runnerActor;
     }
 
-
+    @Override
+    public boolean remove(){
+        this.setActorState(ActorState.REMOVED);
+        return super.remove();
+    }
 
     public Optional<RunnerActor> getRunnerActor() {
         return runnerActor;
