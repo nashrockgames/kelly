@@ -23,7 +23,7 @@ public class EnemyActor extends GameActor {
 
     public EnemyActor(EnemyConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
-        final Body body = Box2dFactory.getInstance().createEnemy(enemyConfig);
+        final Body body = Box2dFactory.createEnemy(enemyConfig);
         body.setUserData(this);
         setBody(body);
         setWidth(enemyConfig.getWidth());

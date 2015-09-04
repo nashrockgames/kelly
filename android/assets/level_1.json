@@ -26,6 +26,17 @@
             "x":1.0,
             "y":1.0
           }
+      },{
+          "name":"cart_boss_dying",
+          "atlas":"cart_boss_dying.atlas",
+          "imageOffset":{
+            "x":0.0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }
       }],
       "frameRate": 0.125,
       "width": 2.0,

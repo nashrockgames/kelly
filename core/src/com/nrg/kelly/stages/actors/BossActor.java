@@ -24,7 +24,7 @@ import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 import java.util.List;
 
 public class BossActor extends EnemyActor {
-
+;
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
     private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
@@ -34,6 +34,7 @@ public class BossActor extends EnemyActor {
     public static final int FIRE_BULLET_INTERVAL_COUNT = 3;
     public static final float FIRE_BULLETS_INTERVAL = 3.5f;
     public static final float DROP_BOMB_DELAY_SECONDS = 2.0f;
+    private final int maxHitCount = 10;
 
     private int bulletsFired = 0;
     private int armourSpawnInterval;
@@ -41,7 +42,10 @@ public class BossActor extends EnemyActor {
     private Optional<RunnerActor> runnerActor;
     private final Animation hitAnimation;
     private final AtlasConfig hitAtlasConfig;
+    private final AtlasConfig dyingAtlasConfig;
+    private final Animation dyingAnimation;
     private boolean paused;
+    private int hitCount = 0;
 
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
@@ -51,6 +55,11 @@ public class BossActor extends EnemyActor {
         hitAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_hit");
         final TextureAtlas hitAtlas = new TextureAtlas(Gdx.files.internal(hitAtlasConfig.getAtlas()));
         hitAnimation = new Animation(enemyConfig.getFrameRate(), hitAtlas.getRegions());
+
+        dyingAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_dying");
+        final TextureAtlas dyingAtlas = new TextureAtlas(Gdx.files.internal(dyingAtlasConfig.getAtlas()));
+        dyingAnimation = new Animation(enemyConfig.getFrameRate(), dyingAtlas.getRegions());
+
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
@@ -62,7 +71,12 @@ public class BossActor extends EnemyActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        if(hitCount >= this.maxHitCount){
+            this.setActorState(ActorState.DYING);
+        }
         maybeFireWeapon();
+
     }
 
     @Override
@@ -79,6 +93,13 @@ public class BossActor extends EnemyActor {
                         region,
                         Optional.of(hitAtlasConfig.getImageOffset()),
                         Optional.of(hitAtlasConfig.getImageScale()));
+                break;
+            case DYING:
+                region = this.dyingAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(dyingAtlasConfig.getImageOffset()),
+                        Optional.of(dyingAtlasConfig.getImageScale()));
                 break;
             case RUNNING:
                 drawDefaultAnimation(batch);
@@ -103,6 +124,7 @@ public class BossActor extends EnemyActor {
     @Subscribe
     public void onHit(BossHitEvent bossHitEvent){
         this.setActorState(ActorState.HIT);
+        this.hitCount++;
         Timer.schedule(new Timer.Task(){
             @Override
             public void run() {
@@ -226,12 +248,6 @@ public class BossActor extends EnemyActor {
 
     public void setRunnerActor(Optional<RunnerActor> runnerActor) {
         this.runnerActor = runnerActor;
-    }
-
-    @Override
-    public boolean remove(){
-        this.setActorState(ActorState.REMOVED);
-        return super.remove();
     }
 
     public Optional<RunnerActor> getRunnerActor() {

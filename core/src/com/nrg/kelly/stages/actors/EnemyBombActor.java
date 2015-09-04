@@ -12,6 +12,8 @@ import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.BossBombConfig;
+import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.game.BombExplodedEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
 import java.util.List;
@@ -24,7 +26,6 @@ public class EnemyBombActor extends EnemyActor {
     private float explosionPositionX;
 
     private boolean exploded = false;
-    private boolean dead = false;
 
     public EnemyBombActor(BossBombConfig bossBombConfig, CameraConfig cameraConfig) {
         super(bossBombConfig, cameraConfig);
@@ -33,24 +34,19 @@ public class EnemyBombActor extends EnemyActor {
         final String explode = explodeAtlasConfig.getAtlas();
         final TextureAtlas explodeAtlas = new TextureAtlas(Gdx.files.internal(explode));
         explodeAnimation = new Animation(bossBombConfig.getFrameRate(), explodeAtlas.getRegions());
-
     }
 
     public void explode(){
-        this.exploded = true;
-        /*
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                final Body body = getBody();
-                if(body!=null) {
-                    body.setUserData(null);
-                    Box2dFactory.destroyBody(body);
+        if(!exploded) {
+            this.exploded = true;
+            final EnemyBombActor instance = this;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Events.get().post(new BombExplodedEvent(instance));
                 }
-                dead = true;
-            }
-        },0.35f);
-        */
+            }, 0.35f);
+        }
     }
 
     @Override
@@ -71,9 +67,6 @@ public class EnemyBombActor extends EnemyActor {
         if(this.getBody().getPosition().x  <= this.getExplosionPositionX() ){
             if(!exploded)
             this.explode();
-        }
-        if(this.dead){
-            remove();
         }
 
     }

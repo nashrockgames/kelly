@@ -95,12 +95,14 @@ public class Box2dFactory {
         return body;
     }
 
-    public synchronized Body createEnemy(final EnemyConfig enemyConfig){
+    public static Body createEnemy(final EnemyConfig enemyConfig){
+        //Gdx.app.log("-", "Creating " + enemyConfig.getClass().getName());
         final PositionConfig positionConfig = enemyConfig.getPosition();
         final PolygonShape shape = new PolygonShape();
         final float hitBoxScale = enemyConfig.getHitBoxScale();
         final Vector2 positionVector = new Vector2(positionConfig.getX(), positionConfig.getY());
         final BodyDef bodyDef = createEnemyBodyDef(positionVector);
+        //Gdx.app.log("-", "Created body def for " + enemyConfig.getClass().getName());
         shape.setAsBox((enemyConfig.getWidth() / 2) * hitBoxScale,
                 (enemyConfig.getHeight() / 2) * hitBoxScale);
         final Body body = world.createBody(bodyDef);
@@ -110,7 +112,7 @@ public class Box2dFactory {
         return body;
     }
 
-    private final BodyDef createEnemyBodyDef(Vector2 positionVector) {
+    private static BodyDef createEnemyBodyDef(final Vector2 positionVector) {
         final BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.position.set(positionVector);
@@ -148,10 +150,12 @@ public class Box2dFactory {
     }
 
     public static void destroyAndRemove(final GameActor actor){
+        //Gdx.app.log("-", "destroying " + actor.getConfig().get().toString());
         final Body body = actor.getBody();
         body.setUserData(null);
         destroyBody(body);
         actor.remove();
+        //Gdx.app.log("-", "destroyed " + actor.getClass().getName());
     }
 
     public Body createArmour(ArmourConfig armour) {

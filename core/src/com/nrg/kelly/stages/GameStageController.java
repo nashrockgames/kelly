@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.events.game.BombExplodedEvent;
 import com.nrg.kelly.events.game.BulletFiredEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.Events;
@@ -18,6 +19,7 @@ import com.nrg.kelly.events.game.OnSpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnArmourEvent;
 import com.nrg.kelly.events.game.SpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnBossEvent;
+import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 
@@ -62,6 +64,11 @@ public class GameStageController {
         if(bossFireSchedule.isPresent()){
             bossFireSchedule.get().cancel();
         }
+    }
+
+    @Subscribe
+    public void onBossBombExploded(final BombExplodedEvent bombExplodedEvent){
+        Box2dFactory.destroyAndRemove(bombExplodedEvent.getEnemyBombActor());
     }
 
     @Subscribe

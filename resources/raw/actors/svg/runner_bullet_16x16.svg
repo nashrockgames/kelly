@@ -53,7 +53,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="7.5320892"
+     inkscape:cx="-10.905411"
      inkscape:cy="1.1868913"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -75,7 +75,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -84,32 +84,24 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-1036.3621)">
-    <g
-       style="fill:#6c5d53"
-       id="g4283"
-       transform="matrix(-1,0,0,1.6666666,15.971864,-696.24192)">
-      <g
-         style="fill:#6c5d53"
-         transform="matrix(3.7215313,0,0,2.1803512,-12.437758,-1232.9947)"
-         id="g4277">
-        <ellipse
-           style="opacity:1;fill:#6c5d53;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="path4273"
-           cx="5.1486211"
-           cy="1044.3629"
-           rx="1.7898641"
-           ry="1.016466" />
-        <rect
-           style="opacity:1;fill:#6c5d53;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4275"
-           width="2.563262"
-           height="2.1213202"
-           x="5.038136"
-           y="1043.3022"
-           rx="57.665401"
-           ry="0.117679" />
-      </g>
-    </g>
+    <ellipse
+       style="opacity:1;fill:#aa8800;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4273"
+       cx="-9.248867"
+       cy="1043.8967"
+       rx="6.6610351"
+       ry="3.6937547"
+       transform="scale(-1,1)" />
+    <rect
+       style="opacity:1;fill:#aa8800;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4275"
+       width="9.5392599"
+       height="7.7087049"
+       x="-9.6600409"
+       y="1040.0424"
+       rx="214.60359"
+       ry="0.42763591"
+       transform="scale(-1,1)" />
     <rect
        style="opacity:1;fill:#241f1c;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4281"

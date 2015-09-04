@@ -52,7 +52,6 @@ public class RunnerBulletActor extends EnemyActor implements RayCastCallback {
         } else if(userData instanceof EnemyBombActor){
             final EnemyBombActor enemyBombActor = (EnemyBombActor)userData;
             enemyBombActor.explode();
-
             return 0;
         }
         return 1;

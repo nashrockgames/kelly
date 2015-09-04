@@ -51,6 +51,12 @@ clean resources/raw/actors/kelly/frames/die
 split resources/raw/actors/kelly/sheets/die *.png 128 128 resources/raw/actors/kelly/frames/die
 pack resources/raw/actors/kelly/frames/die android/assets kelly_die
 
+
+clean resources/raw/actors/enemies/frames/police-boss-die
+split resources/raw/actors/enemies/sheets/police-boss-die *.png 128 128 resources/raw/actors/enemies/frames/police-boss-die
+pack resources/raw/actors/enemies/frames/police-boss-die android/assets police_boss_die
+
+
 clean resources/raw/actors/enemies/frames/magpie
 split resources/raw/actors/enemies/sheets/magpie *.png 128 64 resources/raw/actors/enemies/frames/magpie
 pack resources/raw/actors/enemies/frames/magpie android/assets magpie
@@ -75,6 +81,11 @@ pack resources/raw/actors/enemies/frames/cart-boss android/assets cart_boss
 clean resources/raw/actors/enemies/frames/cart-boss-hit
 split resources/raw/actors/enemies/sheets/cart-boss-hit *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-hit
 pack resources/raw/actors/enemies/frames/cart-boss-hit android/assets cart_boss_hit
+
+clean resources/raw/actors/enemies/frames/cart-boss-dying
+split resources/raw/actors/enemies/sheets/cart-boss-dying *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-dying
+pack resources/raw/actors/enemies/frames/cart-boss-dying android/assets cart_boss_dying
+
 
 #Buttons
 clean resources/raw/buttons/play
