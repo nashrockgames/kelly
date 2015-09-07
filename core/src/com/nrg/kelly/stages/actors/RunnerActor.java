@@ -280,14 +280,15 @@ public class RunnerActor extends GameActor {
     }
 
     private void drawUpgradingAnimation(Batch batch, AnimationState animationState) {
-        Animation animation;
-        TextureRegion region;
+        final Animation animation;
+        final TextureRegion region;
         final PositionConfig positionConfig = this.runnerConfig.getPosition();
         final Vector2 defaultPosition = new Vector2(positionConfig.getX(), positionConfig.getY());
+        final AtlasConfig atlasConfig = getAtlasConfig(animationState);
+
         this.setForcedPositionVector(Optional.of(defaultPosition));
         maintainPosition();
         animation = getUpgradingAnimation(animationState);
-        final AtlasConfig atlasConfig = getAtlasConfig(animationState);
         region = animation.getKeyFrame(stateTime, true);
         drawAnimation(batch,
                 region,
@@ -308,8 +309,10 @@ public class RunnerActor extends GameActor {
         switch(animationState){
             case ARMOUR_EQUIPPED:
                 return armourRunGunAnimation;
+            case GUN_EQUIPPED:
+                return runGunAnimation;
             default:
-                return armourRunAnimation;
+                return this.getDefaultAnimation();
         }
     }
 

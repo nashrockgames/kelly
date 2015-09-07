@@ -7,13 +7,8 @@ import com.nrg.kelly.stages.actors.BossActor;
  */
 public class BombDroppedEvent {
 
-    private final BossActor bossActor;
+    public BombDroppedEvent() {
 
-    public BombDroppedEvent(BossActor bossActor) {
-        this.bossActor = bossActor;
     }
 
-    public BossActor getBossActor() {
-        return bossActor;
-    }
 }

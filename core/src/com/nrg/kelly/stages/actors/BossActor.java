@@ -24,7 +24,7 @@ import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 import java.util.List;
 
 public class BossActor extends EnemyActor {
-;
+
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
     private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
@@ -46,6 +46,7 @@ public class BossActor extends EnemyActor {
     private final Animation dyingAnimation;
     private boolean paused;
     private int hitCount = 0;
+    private Optional<Timer.Task> bombSchedule = Optional.absent();
 
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
@@ -71,10 +72,6 @@ public class BossActor extends EnemyActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-
-        if(hitCount >= this.maxHitCount){
-            this.setActorState(ActorState.DYING);
-        }
         maybeFireWeapon();
 
     }
@@ -123,14 +120,20 @@ public class BossActor extends EnemyActor {
 
     @Subscribe
     public void onHit(BossHitEvent bossHitEvent){
-        this.setActorState(ActorState.HIT);
-        this.hitCount++;
-        Timer.schedule(new Timer.Task(){
-            @Override
-            public void run() {
-                setActorState(ActorState.RUNNING);
-            }
-        }, 1.5f);
+        if(hitCount >= this.maxHitCount){
+            this.setActorState(ActorState.DYING);
+            this.cancelSchedules(null);
+        } else {
+            this.setActorState(ActorState.HIT);
+            this.hitCount++;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    if(!getActorState().equals(ActorState.DYING))
+                    setActorState(ActorState.RUNNING);
+                }
+            }, 1.5f);
+        }
     }
 
     @Subscribe
@@ -158,8 +161,10 @@ public class BossActor extends EnemyActor {
     }
 
     private boolean canFireWeapon() {
-        if(paused)
+        if(paused || this.getActorState().equals(ActorState.DYING)) {
             return false;
+        }
+
 
         boolean canFire = isInFiringPosition;
         for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
@@ -200,21 +205,20 @@ public class BossActor extends EnemyActor {
     }
 
     private void dropBomb() {
-        final BossActor instance = this;
-        Timer.schedule(new Timer.Task() {
+
+        bombSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if(instance.getActorState().equals(ActorState.RUNNING)) {
-                    Events.get().post(new BombDroppedEvent(instance));
-                }
+                Events.get().post(new BombDroppedEvent());
             }
-        }, DROP_BOMB_DELAY_SECONDS);
+        }, DROP_BOMB_DELAY_SECONDS));
     }
 
     @Subscribe
     public void cancelSchedules(CancelSchedulesEvent cancelSchedulesEvent) {
         cancelSchedule(this.fireBulletSchedule);
         cancelSchedule(this.fireIntervalSchedule);
+        cancelSchedule(this.bombSchedule);
     }
 
     private void cancelSchedule(Optional<Timer.Task> taskOptional){
