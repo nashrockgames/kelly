@@ -21,6 +21,7 @@ public interface ActorFactory {
     Actor createBoss(Optional<RunnerActor> runner, int level);
     EnemyBulletActor createBossBullet(int level);
     EnemyBombActor createBossBomb(int level, RunnerActor runnerActor);
+    Actor createBossDeath(int level);
     void reset();
     Actor createGun();
     Actor createRunnerBullet(RunnerActor runnerActor);

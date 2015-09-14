@@ -77,7 +77,6 @@ clean resources/raw/actors/enemies/frames/cart-boss
 split resources/raw/actors/enemies/sheets/cart-boss *.png 128 128 resources/raw/actors/enemies/frames/cart-boss
 pack resources/raw/actors/enemies/frames/cart-boss android/assets cart_boss
 
-
 clean resources/raw/actors/enemies/frames/cart-boss-hit
 split resources/raw/actors/enemies/sheets/cart-boss-hit *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-hit
 pack resources/raw/actors/enemies/frames/cart-boss-hit android/assets cart_boss_hit
@@ -85,6 +84,10 @@ pack resources/raw/actors/enemies/frames/cart-boss-hit android/assets cart_boss_
 clean resources/raw/actors/enemies/frames/cart-boss-dying
 split resources/raw/actors/enemies/sheets/cart-boss-dying *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-dying
 pack resources/raw/actors/enemies/frames/cart-boss-dying android/assets cart_boss_dying
+
+clean resources/raw/actors/enemies/frames/cart-boss-dead
+split resources/raw/actors/enemies/sheets/cart-boss-dead *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-dead
+pack resources/raw/actors/enemies/frames/cart-boss-dead android/assets cart_boss_dead
 
 
 #Buttons

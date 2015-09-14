@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
@@ -15,9 +16,11 @@ import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.events.BossHitEvent;
 import com.nrg.kelly.events.game.BombDroppedEvent;
+import com.nrg.kelly.events.game.BossDeathEvent;
 import com.nrg.kelly.events.game.BulletFiredEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
+import com.nrg.kelly.events.game.GameEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 
@@ -43,10 +46,14 @@ public class BossActor extends EnemyActor {
     private final Animation hitAnimation;
     private final AtlasConfig hitAtlasConfig;
     private final AtlasConfig dyingAtlasConfig;
+    private final AtlasConfig deadAtlasConfig;
     private final Animation dyingAnimation;
+    private final Animation deadAnimation;
     private boolean paused;
     private int hitCount = 0;
     private Optional<Timer.Task> bombSchedule = Optional.absent();
+    private Optional<Timer.Task> hitSchedule = Optional.absent();
+    private Optional<Timer.Task> dyingSchedule = Optional.absent();
 
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
@@ -60,6 +67,10 @@ public class BossActor extends EnemyActor {
         dyingAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_dying");
         final TextureAtlas dyingAtlas = new TextureAtlas(Gdx.files.internal(dyingAtlasConfig.getAtlas()));
         dyingAnimation = new Animation(enemyConfig.getFrameRate(), dyingAtlas.getRegions());
+
+        deadAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_dead");
+        final TextureAtlas deadAtlas = new TextureAtlas(Gdx.files.internal(deadAtlasConfig.getAtlas()));
+        deadAnimation = new Animation(enemyConfig.getFrameRate(), deadAtlas.getRegions());
 
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
@@ -98,6 +109,13 @@ public class BossActor extends EnemyActor {
                         Optional.of(dyingAtlasConfig.getImageOffset()),
                         Optional.of(dyingAtlasConfig.getImageScale()));
                 break;
+            case DEAD:
+                region = this.deadAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(dyingAtlasConfig.getImageOffset()),
+                        Optional.of(dyingAtlasConfig.getImageScale()));
+                break;
             case RUNNING:
                 drawDefaultAnimation(batch);
                 break;
@@ -120,20 +138,37 @@ public class BossActor extends EnemyActor {
 
     @Subscribe
     public void onHit(BossHitEvent bossHitEvent){
+        final ActorState actorState = this.getActorState();
+        if(actorState.equals(ActorState.DYING) || actorState.equals(ActorState.DEAD))
+            return;
+
         if(hitCount >= this.maxHitCount){
-            this.setActorState(ActorState.DYING);
-            this.cancelSchedules(null);
+            if(!dyingSchedule.isPresent()){
+                this.setActorState(ActorState.DYING);
+                this.cancelSchedules(null);
+                final Optional<BossDeathEvent> bossDeathEvent = Optional.of(new BossDeathEvent());
+                dyingSchedule = scheduleState(ActorState.DEAD, 1.5f, bossDeathEvent);
+            }
         } else {
             this.setActorState(ActorState.HIT);
+            Optional<BossDeathEvent> bossDeathEvent = Optional.absent();
             this.hitCount++;
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    if(!getActorState().equals(ActorState.DYING))
-                    setActorState(ActorState.RUNNING);
-                }
-            }, 1.5f);
+            hitSchedule = scheduleState(ActorState.RUNNING, 1.5f, bossDeathEvent);
         }
+    }
+
+    private Optional<Timer.Task> scheduleState(final ActorState actorState,
+                                               final float time,
+                                               final Optional<? extends GameEvent> optionalEvent) {
+        return Optional.of(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setActorState(actorState);
+                for(GameEvent event : optionalEvent.asSet()){
+                    Events.get().post(event);
+                }
+            }
+        }, time));
     }
 
     @Subscribe
@@ -156,15 +191,17 @@ public class BossActor extends EnemyActor {
             body.setLinearVelocity(0f, 0f);
             this.isInFiringPosition = true;
         } else {
-            body.setLinearVelocity(configuredLinearVelocity);
+            for(final Vector2 vector : configuredLinearVelocity.asSet()) {
+                body.setLinearVelocity(vector);
+            }
         }
     }
 
     private boolean canFireWeapon() {
-        if(paused || this.getActorState().equals(ActorState.DYING)) {
+        final ActorState actorState = this.getActorState();
+        if(paused || actorState.equals(ActorState.DYING) || actorState.equals(ActorState.DEAD)) {
             return false;
         }
-
 
         boolean canFire = isInFiringPosition;
         for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
@@ -219,6 +256,9 @@ public class BossActor extends EnemyActor {
         cancelSchedule(this.fireBulletSchedule);
         cancelSchedule(this.fireIntervalSchedule);
         cancelSchedule(this.bombSchedule);
+        cancelSchedule(this.hitSchedule);
+        cancelSchedule(this.dyingSchedule);
+
     }
 
     private void cancelSchedule(Optional<Timer.Task> taskOptional){

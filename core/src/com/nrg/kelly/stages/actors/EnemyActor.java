@@ -17,7 +17,7 @@ import com.nrg.kelly.physics.Box2dFactory;
 
 public class EnemyActor extends GameActor {
 
-    protected Vector2 configuredLinearVelocity;
+    protected Optional<Vector2> configuredLinearVelocity = Optional.absent();
 
     private Optional<RunnerActor> runnerActorOptional = Optional.absent();
 
@@ -31,7 +31,7 @@ public class EnemyActor extends GameActor {
         Events.get().register(this);
     }
 
-    public void setConfiguredLinearVelocity(Vector2 configuredLinearVelocity){
+    public void setConfiguredLinearVelocity(Optional<Vector2> configuredLinearVelocity){
         this.configuredLinearVelocity = configuredLinearVelocity;
     }
 
@@ -44,34 +44,14 @@ public class EnemyActor extends GameActor {
     public void act(float delta) {
         super.act(delta);
         final Body body = this.getBody();
-        body.setLinearVelocity(configuredLinearVelocity);
+        for(Vector2 velocity : configuredLinearVelocity.asSet()) {
+            body.setLinearVelocity(velocity);
+        }
         for (final ActorConfig actorConfig : this.getConfig().asSet()) {
-            if (!isWithinLeftBounds(body, actorConfig)) {
+            if (!isWithinLeftBounds(actorConfig)) {
                 Box2dFactory.destroyAndRemove(this);
             }
         }
-    }
-
-    private boolean isWithinLeftBounds(Body body, ActorConfig actorConfig) {
-        return (body.getPosition().x + actorConfig.getWidth() / 2 > 0);
-    }
-
-    protected boolean isWithinBounds(ActorConfig actorConfig) {
-            final CameraConfig cameraConfig = this.getCameraConfig();
-            return isWithinWidth(actorConfig, cameraConfig, this.getBody()) &&
-                    isWithinHeight(actorConfig, cameraConfig, this.getBody());
-    }
-
-    private boolean isWithinHeight(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
-        final Vector2 position = body.getPosition();
-        final float y = position.y + (actorConfig.getHeight() / 2.0f);
-        return y > 0 && y < cameraConfig.getViewportHeight();
-    }
-
-    private boolean isWithinWidth(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
-        final Vector2 position = body.getPosition();
-        final float x = position.x + (actorConfig.getWidth() / 2.0f);
-        return x > 0 && x < cameraConfig.getViewportWidth();
     }
 
     protected Filter createArmourCollisionFilter() {

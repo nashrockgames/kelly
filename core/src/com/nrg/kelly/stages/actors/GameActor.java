@@ -184,6 +184,30 @@ public abstract class GameActor extends Actor {
         }
     }
 
+
+    protected boolean isWithinLeftBounds(ActorConfig actorConfig) {
+        return (this.getBody().getPosition().x + actorConfig.getWidth() / 2 > 0);
+    }
+
+    protected boolean isWithinBounds(ActorConfig actorConfig) {
+        final CameraConfig cameraConfig = this.getCameraConfig();
+        return isWithinWidth(actorConfig, cameraConfig, this.getBody()) &&
+                isWithinHeight(actorConfig, cameraConfig, this.getBody());
+    }
+
+    private boolean isWithinHeight(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
+        final Vector2 position = body.getPosition();
+        final float y = position.y + (actorConfig.getHeight() / 2.0f);
+        return y > 0 && y < cameraConfig.getViewportHeight();
+    }
+
+    private boolean isWithinWidth(ActorConfig actorConfig, CameraConfig cameraConfig, Body body){
+        final Vector2 position = body.getPosition();
+        final float x = position.x + (actorConfig.getWidth() / 2.0f);
+        return x > 0 && x < cameraConfig.getViewportWidth();
+    }
+
+
     protected void drawAnimation(Batch batch,
                                  TextureRegion textureRegion,
                                  Optional<ImageOffsetConfig> offsetOptional,

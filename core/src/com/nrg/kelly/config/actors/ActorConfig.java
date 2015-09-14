@@ -13,6 +13,24 @@ public abstract class ActorConfig {
     private PositionConfig position;
     private float frameRate;
     private float hitBoxScale = 1.0f;
+    private HitVectorConfig hitVectorConfig;
+    private float gravityScale = 1.0f;
+
+    public float getGravityScale() {
+        return gravityScale;
+    }
+
+    public void setGravityScale(float gravityScale) {
+        this.gravityScale = gravityScale;
+    }
+
+    public HitVectorConfig getHitVectorConfig() {
+        return hitVectorConfig;
+    }
+
+    public void setHitVectorConfig(HitVectorConfig hitVectorConfig) {
+        this.hitVectorConfig = hitVectorConfig;
+    }
 
     private List<AtlasConfig> animations;
 

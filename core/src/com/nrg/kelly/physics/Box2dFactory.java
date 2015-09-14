@@ -1,7 +1,6 @@
 package com.nrg.kelly.physics;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,6 +12,7 @@ import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.ArmourConfig;
+import com.nrg.kelly.config.actors.BossDeathConfig;
 import com.nrg.kelly.config.actors.GunConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
@@ -77,6 +77,24 @@ public class Box2dFactory {
         return body;
     }
 
+    public Body createBossDeath(BossDeathConfig  bossDeathConfig){
+
+        final PositionConfig positionConfig = bossDeathConfig.getPosition();
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        Vector2 configuredPosition = new Vector2(positionConfig.getX(), positionConfig.getY());
+        bodyDef.position.set(configuredPosition);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(bossDeathConfig.getWidth() / 2, bossDeathConfig.getHeight() / 2);
+        Body body = world.createBody(bodyDef);
+        body.setGravityScale(bossDeathConfig.getGravityScale());
+        body.createFixture(shape, bossDeathConfig.getDensity());
+        body.resetMassData();
+        shape.dispose();
+        return body;
+
+    }
+
     public Body createRunner() {
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
         final RunnerConfig runnerConfig = gameConfig.getActors().getRunner();
@@ -106,6 +124,7 @@ public class Box2dFactory {
         shape.setAsBox((enemyConfig.getWidth() / 2) * hitBoxScale,
                 (enemyConfig.getHeight() / 2) * hitBoxScale);
         final Body body = world.createBody(bodyDef);
+        body.setGravityScale(enemyConfig.getGravityScale());
         body.createFixture(shape, enemyConfig.getDensity());
         body.resetMassData();
         shape.dispose();
@@ -119,7 +138,7 @@ public class Box2dFactory {
         return bodyDef;
     }
 
-    public Vector2 getRunnerLinerImpulse(){
+    public Vector2 getRunnerJumpImpulse(){
         return runnerJumpingLinearImpulse;
     }
 

@@ -12,6 +12,7 @@ import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.events.game.BombDroppedEvent;
+import com.nrg.kelly.events.game.BossDeathEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.game.FireRunnerWeaponEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
@@ -102,6 +103,12 @@ public class GameStageView extends Stage {
         }
     }
 
+    @Subscribe
+    public void onBossDeathEvent(final BossDeathEvent bossDeathEvent) {
+        if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
+            this.addActor(actorFactory.createBossDeath(this.level));
+        }
+    }
     @Subscribe
     public void onBossDroppedBombEvent(BombDroppedEvent bombDroppedEvent) {
         if (gameStateManager.getGameState().equals(GameState.PLAYING)) {

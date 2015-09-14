@@ -7,6 +7,7 @@ public class Constants {
 
     public static final int APP_WIDTH = 1024;
     public static final int APP_HEIGHT = 720;
+
     public static final short RUNNER_HIT_CATEGORY = 1;
     public static final short RUNNER_HIT_GROUP_INDEX = 2;
     public static final short RUNNER_HIT_MASK_INDEX = 0;
@@ -16,6 +17,11 @@ public class Constants {
     public static final short ENEMY_ARMOUR_HIT_CATEGORY = 2;
     public static final short ENEMY_ARMOUR_HIT_GROUP_INDEX = 3;
     public static final short ENEMY_ARMOUR_HIT_MASK_INDEX = 1;
+    public static final short BOSS_DEATH_HIT_CATEGORY = 3;
+    public static final short BOSS_DEATH_HIT_GROUP_INDEX = 1;
+    public static final short BOSS_DEATH_HIT_MASK_INDEX = 1;
+
+
     public enum MENU_ID {
         MAIN("main_menu");
         private String id;

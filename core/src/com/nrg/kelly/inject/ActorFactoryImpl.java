@@ -13,6 +13,7 @@ import com.nrg.kelly.config.actors.ArmourConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.BossBombConfig;
 import com.nrg.kelly.config.actors.BossBulletConfig;
+import com.nrg.kelly.config.actors.BossDeathConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.config.actors.GunConfig;
@@ -25,9 +26,11 @@ import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.ArmourActor;
 import com.nrg.kelly.stages.actors.BackgroundActor;
 import com.nrg.kelly.stages.actors.BossActor;
+import com.nrg.kelly.stages.actors.BossDeathActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
+import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.GroundActor;
 import com.nrg.kelly.stages.actors.GunActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
@@ -84,7 +87,7 @@ public class ActorFactoryImpl implements ActorFactory{
         return createEnemyActor(enemyConfig);
      }
 
-    private void  setupDefaultAnimation(EnemyConfig enemyConfig, EnemyActor enemyActor, List<AtlasConfig> animations) {
+    private void  setupDefaultAnimation(EnemyConfig enemyConfig, GameActor enemyActor, List<AtlasConfig> animations) {
         final AtlasConfig defaultAtlasConfig = enemyActor
                 .getAtlasConfigByName(animations, "default");
         enemyActor.setDefaultAtlasConfig(defaultAtlasConfig);
@@ -157,7 +160,8 @@ public class ActorFactoryImpl implements ActorFactory{
         if(animations != null) {
             setupDefaultAnimation(boss, bossActor, animations);
         }
-        bossActor.setConfiguredLinearVelocity(new Vector2(boss.getVelocityX(), 0f));
+        final Vector2 vector2 = new Vector2(boss.getVelocityX(), 0f);
+        bossActor.setConfiguredLinearVelocity(Optional.of(vector2));
         bossActor.setRunnerActor(runner);
         return bossActor;
     }
@@ -174,7 +178,7 @@ public class ActorFactoryImpl implements ActorFactory{
     public Actor createRunnerBullet(RunnerActor runnerActor) {
         final GameConfig gameConfig = ConfigFactory.getGameConfig();
         final RunnerBulletConfig runnerBulletConfig = gameConfig.getActors().getRunnerBullet();
-        return this.createRunnerBullet(runnerBulletConfig);
+        return this.createRunnerBulletActor(runnerBulletConfig);
     }
 
 
@@ -186,13 +190,31 @@ public class ActorFactoryImpl implements ActorFactory{
                 runnerActor.getBody().getPosition().x + runnerActor.getWidth());
     }
 
+    @Override
+    public Actor createBossDeath(int level) {
+        final LevelConfig levelConfig = levelsConfig.getLevels().get(level - 1);
+        final BossDeathConfig bossDeathConfig = levelConfig.getBossDeath();
+        return this.createBossDeathActor(bossDeathConfig);
+
+    }
+
+    private Actor createBossDeathActor(BossDeathConfig bossDeathConfig) {
+        final BossDeathActor bossDeathActor = new BossDeathActor(bossDeathConfig, cameraConfig);
+        final List<AtlasConfig> animations = bossDeathConfig.getAnimations();
+        if(animations != null) {
+            setupDefaultAnimation(bossDeathConfig, bossDeathActor, animations);
+        }
+        return bossDeathActor;
+    }
+
     private EnemyBombActor createEnemyBombActor(BossBombConfig bossBombConfig, float explosionPositionX) {
         final EnemyBombActor enemyActor = new EnemyBombActor(bossBombConfig, cameraConfig);
         final List<AtlasConfig> animations = bossBombConfig.getAnimations();
         if(animations != null) {
             setupDefaultAnimation(bossBombConfig, enemyActor, animations);
         }
-        enemyActor.setConfiguredLinearVelocity(new Vector2(bossBombConfig.getVelocityX(), 0f));
+        final Vector2 vector2 = new Vector2(bossBombConfig.getVelocityX(), 0f);
+        enemyActor.setConfiguredLinearVelocity(Optional.of(vector2));
         enemyActor.setExplosionPositionX(explosionPositionX);
         return enemyActor;
     }
@@ -203,17 +225,19 @@ public class ActorFactoryImpl implements ActorFactory{
         if(animations != null) {
             setupDefaultAnimation(enemyConfig, enemyActor, animations);
         }
-        enemyActor.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        final Vector2 vector2 = new Vector2(enemyConfig.getVelocityX(), 0f);
+        enemyActor.setConfiguredLinearVelocity(Optional.of(vector2));
         return enemyActor;
     }
 
-    private RunnerBulletActor createRunnerBullet(final RunnerBulletConfig runnerBulletConfig) {
+    private RunnerBulletActor createRunnerBulletActor(final RunnerBulletConfig runnerBulletConfig) {
         final RunnerBulletActor runnerBulletActor = new RunnerBulletActor(runnerBulletConfig, cameraConfig);
         final List<AtlasConfig> animations = runnerBulletConfig.getAnimations();
         if(animations != null) {
             setupDefaultAnimation(runnerBulletConfig, runnerBulletActor, animations);
         }
-        runnerBulletActor.setConfiguredLinearVelocity(new Vector2(runnerBulletConfig.getVelocityX(), 0f));
+        final Vector2 vector2 = new Vector2(runnerBulletConfig.getVelocityX(), 0f);
+        runnerBulletActor.setConfiguredLinearVelocity(Optional.of(vector2));
         return runnerBulletActor;
     }
 
@@ -223,7 +247,8 @@ public class ActorFactoryImpl implements ActorFactory{
         if(animations != null) {
             setupDefaultAnimation(enemyConfig, enemyBulletActor, animations);
         }
-        enemyBulletActor.setConfiguredLinearVelocity(new Vector2(enemyConfig.getVelocityX(), 0f));
+        final Vector2 vector2 = new Vector2(enemyConfig.getVelocityX(), 0f);
+        enemyBulletActor.setConfiguredLinearVelocity(Optional.of(vector2));
         return enemyBulletActor;
     }
 

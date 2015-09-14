@@ -17,6 +17,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.HitVectorConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
@@ -348,13 +349,14 @@ public class RunnerActor extends GameActor {
 
     private void scheduleDeath(final Body body) {
         if(!deathScheduled) {
+            final HitVectorConfig hitVectorConfig = runnerConfig.getHitVectorConfig();
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    final float hitVelocityX = runnerConfig.getHitVelocityX();
-                    final float hitVelocityY = runnerConfig.getHitVelocityY();
-                    final float hitImpulseX = runnerConfig.getHitImpulseX();
-                    final float hitImpulseY = runnerConfig.getHitImpulseY();
+                    final float hitVelocityX = hitVectorConfig.getHitVelocityX();
+                    final float hitVelocityY = hitVectorConfig.getHitVelocityY();
+                    final float hitImpulseX = hitVectorConfig.getHitImpulseX();
+                    final float hitImpulseY = hitVectorConfig.getHitImpulseY();
                     final Filter f = createDeathCollisionFilter();
                     final Vector2 linearVelocity = new Vector2(hitVelocityX, hitVelocityY);
                     final Vector2 impulseVector = new Vector2(hitImpulseX, hitImpulseY);
@@ -364,7 +366,7 @@ public class RunnerActor extends GameActor {
                     applyCollisionImpulse(collisionParams);
                     clearTransform();
                 }
-            }, runnerConfig.getHitPauseTime());
+            }, hitVectorConfig.getHitPauseTime());
             deathScheduled = true;
         }
     }
@@ -500,7 +502,7 @@ public class RunnerActor extends GameActor {
 
     private void applyJump() {
         final Body body = getBody();
-        final Vector2 runnerLinerImpulse = Box2dFactory.getInstance().getRunnerLinerImpulse();
+        final Vector2 runnerLinerImpulse = Box2dFactory.getInstance().getRunnerJumpImpulse();
         body.applyLinearImpulse(runnerLinerImpulse,
                 body.getWorldCenter(), true);
     }
