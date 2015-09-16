@@ -28,6 +28,8 @@ import java.util.List;
 
 public class BossActor extends EnemyActor {
 
+    public static final float DYING_TIME = 3.0f;
+    public static final float HIT_TIME = 1.5f;
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
     private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
@@ -143,18 +145,20 @@ public class BossActor extends EnemyActor {
             return;
 
         if(hitCount >= this.maxHitCount){
-            if(!dyingSchedule.isPresent()){
+            if(!dyingSchedule.isPresent() && !actorState.equals(ActorState.DYING)){
                 this.setActorState(ActorState.DYING);
                 this.cancelSchedules(null);
                 final Optional<BossDeathEvent> bossDeathEvent = Optional.of(new BossDeathEvent());
-                dyingSchedule = scheduleState(ActorState.DEAD, 1.5f, bossDeathEvent);
+                dyingSchedule = scheduleState(ActorState.DEAD, DYING_TIME, bossDeathEvent);
+                Gdx.app.log("","Death scheduled");
             }
-        } else {
+        } else if(actorState.equals(ActorState.RUNNING)) {
             this.setActorState(ActorState.HIT);
-            Optional<BossDeathEvent> bossDeathEvent = Optional.absent();
-            this.hitCount++;
-            hitSchedule = scheduleState(ActorState.RUNNING, 1.5f, bossDeathEvent);
+            Optional<BossDeathEvent> absentEvent = Optional.absent();
+            hitSchedule = scheduleState(ActorState.RUNNING, HIT_TIME, absentEvent);
         }
+        this.hitCount++;
+
     }
 
     private Optional<Timer.Task> scheduleState(final ActorState actorState,
