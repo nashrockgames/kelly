@@ -8,6 +8,34 @@ public class EnemyBossConfig extends EnemyConfig {
     private int armourSpawnInterval;
     private int gunSpawnInterval;
 
+    private PositionConfig endOfLevelPosition;
+    private float endOfLevelVelocityX;
+    private float endOfLevelVelocityY;
+
+    public PositionConfig getEndOfLevelPosition() {
+        return endOfLevelPosition;
+    }
+
+    public void setEndOfLevelPosition(PositionConfig endOfLevelPosition) {
+        this.endOfLevelPosition = endOfLevelPosition;
+    }
+
+    public float getEndOfLevelVelocityX() {
+        return endOfLevelVelocityX;
+    }
+
+    public void setEndOfLevelVelocityX(float endOfLevelVelocityX) {
+        this.endOfLevelVelocityX = endOfLevelVelocityX;
+    }
+
+    public float getEndOfLevelVelocityY() {
+        return endOfLevelVelocityY;
+    }
+
+    public void setEndOfLevelVelocityY(float endOfLevelVelocityY) {
+        this.endOfLevelVelocityY = endOfLevelVelocityY;
+    }
+
     public int getArmourSpawnInterval() {
         return armourSpawnInterval;
     }

@@ -68,6 +68,10 @@ public abstract class GameActor extends Actor {
         return forcedTransform;
     }
 
+    protected void clearForcedTransform(){
+        this.forcedTransform = Optional.absent();
+    }
+
     public ActorState getActorState() {
         return actorState;
     }
@@ -168,6 +172,10 @@ public abstract class GameActor extends Actor {
         forcedLinearVelocity = Optional.absent();
     }
 
+    public Optional<Vector2> getForcedLinearVelocity() {
+        return forcedLinearVelocity;
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -179,6 +187,7 @@ public abstract class GameActor extends Actor {
             final Vector2 linearVelocity = forcedLinearVelocity.get();
             this.getBody().setLinearVelocity(linearVelocity);
         }
+
         maybeUpdateTextureBounds();
     }
 

@@ -388,6 +388,7 @@ public class RunnerActor extends GameActor {
 
         this.setEndOfLevelPosition(Optional.fromNullable(position));
         this.setForcedLinearVelocity(endVelocityX, endVelocityY);
+        this.setAnimationState(AnimationState.DEFAULT);
 
 
     }

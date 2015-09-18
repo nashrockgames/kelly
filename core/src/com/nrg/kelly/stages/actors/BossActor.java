@@ -14,8 +14,10 @@ import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.EnemyBossConfig;
+import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.events.BossHitEvent;
 import com.nrg.kelly.events.game.BombDroppedEvent;
+import com.nrg.kelly.events.game.BossDeadEvent;
 import com.nrg.kelly.events.game.BossDeathEvent;
 import com.nrg.kelly.events.game.BossBulletFiredEvent;
 import com.nrg.kelly.events.Events;
@@ -30,9 +32,12 @@ public class BossActor extends EnemyActor {
 
     public static final float DYING_TIME = 3.0f;
     public static final float HIT_TIME = 1.5f;
+    private final EnemyBossConfig bossConfig;
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
     private Optional<Timer.Task> fireIntervalSchedule = Optional.absent();
+    private Optional<PositionConfig> endOfLevelPosition = Optional.absent();
+
 
     //TODO: make configurable
     public static final float FIRE_BULLET_DELAY_SECONDS = 1.2f;
@@ -60,6 +65,7 @@ public class BossActor extends EnemyActor {
 
     public BossActor(EnemyBossConfig enemyConfig, CameraConfig cameraConfig) {
         super(enemyConfig, cameraConfig);
+        this.bossConfig = enemyConfig;
 
         final List<AtlasConfig> animations = enemyConfig.getAnimations();
         hitAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_hit");
@@ -78,6 +84,27 @@ public class BossActor extends EnemyActor {
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
 
+    @Subscribe
+    public void onBossDead(BossDeadEvent bossDeadEvent){
+
+        final PositionConfig endOfLevelPosition = this.bossConfig.getEndOfLevelPosition();
+        final float endVelocityX = this.bossConfig.getEndOfLevelVelocityX();
+        final float endVelocityY = this.bossConfig.getEndOfLevelVelocityY();
+        moveToPosition(endOfLevelPosition, endVelocityX, endVelocityY);
+
+    }
+
+    private void moveToPosition(PositionConfig position, float endVelocityX, float endVelocityY) {
+        this.clearForcedTransform();
+        this.unMaintainPosition();
+        this.setEndOfLevelPosition(Optional.fromNullable(position));
+        this.setForcedLinearVelocity(endVelocityX, endVelocityY);
+    }
+
+    public void setEndOfLevelPosition(Optional<PositionConfig> endOfLevelPosition) {
+        this.endOfLevelPosition = endOfLevelPosition;
+    }
+
     public Optional<Timer.Task> getFireBulletSchedule() {
         return fireBulletSchedule;
     }
@@ -85,6 +112,12 @@ public class BossActor extends EnemyActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        if(endOfLevelPosition.isPresent()){
+            if(this.getBody().getPosition().x <= endOfLevelPosition.get().getX()){
+                clearForcedLinearVelocity();
+                maintainPosition();
+            }
+        }
         maybeFireWeapon();
 
     }
@@ -131,7 +164,9 @@ public class BossActor extends EnemyActor {
 
         final Body body = this.getBody();
         for (final ActorConfig actorConfig : this.getConfig().asSet()) {
-            holdPositionWhenInView(body);
+            if(!this.getForcedLinearVelocity().isPresent()) {
+                holdPositionWhenInView(body);
+            }
             if (canFireWeapon()) {
                 fireWeapon();
             }
@@ -185,6 +220,7 @@ public class BossActor extends EnemyActor {
     }
 
     private void holdPositionWhenInView(Body body) {
+
 
         final CameraConfig cameraConfig = this.getCameraConfig();
         float finalBodyPosition = cameraConfig.getViewportWidth() - (this.getWidth() / 2f);

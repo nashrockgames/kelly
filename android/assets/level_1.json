@@ -59,7 +59,13 @@
       "density": 0.5,
       "velocityX" : -2.5,
       "armourSpawnInterval" : 9,
-      "gunSpawnInterval" : 3
+      "gunSpawnInterval" : 3,
+      "endOfLevelPosition": {
+         "x": 12.0,
+         "y": 2.01
+       },
+      "endOfLevelVelocityX":-5.0,
+      "endOfLevelVelocityY":0.0
     },
     "bossBullet":{
       "animations":[
