@@ -16,12 +16,14 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.CameraConfig;
+import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.HitVectorConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.events.game.ArmourPickedUpEvent;
+import com.nrg.kelly.events.game.BossDeadEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.events.game.GunPickedUpEvent;
@@ -63,6 +65,7 @@ public class RunnerActor extends GameActor {
     private Animation armourJumpGunAnimation;
     private Animation armourSlideGunAnimation;
     private Animation armourRunGunAnimation;
+    private Optional<PositionConfig> endOfLevelPosition = Optional.absent();
 
     public RunnerActor(RunnerConfig runnerConfig, CameraConfig cameraConfig) {
         super(runnerConfig, cameraConfig);
@@ -371,6 +374,35 @@ public class RunnerActor extends GameActor {
         }
     }
 
+    @Subscribe
+    public void onBossDead(BossDeadEvent bossDeadEvent){
+
+        final PositionConfig endOfLevelPosition = this.runnerConfig.getEndOfLevelPosition();
+        final float endVelocityX = this.runnerConfig.getEndOfLevelVelocityX();
+        final float endVelocityY = this.runnerConfig.getEndOfLevelVelocityY();
+        moveToPosition(endOfLevelPosition, endVelocityX, endVelocityY);
+
+    }
+
+    private void moveToPosition(PositionConfig position, float endVelocityX, float endVelocityY) {
+
+        this.setEndOfLevelPosition(Optional.fromNullable(position));
+        this.setForcedLinearVelocity(endVelocityX, endVelocityY);
+
+
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(endOfLevelPosition.isPresent()){
+            if(this.getBody().getPosition().x >= endOfLevelPosition.get().getX()){
+                clearForcedLinearVelocity();
+                maintainPosition();
+            }
+        }
+    }
+
     private Filter createDeathCollisionFilter() {
         final Filter f = new Filter();
         f.categoryBits = Constants.RUNNER_HIT_CATEGORY;
@@ -590,5 +622,13 @@ public class RunnerActor extends GameActor {
 
     public AnimationState getAnimationState() {
         return animationState;
+    }
+
+    public void setEndOfLevelPosition(Optional<PositionConfig> endOfLevelPosition) {
+        this.endOfLevelPosition = endOfLevelPosition;
+    }
+
+    public Optional<PositionConfig> getEndOfLevelPosition() {
+        return endOfLevelPosition;
     }
 }

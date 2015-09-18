@@ -11,6 +11,7 @@ import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.BossDeathConfig;
 import com.nrg.kelly.config.actors.HitVectorConfig;
 import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.game.BossDeadEvent;
 import com.nrg.kelly.physics.Box2dFactory;
 
 /**
@@ -59,6 +60,7 @@ public class BossDeathActor extends GameActor {
             }
             if (!isWithinBounds(actorConfig)) {
                 Box2dFactory.destroyAndRemove(this);
+                Events.get().post(new BossDeadEvent());
             }
         }
     }

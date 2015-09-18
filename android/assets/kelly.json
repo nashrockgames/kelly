@@ -291,7 +291,13 @@
         "hitVelocityY": 10.0,
         "hitPauseTime":0.5
       },
-      "slideTime":1.0
+      "slideTime":1.0,
+      "endOfLevelPosition": {
+              "x": 9.0,
+              "y": 2.01
+            },
+      "endOfLevelVelocityX":5.0,
+      "endOfLevelVelocityY":0.0
     }
   }
 }

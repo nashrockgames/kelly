@@ -17,7 +17,7 @@ import com.nrg.kelly.config.actors.EnemyBossConfig;
 import com.nrg.kelly.events.BossHitEvent;
 import com.nrg.kelly.events.game.BombDroppedEvent;
 import com.nrg.kelly.events.game.BossDeathEvent;
-import com.nrg.kelly.events.game.BulletFiredEvent;
+import com.nrg.kelly.events.game.BossBulletFiredEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.GameEvent;
@@ -150,7 +150,6 @@ public class BossActor extends EnemyActor {
                 this.cancelSchedules(null);
                 final Optional<BossDeathEvent> bossDeathEvent = Optional.of(new BossDeathEvent());
                 dyingSchedule = scheduleState(ActorState.DEAD, DYING_TIME, bossDeathEvent);
-                Gdx.app.log("","Death scheduled");
             }
         } else if(actorState.equals(ActorState.RUNNING)) {
             this.setActorState(ActorState.HIT);
@@ -227,7 +226,7 @@ public class BossActor extends EnemyActor {
         fireBulletSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Events.get().post(new BulletFiredEvent(instance, runnerActor));
+                Events.get().post(new BossBulletFiredEvent(instance, runnerActor));
             }
         }, FIRE_BULLET_DELAY_SECONDS));
 

@@ -14,6 +14,7 @@ import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
+import com.nrg.kelly.config.actors.PositionConfig;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public abstract class GameActor extends Actor {
     private Float currentTextureRotation = 0f;
     private Float currentBodyRotation = 0f;
     private Rectangle textureBounds = new Rectangle();
+    private Optional<Vector2> forcedLinearVelocity = Optional.absent();
 
     public CameraConfig getCameraConfig() {
         return cameraConfig;
@@ -162,12 +164,20 @@ public abstract class GameActor extends Actor {
         throw new IllegalArgumentException("Unknown atlas name " + name);
     }
 
+    protected void clearForcedLinearVelocity() {
+        forcedLinearVelocity = Optional.absent();
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
         if (getForcedTransform().isPresent()) {
             final Vector2 position = getForcedTransform().get();
             this.getBody().setTransform(position, this.getForcedTransformAngle());
+        }
+        if(forcedLinearVelocity.isPresent()){
+            final Vector2 linearVelocity = forcedLinearVelocity.get();
+            this.getBody().setLinearVelocity(linearVelocity);
         }
         maybeUpdateTextureBounds();
     }
@@ -309,4 +319,7 @@ public abstract class GameActor extends Actor {
         this.textureRotation = textureRotation;
     }
 
+    public void setForcedLinearVelocity(float endVelocityX, float endVelocityY) {
+        this.forcedLinearVelocity = Optional.of(new Vector2(endVelocityX, endVelocityY));
+    }
 }

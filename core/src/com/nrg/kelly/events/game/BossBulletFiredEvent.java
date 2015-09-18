@@ -7,12 +7,12 @@ import com.nrg.kelly.stages.actors.RunnerActor;
 /**
  * Created by Andrew on 6/07/2015.
  */
-public class BulletFiredEvent {
+public class BossBulletFiredEvent {
 
     private final BossActor bossActor;
     private final Optional<RunnerActor> runnerActor;
 
-    public BulletFiredEvent(BossActor bossActor, Optional<RunnerActor> runnerActor) {
+    public BossBulletFiredEvent(BossActor bossActor, Optional<RunnerActor> runnerActor) {
         this.bossActor = bossActor;
         this.runnerActor = runnerActor;
     }
