@@ -6,9 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.BossState;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
-import com.nrg.kelly.events.game.BombExplodedEvent;
 import com.nrg.kelly.events.game.BossBulletFiredEvent;
-import com.nrg.kelly.events.game.BossDeadEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.SpawnEnemyEvent;
@@ -20,7 +18,6 @@ import com.nrg.kelly.events.game.OnSpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnArmourEvent;
 import com.nrg.kelly.events.game.SpawnBossBulletEvent;
 import com.nrg.kelly.events.game.SpawnBossEvent;
-import com.nrg.kelly.physics.Box2dFactory;
 import com.nrg.kelly.stages.actors.ActorState;
 import com.nrg.kelly.stages.actors.BossActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
@@ -69,11 +66,6 @@ public class GameStageController {
     }
 
     @Subscribe
-    public void onBossBombExploded(final BombExplodedEvent bombExplodedEvent){
-        Box2dFactory.destroyAndRemove(bombExplodedEvent.getEnemyBombActor());
-    }
-
-    @Subscribe
     public void spawnBossBullet(SpawnBossBulletEvent spawnBossBulletEvent) {
         final BossActor bossActor = spawnBossBulletEvent.getBossActor();
         if(bossActor.getActorState().equals(ActorState.RUNNING)) {
@@ -98,19 +90,25 @@ public class GameStageController {
     public void onBossFiredEvent(BossBulletFiredEvent bossBulletFiredEvent){
         if(gameStateManager.getGameState().equals(GameState.PLAYING)) {
             final BossActor bossActor = bossBulletFiredEvent.getBossActor();
-            Events.get().post(new SpawnBossBulletEvent(bossActor));
-            for (RunnerActor runnerActor : bossBulletFiredEvent.getRunnerActor().asSet()) {
-                final int bulletsFired = bossActor.getBulletsFired();
-                if (bulletsFired > 0) {
-                    if (bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
-                        if (gameStateManager.canSpawnArmour(runnerActor)) {
-                            Events.get().post(new SpawnArmourEvent());
-                        }
+            if(bossActor.getActorState().equals(ActorState.RUNNING)) {
+                spawnObject(bossBulletFiredEvent, bossActor);
+            }
+        }
+    }
+
+    private void spawnObject(BossBulletFiredEvent bossBulletFiredEvent, BossActor bossActor) {
+        Events.get().post(new SpawnBossBulletEvent(bossActor));
+        for (RunnerActor runnerActor : bossBulletFiredEvent.getRunnerActor().asSet()) {
+            final int bulletsFired = bossActor.getBulletsFired();
+            if (bulletsFired > 0) {
+                if (bulletsFired % bossActor.getArmourSpawnInterval() == 0) {
+                    if (gameStateManager.canSpawnArmour(runnerActor)) {
+                        Events.get().post(new SpawnArmourEvent());
                     }
-                    if (bulletsFired % bossActor.getGunSpawnInterval() == 0) {
-                        if (gameStateManager.canSpawnGun(runnerActor)) {
-                            Events.get().post(new SpawnGunEvent());
-                        }
+                }
+                if (bulletsFired % bossActor.getGunSpawnInterval() == 0) {
+                    if (gameStateManager.canSpawnGun(runnerActor)) {
+                        Events.get().post(new SpawnGunEvent());
                     }
                 }
             }

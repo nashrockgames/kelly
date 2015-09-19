@@ -89,6 +89,9 @@ clean resources/raw/actors/enemies/frames/cart-boss-dead
 split resources/raw/actors/enemies/sheets/cart-boss-dead *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-dead
 pack resources/raw/actors/enemies/frames/cart-boss-dead android/assets cart_boss_dead
 
+clean resources/raw/actors/enemies/frames/cart-boss-end
+split resources/raw/actors/enemies/sheets/cart-boss-end *.png 128 128 resources/raw/actors/enemies/frames/cart-boss-end
+pack resources/raw/actors/enemies/frames/cart-boss-end android/assets cart_boss_end
 
 #Buttons
 clean resources/raw/buttons/play

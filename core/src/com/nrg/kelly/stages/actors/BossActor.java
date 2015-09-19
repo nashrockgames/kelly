@@ -24,6 +24,7 @@ import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.CancelSchedulesEvent;
 import com.nrg.kelly.events.game.GameEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
+import com.nrg.kelly.events.game.RunnerEndLevelEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 
 import java.util.List;
@@ -54,6 +55,8 @@ public class BossActor extends EnemyActor {
     private final AtlasConfig hitAtlasConfig;
     private final AtlasConfig dyingAtlasConfig;
     private final AtlasConfig deadAtlasConfig;
+    private final AtlasConfig endAtlasConfig;
+    private final Animation endAnimation;
     private final Animation dyingAnimation;
     private final Animation deadAnimation;
     private boolean paused;
@@ -80,6 +83,11 @@ public class BossActor extends EnemyActor {
         final TextureAtlas deadAtlas = new TextureAtlas(Gdx.files.internal(deadAtlasConfig.getAtlas()));
         deadAnimation = new Animation(enemyConfig.getFrameRate(), deadAtlas.getRegions());
 
+        endAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_end");
+        final TextureAtlas endAtlas = new TextureAtlas(Gdx.files.internal(endAtlasConfig.getAtlas()));
+        endAnimation = new Animation(enemyConfig.getFrameRate(), endAtlas.getRegions());
+
+
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
@@ -103,6 +111,11 @@ public class BossActor extends EnemyActor {
 
     public void setEndOfLevelPosition(Optional<PositionConfig> endOfLevelPosition) {
         this.endOfLevelPosition = endOfLevelPosition;
+    }
+
+    @Subscribe
+    public void onRunnerEndLevel(RunnerEndLevelEvent runnerEndLevelEvent){
+        this.setActorState(ActorState.END_LEVEL);
     }
 
     public Optional<Timer.Task> getFireBulletSchedule() {
@@ -150,6 +163,13 @@ public class BossActor extends EnemyActor {
                         region,
                         Optional.of(dyingAtlasConfig.getImageOffset()),
                         Optional.of(dyingAtlasConfig.getImageScale()));
+                break;
+            case END_LEVEL:
+                region = this.endAnimation.getKeyFrame(stateTime, true);
+                drawAnimation(batch,
+                        region,
+                        Optional.of(endAtlasConfig.getImageOffset()),
+                        Optional.of(endAtlasConfig.getImageScale()));
                 break;
             case RUNNING:
                 drawDefaultAnimation(batch);
@@ -238,7 +258,7 @@ public class BossActor extends EnemyActor {
 
     private boolean canFireWeapon() {
         final ActorState actorState = this.getActorState();
-        if(paused || actorState.equals(ActorState.DYING) || actorState.equals(ActorState.DEAD)) {
+        if(!actorState.equals(ActorState.RUNNING)){
             return false;
         }
 

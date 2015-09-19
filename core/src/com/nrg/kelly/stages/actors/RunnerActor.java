@@ -16,7 +16,6 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.Constants;
 import com.nrg.kelly.config.CameraConfig;
-import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.HitVectorConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
@@ -27,6 +26,7 @@ import com.nrg.kelly.events.game.BossDeadEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
 import com.nrg.kelly.config.actors.RunnerConfig;
 import com.nrg.kelly.events.game.GunPickedUpEvent;
+import com.nrg.kelly.events.game.RunnerEndLevelEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.physics.BeginContactEvent;
 import com.nrg.kelly.events.Events;
@@ -66,6 +66,8 @@ public class RunnerActor extends GameActor {
     private Animation armourSlideGunAnimation;
     private Animation armourRunGunAnimation;
     private Optional<PositionConfig> endOfLevelPosition = Optional.absent();
+    private boolean destroyOnNextCollision = false;
+    private boolean collidedWithDeadBoss = false;
 
     public RunnerActor(RunnerConfig runnerConfig, CameraConfig cameraConfig) {
         super(runnerConfig, cameraConfig);
@@ -385,21 +387,26 @@ public class RunnerActor extends GameActor {
     }
 
     private void moveToPosition(PositionConfig position, float endVelocityX, float endVelocityY) {
-
         this.setEndOfLevelPosition(Optional.fromNullable(position));
         this.setForcedLinearVelocity(endVelocityX, endVelocityY);
         this.setAnimationState(AnimationState.DEFAULT);
-
-
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(endOfLevelPosition.isPresent()){
-            if(this.getBody().getPosition().x >= endOfLevelPosition.get().getX()){
-                clearForcedLinearVelocity();
-                maintainPosition();
+        if(collidedWithDeadBoss){
+            Events.get().post(new RunnerEndLevelEvent());
+            Box2dFactory.destroyAndRemove(this);
+        } else {
+            if (endOfLevelPosition.isPresent()) {
+                if (this.getBody().getPosition().x >= endOfLevelPosition.get().getX()) {
+                    clearForcedLinearVelocity();
+                    this.collidedWithDeadBoss = false;
+                    this.destroyOnNextCollision = true;
+                    jump(null);
+                    //maintainPosition();
+                }
             }
         }
     }
@@ -445,30 +452,35 @@ public class RunnerActor extends GameActor {
     @Subscribe
     public void beginContact(BeginContactEvent beginContactEvent){
 
-        final Optional<RunnerActor> runnerActorOptional = beginContactEvent.getRunnerActor();
-        final Optional<EnemyActor> enemyActorOptional = beginContactEvent.getEnemyActor();
-        final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
-        final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
-        final Optional<GunActor> gunActorOptional = beginContactEvent.getGunActor();
-        for(RunnerActor runnerActor : runnerActorOptional.asSet()){
-            final ActorState actorState = this.getActorState();
-            for(EnemyActor enemyActor : enemyActorOptional.asSet()){
-                if(!actorState.equals(ActorState.HIT)){
-                    this.hit(enemyActor);
+        if(destroyOnNextCollision){
+            collidedWithDeadBoss = true;
+            return;
+        } else {
+            final Optional<RunnerActor> runnerActorOptional = beginContactEvent.getRunnerActor();
+            final Optional<EnemyActor> enemyActorOptional = beginContactEvent.getEnemyActor();
+            final Optional<GroundActor> groundActorOptional = beginContactEvent.getGroundActor();
+            final Optional<ArmourActor> armourActorOptional = beginContactEvent.getArmourActor();
+            final Optional<GunActor> gunActorOptional = beginContactEvent.getGunActor();
+            for (RunnerActor runnerActor : runnerActorOptional.asSet()) {
+                final ActorState actorState = this.getActorState();
+                for (EnemyActor enemyActor : enemyActorOptional.asSet()) {
+                    if (!actorState.equals(ActorState.HIT)) {
+                        this.hit(enemyActor);
+                    }
                 }
-            }
-            for(ArmourActor armourActor : armourActorOptional.asSet()){
-                if(!actorState.equals(ActorState.HIT)){
-                    this.pickupArmour();
+                for (ArmourActor armourActor : armourActorOptional.asSet()) {
+                    if (!actorState.equals(ActorState.HIT)) {
+                        this.pickupArmour();
+                    }
                 }
-            }
-            for(GunActor gunActor : gunActorOptional.asSet()){
-                if(!actorState.equals(ActorState.HIT)){
-                    this.pickupGun();
+                for (GunActor gunActor : gunActorOptional.asSet()) {
+                    if (!actorState.equals(ActorState.HIT)) {
+                        this.pickupGun();
+                    }
                 }
-            }
-            for(GroundActor groundActor : groundActorOptional.asSet()){
-                this.setLanded();
+                for (GroundActor groundActor : groundActorOptional.asSet()) {
+                    this.setLanded();
+                }
             }
         }
 

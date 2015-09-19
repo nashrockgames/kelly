@@ -5,15 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Timer;
 import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.BossBombConfig;
-import com.nrg.kelly.events.Events;
-import com.nrg.kelly.events.game.BombExplodedEvent;
+
 import com.nrg.kelly.physics.Box2dFactory;
 
 import java.util.List;
@@ -38,12 +35,12 @@ public class EnemyBombActor extends EnemyActor {
 
     public void explode(){
         if(!exploded) {
-            this.exploded = true;
             final EnemyBombActor instance = this;
+            exploded = true;
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    Events.get().post(new BombExplodedEvent(instance));
+                    Box2dFactory.destroyAndRemove(instance);
                 }
             }, 0.35f);
         }
@@ -63,7 +60,6 @@ public class EnemyBombActor extends EnemyActor {
     public void act(float delta) {
 
         super.act(delta);
-
         if(this.getBody().getPosition().x  <= this.getExplosionPositionX() ){
             if(!exploded)
             this.explode();
