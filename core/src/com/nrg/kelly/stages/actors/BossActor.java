@@ -187,8 +187,10 @@ public class BossActor extends EnemyActor {
             if(!this.getForcedLinearVelocity().isPresent()) {
                 holdPositionWhenInView(body);
             }
-            if (canFireWeapon()) {
-                fireWeapon();
+            if(this.isInFiringPosition) {
+                if (canFireWeapon()) {
+                    fireWeapon();
+                }
             }
         }
     }
@@ -256,22 +258,23 @@ public class BossActor extends EnemyActor {
     }
 
     private boolean canFireWeapon() {
+        //TODO: this is ugly
         final ActorState actorState = this.getActorState();
-        if(!actorState.equals(ActorState.RUNNING)){
+        if(actorState.equals(ActorState.DYING))
             return false;
+
+        boolean canFire = actorState.equals(ActorState.RUNNING) ||
+                actorState.equals(ActorState.HIT);
+
+        for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
+            canFire = !intervalTask.isScheduled();
+        }
+        if(canFire) {
+            for (final Timer.Task fireBulletTask : fireBulletSchedule.asSet()) {
+                canFire = !fireBulletTask.isScheduled();
+            }
         }
 
-        boolean canFire = isInFiringPosition;
-        for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
-            if (intervalTask.isScheduled()) {
-                canFire = false;
-            }
-        }
-        for (final Timer.Task task : fireBulletSchedule.asSet()) {
-            if (task.isScheduled()) {
-                canFire = false;
-            }
-        }
         return canFire;
     }
 
