@@ -57,6 +57,10 @@ public class PlayButtonActor extends GameActor{
 
     }
 
+    @Override
+    public boolean destroyOnEndLevel(){
+        return false;
+    }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {

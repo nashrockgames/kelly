@@ -16,6 +16,7 @@ import com.nrg.kelly.config.actors.BossDeathConfig;
 import com.nrg.kelly.config.actors.GunConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
+import com.nrg.kelly.events.Events;
 import com.nrg.kelly.inject.ConfigFactory;
 import com.nrg.kelly.config.actors.GroundConfig;
 import com.nrg.kelly.config.actors.WorldGravityConfig;
@@ -170,6 +171,7 @@ public class Box2dFactory {
 
     public static void destroyAndRemove(final GameActor actor){
         //Gdx.app.log("-", "destroying " + actor.getConfig().get().toString());
+        Events.get().unregister(actor);
         final Body body = actor.getBody();
         body.setUserData(null);
         destroyBody(body);

@@ -33,6 +33,11 @@ public abstract class ScrollingActor extends GameActor {
         }
     }
 
+    @Override
+    public boolean destroyOnEndLevel(){
+        return false;
+    }
+
     private boolean leftBoundsReached(float delta) {
         return (textureRegionBounds2.x - (delta * speed)) <= 0;
     }

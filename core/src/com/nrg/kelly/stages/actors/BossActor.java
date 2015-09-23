@@ -31,8 +31,8 @@ import java.util.List;
 
 public class BossActor extends EnemyActor {
 
-    public static final float DYING_TIME = 3.0f;
-    public static final float HIT_TIME = 1.5f;
+    public static final float DYING_TIME = 1.5f;
+    public static final float HIT_TIME = 0.5f;
     private final EnemyBossConfig bossConfig;
     private boolean isInFiringPosition = false;
     private Optional<Timer.Task> fireBulletSchedule = Optional.absent();
@@ -198,8 +198,7 @@ public class BossActor extends EnemyActor {
         final ActorState actorState = this.getActorState();
         if(actorState.equals(ActorState.DYING) || actorState.equals(ActorState.DEAD))
             return;
-
-        if(hitCount >= this.maxHitCount){
+        if(hitCount == this.maxHitCount){
             if(!dyingSchedule.isPresent() && !actorState.equals(ActorState.DYING)){
                 this.setActorState(ActorState.DYING);
                 this.cancelSchedules(null);
@@ -356,4 +355,5 @@ public class BossActor extends EnemyActor {
     public Optional<RunnerActor> getRunnerActor() {
         return runnerActor;
     }
+
 }

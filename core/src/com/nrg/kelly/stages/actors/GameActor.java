@@ -15,6 +15,7 @@ import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
+import com.nrg.kelly.events.Events;
 
 import java.util.List;
 
@@ -331,4 +332,9 @@ public abstract class GameActor extends Actor {
     public void setForcedLinearVelocity(float endVelocityX, float endVelocityY) {
         this.forcedLinearVelocity = Optional.of(new Vector2(endVelocityX, endVelocityY));
     }
+
+    public boolean destroyOnEndLevel() {
+        return true;
+    }
+
 }

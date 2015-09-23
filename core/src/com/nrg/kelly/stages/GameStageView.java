@@ -31,6 +31,8 @@ import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
+import com.nrg.kelly.stages.actors.ActorState;
+import com.nrg.kelly.stages.actors.BossDeathActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
@@ -154,7 +156,7 @@ public class GameStageView extends Stage {
     }
 
     @Subscribe
-    public void onGameOver(GameOverEvent gameOverEvent){
+    public void onGameOver(GameOverEvent gameOverEvent) {
 
         Gdx.app.log(this.getClass().getName(),
                 "Total game time = " + this.gameStageController.getGameTime() + " seconds");
@@ -162,29 +164,23 @@ public class GameStageView extends Stage {
         Events.get().post(new CancelSchedulesEvent());
 
 
-        for(RunnerActor runnerActor : runner.asSet()) {
+        for (RunnerActor runnerActor : runner.asSet()) {
             destroyActor(runnerActor);
         }
         //remove any left over enemies by index
-        final List<EnemyActor> enemyActorList = this.getEnemyActors();
-        for(int index = 0; index < enemyActorList.size(); index++){
-            final EnemyActor enemyActor = enemyActorList.get(index);
-            destroyActor(enemyActor);
+        final List<GameActor> gameActors = this.getDestroyableGameActors();
+        for (int index = 0; index < gameActors.size(); index++) {
+            final GameActor gameActor = gameActors.get(index);
+            destroyActor(gameActor);
         }
+
         this.gameStageController.setEnemiesSpawned(0);
+        //re-register for button event after removing
+        Events.get().register(playButtonActor);
         this.addActor(playButtonActor);
+
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();
-    }
-
-    private List<EnemyActor> getEnemyActors(){
-        final List<EnemyActor> enemyActors = new ArrayList<EnemyActor>();
-        for(Actor actor : this.getActors()){
-            if(actor instanceof EnemyActor){
-                enemyActors.add((EnemyActor)actor);
-            }
-        }
-        return enemyActors;
     }
 
     private void destroyActor(GameActor gameActor){
@@ -256,6 +252,19 @@ public class GameStageView extends Stage {
     private void addBackgroundActors() {
         this.addActor(actorFactory.createBackground(level));
         this.addActor(actorFactory.createGround(level));
+    }
+
+    private List<GameActor> getDestroyableGameActors() {
+        final List<GameActor> gameActors = new ArrayList<GameActor>();
+        for(Actor actor : this.getActors()){
+            if(actor instanceof GameActor){
+                GameActor gameActor = (GameActor)actor;
+                if(gameActor.destroyOnEndLevel()) {
+                    gameActors.add((EnemyActor) actor);
+                }
+            }
+        }
+        return gameActors;
     }
 /*
     @Override
