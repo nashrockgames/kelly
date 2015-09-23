@@ -17,25 +17,6 @@ public class Constants {
     public static final short ENEMY_ARMOUR_HIT_CATEGORY = 2;
     public static final short ENEMY_ARMOUR_HIT_GROUP_INDEX = 3;
     public static final short ENEMY_ARMOUR_HIT_MASK_INDEX = 1;
-    public static final short BOSS_DEATH_HIT_CATEGORY = 3;
-    public static final short BOSS_DEATH_HIT_GROUP_INDEX = 1;
-    public static final short BOSS_DEATH_HIT_MASK_INDEX = 1;
-
-
-    public enum MENU_ID {
-        MAIN("main_menu");
-        private String id;
-        MENU_ID(String id){
-            this.id = id;
-        }
-        @Override
-        public String toString(){
-            return this.id;
-        }
-    }
-    public enum BUTTON_ID {
-        MAIN_MENU_QUIT,
-        MAIN_MENU_PLAY
-    }
+    public static final String FONT_NAME = "roboto_bold.ttf";
 
 }

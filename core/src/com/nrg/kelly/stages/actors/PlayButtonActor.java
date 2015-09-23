@@ -49,7 +49,7 @@ public class PlayButtonActor extends GameActor{
     }
 
     @Subscribe
-    public void onTouched(PlayButtonClickedEvent playButtonClickedEvent){
+    public void onPlayButtonPressed(PlayButtonClickedEvent playButtonClickedEvent){
 
         gameStateManager.setGameState(GameState.PLAYING);
         //TODO: make this move down a few pixels before remove to make it look like a real button

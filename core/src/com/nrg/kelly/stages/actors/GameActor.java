@@ -14,8 +14,6 @@ import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.ImageOffsetConfig;
 import com.nrg.kelly.config.actors.ImageScaleConfig;
-import com.nrg.kelly.config.actors.PositionConfig;
-import com.nrg.kelly.events.Events;
 
 import java.util.List;
 
@@ -161,7 +159,7 @@ public abstract class GameActor extends Actor {
     }
 
     public AtlasConfig getAtlasConfigByName(List<AtlasConfig> atlasConfigList, String name) {
-        for (AtlasConfig a : atlasConfigList) {
+        for (final AtlasConfig a : atlasConfigList) {
             if (a.getName().equals(name)) {
                 return a;
             }
@@ -264,24 +262,15 @@ public abstract class GameActor extends Actor {
 
     protected void updateTextureBounds(CameraConfig cameraConfig) {
 
-
-        //get the screen width
-
-
         final Rectangle textureBounds = this.getTextureBounds();
         final float worldToScreenScale = cameraConfig.getWorldToScreenScale();
         final float bodyWidth = getWidth();
         final float bodyHeight = getHeight();
         final Vector2 position = getBody().getPosition();
-
-
         final float xRatio = (position.x - bodyWidth) / cameraConfig.getViewportWidth();
         final float screenX = Gdx.graphics.getWidth() * xRatio;
 
-       // final float yRatio = position.y / cameraConfig.getViewportHeight();
-       // final float screenY = Gdx.graphics.getHeight() * yRatio;
-
-        textureBounds.x = screenX;//transformToScreen(position.x - bodyWidth / 2, worldToScreenScale);
+        textureBounds.x = screenX;
         textureBounds.y = transformToScreen(position.y - bodyHeight / 2, worldToScreenScale);
         textureBounds.width = transformToScreen(bodyWidth, worldToScreenScale);
         textureBounds.height = transformToScreen(bodyHeight, worldToScreenScale);
