@@ -3,6 +3,7 @@ package com.nrg.kelly.stages;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.base.Optional;
@@ -31,14 +32,13 @@ import com.nrg.kelly.inject.ActorFactory;
 import com.nrg.kelly.events.game.OnEnemySpawnedEvent;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.physics.Box2dFactory;
-import com.nrg.kelly.stages.actors.ActorState;
-import com.nrg.kelly.stages.actors.BossDeathActor;
 import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GameActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
+import com.nrg.kelly.stages.actors.ScoreActor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +76,9 @@ public class GameStageView extends Stage {
 
     @Inject
     Box2dGameStageView box2dGameStageView;
+
+    @Inject
+    ScoreActor scoreActor;
 
     private float timeStep;
 
@@ -151,7 +154,7 @@ public class GameStageView extends Stage {
         Events.get().post(new OnEnemySpawnedEvent(runner));
     }
     @Subscribe
-    public void spawnBoss(SpawnBossEvent spawnBossEvent){
+    public void spawnBoss(SpawnBossEvent spawnBossEvent) {
         this.addActor(actorFactory.createBoss(runner, level));
     }
 
@@ -164,9 +167,12 @@ public class GameStageView extends Stage {
         Events.get().post(new CancelSchedulesEvent());
 
 
+
         for (RunnerActor runnerActor : runner.asSet()) {
             destroyActor(runnerActor);
         }
+        Optional<Body> emptyOptional = Optional.absent();
+        Box2dFactory.destroyAndRemove(scoreActor, emptyOptional);
         //remove any left over enemies by index
         final List<GameActor> gameActors = this.getDestroyableGameActors();
         for (int index = 0; index < gameActors.size(); index++) {
@@ -205,8 +211,10 @@ public class GameStageView extends Stage {
     public void onPlayButtonClicked(PlayButtonClickedEvent playButtonClickedEvent){
         runner = Optional.of(actorFactory.createRunner());
         for(RunnerActor runnerActor : runner.asSet()) {
-            this.addActor(runnerActor);
+           this.addActor(runnerActor);
         }
+        scoreActor.setScore(0);
+        this.addActor(scoreActor);
         this.gameStageController.setEnemySpawnDelaySeconds(this.gameConfig.getEnemySpawnDelaySeconds());
         this.gameStageController.resetGameTime();
         this.gameStateManager.setBossState(BossState.NONE);
@@ -264,6 +272,7 @@ public class GameStageView extends Stage {
                 }
             }
         }
+
         return gameActors;
     }
 /*

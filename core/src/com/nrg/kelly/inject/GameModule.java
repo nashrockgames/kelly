@@ -1,6 +1,8 @@
 package com.nrg.kelly.inject;
 
 import com.badlogic.gdx.physics.box2d.World;
+import com.nrg.kelly.FontManager;
+import com.nrg.kelly.FontManagerImpl;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.GameStateManagerImpl;
 import com.nrg.kelly.config.GameConfig;
@@ -46,6 +48,13 @@ public class GameModule {
     ActorFactory provideEnemyFactory(LevelsConfig levelsConfig, CameraConfig cameraConfig){
         return new ActorFactoryImpl(levelsConfig, cameraConfig);
     }
+
+    @Provides
+    @Singleton
+    FontManager provideFontManager(){
+        return new FontManagerImpl();
+    }
+
     @Provides
     RunnerConfig provideRunnerConfig(GameConfig gameConfig){
         return gameConfig.getActors().getRunner();

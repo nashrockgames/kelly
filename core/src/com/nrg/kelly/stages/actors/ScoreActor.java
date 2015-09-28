@@ -5,9 +5,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.FontManager;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
+import com.nrg.kelly.config.CameraConfig;
+import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.game.RunnerHitEvent;
+import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -26,24 +31,38 @@ public class ScoreActor extends Actor {
     @Inject
     GameStateManager gameStateManager;
 
-    public ScoreActor(Rectangle bounds) {
-        this.bounds = bounds;
-        setWidth(bounds.width);
-        setHeight(bounds.height);
+    private boolean runnerHit = false;
+
+    @Inject
+    public ScoreActor(CameraConfig cameraConfig) {
+        Events.get().register(this);
+
+        final int worldToScreenScale = cameraConfig.getWorldToScreenScale();
+        final float width = 2f * worldToScreenScale;
+        final float height = 0.5f * worldToScreenScale;
+        final float y = (cameraConfig.getViewportHeight() - 2.0f) * worldToScreenScale;
+        final float x = 0.25f * worldToScreenScale;
+        bounds = new Rectangle(x, y, width , height);
+        setWidth(width);
+        setHeight(height);
         score = 0;
         multiplier = 5;
-
     }
 
-    @PostConstruct
-    public void postConstruct(){
-        font = fontManager.getSmallFont();
+    @Subscribe
+    public void onRunnerHit(RunnerHitEvent runnerHitEvent){
+        this.runnerHit = true;
+    }
+
+    @Subscribe
+    public void onRunnerHit(PlayButtonClickedEvent playButtonClickedEvent){
+        this.runnerHit = false;
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (gameStateManager.getGameState() != GameState.PLAYING) {
+        if (runnerHit || gameStateManager.getGameState() != GameState.PLAYING) {
             return;
         }
         score += multiplier * delta;
@@ -52,11 +71,11 @@ public class ScoreActor extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        if (getScore() == 0) {
-            return;
+        if(font == null ){
+            font = fontManager.getSmallFont();
         }
-        //draw(Batch batch, java.lang.CharSequence str, float x, float y, float targetWidth, int halign, boolean wrap)
         font.draw(batch, String.format("%d", getScore()), bounds.x, bounds.y, bounds.width, Align.left, true);
+
     }
 
     public int getScore() {
@@ -65,5 +84,9 @@ public class ScoreActor extends Actor {
 
     public void setMultiplier(int multiplier) {
         this.multiplier = multiplier;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

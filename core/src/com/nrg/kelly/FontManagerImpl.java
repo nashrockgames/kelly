@@ -4,11 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.google.common.eventbus.Subscribe;
+import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.PostCreateGameEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+
+@Singleton
 public class FontManagerImpl implements FontManager {
 
     private BitmapFont smallFont;
+
+    public FontManagerImpl(){
+        Events.get().register(this);
+    }
 
     @Subscribe
     public void postConstruct(PostCreateGameEvent postCreateGameEvent){

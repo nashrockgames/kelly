@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.google.common.base.Optional;
 import com.nrg.kelly.DaggerGameComponent;
 import com.nrg.kelly.GameComponent;
 import com.nrg.kelly.config.GameConfig;
@@ -172,11 +174,16 @@ public class Box2dFactory {
     public static void destroyAndRemove(final GameActor actor){
         //Gdx.app.log("-", "destroying " + actor.getConfig().get().toString());
         Events.get().unregister(actor);
-        final Body body = actor.getBody();
-        body.setUserData(null);
-        destroyBody(body);
-        actor.remove();
+        destroyAndRemove(actor, Optional.fromNullable(actor.getBody()));
         //Gdx.app.log("-", "destroyed " + actor.getClass().getName());
+    }
+
+    public static void destroyAndRemove(Actor actor, Optional<Body> body) {
+        if(body.isPresent()) {
+            body.get().setUserData(null);
+            destroyBody(body.get());
+        }
+        actor.remove();
     }
 
     public Body createArmour(ArmourConfig armour) {
