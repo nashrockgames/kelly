@@ -112,6 +112,7 @@ public class GameStageView extends Stage {
     public void onBossDeathEvent(final BossDeathEvent bossDeathEvent) {
         if (gameStateManager.getGameState().equals(GameState.PLAYING)) {
             this.addActor(actorFactory.createBossDeath(this.level));
+            gameStateManager.setGameState(GameState.END_LEVEL);
         }
     }
     @Subscribe

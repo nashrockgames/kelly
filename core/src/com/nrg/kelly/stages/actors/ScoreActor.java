@@ -14,7 +14,6 @@ import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 
@@ -62,7 +61,8 @@ public class ScoreActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (runnerHit || gameStateManager.getGameState() != GameState.PLAYING) {
+        final GameState gameState = gameStateManager.getGameState();
+        if (runnerHit || gameState != GameState.PLAYING) {
             return;
         }
         score += multiplier * delta;
@@ -72,9 +72,9 @@ public class ScoreActor extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         if(font == null ){
-            font = fontManager.getSmallFont();
+            font = fontManager.getMediumFont();
         }
-        font.draw(batch, String.format("%d", getScore()), bounds.x, bounds.y, bounds.width, Align.left, true);
+        font.draw(batch, String.format("Score: %d", getScore()), bounds.x, bounds.y, bounds.width, Align.left, true);
 
     }
 

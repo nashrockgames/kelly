@@ -1,6 +1,7 @@
 package com.nrg.kelly.config;
 
 import com.nrg.kelly.config.actors.ActorsConfig;
+import com.nrg.kelly.config.fonts.FontsConfig;
 import com.nrg.kelly.config.settings.Settings;
 
 /**
@@ -27,7 +28,18 @@ public class GameConfig {
     private float reduceEnemySpawnDelayPercentage;
     private int spawnBossOnEnemyCount;
 
+    private FontsConfig fonts;
+
     public GameConfig(){
+    }
+
+    public FontsConfig getFonts() {
+        return fonts;
+    }
+
+    public void setFonts(FontsConfig fonts) {
+
+        this.fonts = fonts;
     }
 
     public int getWorldPositionIterations() {

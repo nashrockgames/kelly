@@ -17,6 +17,5 @@ public class Constants {
     public static final short ENEMY_ARMOUR_HIT_CATEGORY = 2;
     public static final short ENEMY_ARMOUR_HIT_GROUP_INDEX = 3;
     public static final short ENEMY_ARMOUR_HIT_MASK_INDEX = 1;
-    public static final String FONT_NAME = "roboto_bold.ttf";
 
 }

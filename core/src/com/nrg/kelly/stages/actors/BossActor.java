@@ -303,11 +303,12 @@ public class BossActor extends EnemyActor {
     }
 
     private void dropBomb() {
-
         bombSchedule = Optional.of(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Events.get().post(new BombDroppedEvent());
+                if(getActorState().equals(ActorState.RUNNING)) {
+                    Events.get().post(new BombDroppedEvent());
+                }
             }
         }, DROP_BOMB_DELAY_SECONDS));
     }

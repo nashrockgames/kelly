@@ -76,14 +76,6 @@ public class GameStageTouchListener {
         }
     }
 
-    private Optional<Timer.Task> scheduleDoubleTouch() {
-        return Optional.of(Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-            }
-        }, 0.5f));
-    }
-
     @Subscribe
     public void onTouchGesture(OnTouchDownGestureEvent onTouchDownGestureEvent){
         final GameState gameState = gameStateManager.getGameState();

@@ -51,8 +51,8 @@ public class GameModule {
 
     @Provides
     @Singleton
-    FontManager provideFontManager(){
-        return new FontManagerImpl();
+    FontManager provideFontManager(GameConfig gameConfig){
+        return new FontManagerImpl(gameConfig);
     }
 
     @Provides

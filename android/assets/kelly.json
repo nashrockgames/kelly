@@ -9,6 +9,18 @@
   "reduceEnemySpawnDelayPercentage":0.1,
   "spawnBossOnEnemyCount":3,
   "levelCount":1,
+  "fonts":{
+    "mediumFont":{
+      "name":"roboto_bold.ttf",
+      "size": 24,
+      "height":0.5,
+      "width":2.0,
+      "red":0.21,
+      "green": 0.22,
+      "blue":0.21,
+      "alpha":1.0
+    }
+  },
   "actors":{
     "worldGravity": {
       "x": 0,
@@ -90,7 +102,7 @@
       "height": 2.0,
       "width": 1.0
     },
-    runnerBullet: {
+    "runnerBullet": {
       "animations":[
         {
           "name":"default",
@@ -112,7 +124,7 @@
         "y": 2.07
       },
       "density": 0.5,
-      "velocityX" : 15.0,
+      "velocityX" : 15.0
    },
     "runner": {
       "animations":[
