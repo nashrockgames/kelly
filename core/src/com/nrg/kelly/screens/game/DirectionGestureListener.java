@@ -3,6 +3,7 @@ package com.nrg.kelly.screens.game;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.screen.OnDoubleTapGestureEvent;
 import com.nrg.kelly.events.screen.OnFlingGestureEvent;
 import com.nrg.kelly.events.screen.OnTouchDownGestureEvent;
 
@@ -26,6 +27,10 @@ public class DirectionGestureListener implements GestureDetector.GestureListener
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        if(count==2){
+            Events.get().post(new OnDoubleTapGestureEvent(x, y));
+        }
+
         return false;
     }
 

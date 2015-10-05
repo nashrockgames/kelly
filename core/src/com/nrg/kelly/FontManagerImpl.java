@@ -1,6 +1,7 @@
 package com.nrg.kelly;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.google.common.eventbus.Subscribe;
@@ -33,6 +34,7 @@ public class FontManagerImpl implements FontManager {
         parameter.size = mediumFont.getSize();
         this.mediumFont = generator.generateFont(parameter);
         this.mediumFont.setColor(mediumFont.getRed(), mediumFont.getGreen(), mediumFont.getBlue(), mediumFont.getAlpha());
+        generator.dispose();
     }
 
     @Override

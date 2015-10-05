@@ -258,24 +258,13 @@ public class BossActor extends EnemyActor {
     }
 
     private boolean canFireWeapon() {
-        //TODO: this is ugly
-        final ActorState actorState = this.getActorState();
-        if(actorState.equals(ActorState.DYING))
-            return false;
 
-        boolean canFire = actorState.equals(ActorState.RUNNING) ||
-                actorState.equals(ActorState.HIT);
+        return !isScheduled(fireIntervalSchedule) && !isScheduled(fireBulletSchedule)
+                && this.getActorState().equals(ActorState.RUNNING);
+    }
 
-        for (final Timer.Task intervalTask : fireIntervalSchedule.asSet()) {
-            canFire = !intervalTask.isScheduled();
-        }
-        if(canFire) {
-            for (final Timer.Task fireBulletTask : fireBulletSchedule.asSet()) {
-                canFire = !fireBulletTask.isScheduled();
-            }
-        }
-
-        return canFire;
+    private boolean isScheduled(Optional<Timer.Task> task){
+        return task.isPresent() && task.get().isScheduled();
     }
 
     private void fireWeapon() {
@@ -288,8 +277,6 @@ public class BossActor extends EnemyActor {
             }
         }, FIRE_BULLET_DELAY_SECONDS));
 
-        this.bulletsFired += 1;
-
         if (this.bulletsFired % FIRE_BULLET_INTERVAL_COUNT == 0) {
             this.dropBomb();
             fireIntervalSchedule = Optional.of(Timer.schedule(new Timer.Task() {
@@ -299,6 +286,8 @@ public class BossActor extends EnemyActor {
                 }
             }, FIRE_BULLETS_INTERVAL));
         }
+
+        this.bulletsFired++;
 
     }
 

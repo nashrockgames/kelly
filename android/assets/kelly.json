@@ -11,13 +11,13 @@
   "levelCount":1,
   "fonts":{
     "mediumFont":{
-      "name":"roboto_bold.ttf",
-      "size": 24,
+      "name":"edmunds.ttf",
+      "size": 32,
       "height":0.5,
       "width":2.0,
-      "red":0.21,
-      "green": 0.22,
-      "blue":0.21,
+      "red":1.0,
+      "green": 0.84,
+      "blue":0.0,
       "alpha":1.0
     }
   },

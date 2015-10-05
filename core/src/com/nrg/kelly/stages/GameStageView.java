@@ -17,6 +17,7 @@ import com.nrg.kelly.events.game.BossDeathEvent;
 import com.nrg.kelly.events.game.EnemySpawnTimeReducedEvent;
 import com.nrg.kelly.events.game.FireRunnerWeaponEvent;
 import com.nrg.kelly.events.game.GameOverEvent;
+import com.nrg.kelly.events.screen.OnDoubleTapGestureEvent;
 import com.nrg.kelly.events.screen.OnStageTouchDownEvent;
 import com.nrg.kelly.events.game.SpawnEnemyEvent;
 import com.nrg.kelly.events.game.SpawnGunEvent;
@@ -160,14 +161,26 @@ public class GameStageView extends Stage {
     }
 
     @Subscribe
+    public void onDoubleTap(OnDoubleTapGestureEvent onDoubleTapGestureEvent){
+        fireRunnerWeapon();
+    }
+
+    private void fireRunnerWeapon() {
+        for(RunnerActor runnerActor : runner.asSet()) {
+            if(runnerActor.canFireWeapon()) {
+                Events.get().post(new FireRunnerWeaponEvent());
+            }
+        }
+    }
+
+
+    @Subscribe
     public void onGameOver(GameOverEvent gameOverEvent) {
 
         Gdx.app.log(this.getClass().getName(),
                 "Total game time = " + this.gameStageController.getGameTime() + " seconds");
 
         Events.get().post(new CancelSchedulesEvent());
-
-
 
         for (RunnerActor runnerActor : runner.asSet()) {
             destroyActor(runnerActor);
@@ -228,11 +241,7 @@ public class GameStageView extends Stage {
     public boolean touchDown(int x, int y, int pointer, int button) {
         //TODO: make this work for IOS - no RIGHT button
         if(Input.Buttons.RIGHT == button){
-            for(RunnerActor runnerActor : runner.asSet()) {
-                if(runnerActor.canFireWeapon()) {
-                    Events.get().post(new FireRunnerWeaponEvent());
-                }
-            }
+            fireRunnerWeapon();
         } else {
             Events.get().post(new OnStageTouchDownEvent(x, y));
         }

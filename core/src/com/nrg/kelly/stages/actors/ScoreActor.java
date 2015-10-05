@@ -1,5 +1,6 @@
 package com.nrg.kelly.stages.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,15 +33,26 @@ public class ScoreActor extends Actor {
 
     private boolean runnerHit = false;
 
+    private static float margin = 0.55f;
+
     @Inject
     public ScoreActor(CameraConfig cameraConfig) {
         Events.get().register(this);
 
         final int worldToScreenScale = cameraConfig.getWorldToScreenScale();
-        final float width = 2f * worldToScreenScale;
-        final float height = 0.5f * worldToScreenScale;
-        final float y = (cameraConfig.getViewportHeight() - 2.0f) * worldToScreenScale;
-        final float x = 0.25f * worldToScreenScale;
+        //final float x = 7.5f * worldToScreenScale;
+        //final float y = 11f * worldToScreenScale;
+        //final float height = 2f * worldToScreenScale;
+        //final float width = 8f * worldToScreenScale;
+
+
+
+        final int aGdxgraphicsWidth = Gdx.graphics.getWidth();
+        final int aGdxgraphicsHeight = Gdx.graphics.getHeight();
+        final float x = aGdxgraphicsWidth - (aGdxgraphicsWidth * margin);
+        final float y = aGdxgraphicsHeight - (aGdxgraphicsHeight * 0.02f);
+        final float width = aGdxgraphicsWidth/2f;
+        final float height = 32f;
         bounds = new Rectangle(x, y, width , height);
         setWidth(width);
         setHeight(height);
@@ -74,7 +86,7 @@ public class ScoreActor extends Actor {
         if(font == null ){
             font = fontManager.getMediumFont();
         }
-        font.draw(batch, String.format("Score: %d", getScore()), bounds.x, bounds.y, bounds.width, Align.left, true);
+        font.draw(batch, String.format("%d", getScore()), bounds.x, bounds.y, bounds.width, Align.right, true);
 
     }
 
