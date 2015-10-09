@@ -11,7 +11,9 @@ import com.nrg.kelly.FontManager;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.CameraConfig;
+import com.nrg.kelly.config.fonts.FontConfig;
 import com.nrg.kelly.events.Events;
+import com.nrg.kelly.events.game.PostCreateGameEvent;
 import com.nrg.kelly.events.game.RunnerHitEvent;
 import com.nrg.kelly.events.screen.PlayButtonClickedEvent;
 
@@ -36,29 +38,30 @@ public class ScoreActor extends Actor {
     private static float margin = 0.55f;
 
     @Inject
-    public ScoreActor(CameraConfig cameraConfig) {
+    public ScoreActor() {
         Events.get().register(this);
+    }
 
-        final int worldToScreenScale = cameraConfig.getWorldToScreenScale();
-        //final float x = 7.5f * worldToScreenScale;
-        //final float y = 11f * worldToScreenScale;
-        //final float height = 2f * worldToScreenScale;
-        //final float width = 8f * worldToScreenScale;
+    @Subscribe
+    public void postConstruct(PostCreateGameEvent postCreateGameEvent){
 
-
-
-        final int aGdxgraphicsWidth = Gdx.graphics.getWidth();
-        final int aGdxgraphicsHeight = Gdx.graphics.getHeight();
-        final float x = aGdxgraphicsWidth - (aGdxgraphicsWidth * margin);
-        final float y = aGdxgraphicsHeight - (aGdxgraphicsHeight * 0.02f);
-        final float width = aGdxgraphicsWidth/2f;
-        final float height = 32f;
+        final int graphicsWidth = Gdx.graphics.getWidth();
+        final int graphicsHeight = Gdx.graphics.getHeight();
+        final float x = graphicsWidth - (graphicsWidth * margin);
+        final float y = graphicsHeight - (graphicsHeight * 0.02f);
+        final float width = graphicsWidth/2f;
+        final float height = graphicsHeight * 0.2f;
+        final FontConfig mediumFontConfig = fontManager.getMediumFontConfig();
         bounds = new Rectangle(x, y, width , height);
-        setWidth(width);
-        setHeight(height);
+        setWidth(mediumFontConfig.getWidth());
+        setHeight(mediumFontConfig.getHeight());
         score = 0;
         multiplier = 5;
+
+
+
     }
+
 
     @Subscribe
     public void onRunnerHit(RunnerHitEvent runnerHitEvent){

@@ -12,9 +12,9 @@
   "fonts":{
     "mediumFont":{
       "name":"edmunds.ttf",
-      "size": 32,
-      "height":0.5,
-      "width":2.0,
+      "size": 56,
+      "height":2.0,
+      "width":10.0,
       "red":1.0,
       "green": 0.84,
       "blue":0.0,
@@ -74,7 +74,7 @@
             "y": 2.01
       },
       "density": 0.0,
-      "velocityX" : -10,
+      "velocityX" : -5,
       "frameRate" : 0.125,
       "height": 2.0,
       "width": 1.0
@@ -97,7 +97,7 @@
             "y": 2.01
       },
       "density": 0.0,
-      "velocityX" : -10,
+      "velocityX" : -5,
       "frameRate" : 0.125,
       "height": 2.0,
       "width": 1.0

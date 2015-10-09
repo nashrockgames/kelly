@@ -86,8 +86,7 @@ public class BossActor extends EnemyActor {
         endAtlasConfig = this.getAtlasConfigByName(animations, "cart_boss_end");
         final TextureAtlas endAtlas = new TextureAtlas(Gdx.files.internal(endAtlasConfig.getAtlas()));
         endAnimation = new Animation(enemyConfig.getFrameRate(), endAtlas.getRegions());
-
-
+        
         this.setArmourSpawnInterval(enemyConfig.getArmourSpawnInterval());
         this.setGunSpawnInterval(enemyConfig.getGunSpawnInterval());
     }
