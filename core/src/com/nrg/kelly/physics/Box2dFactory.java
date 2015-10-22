@@ -172,7 +172,7 @@ public class Box2dFactory {
     }
 
     public static void destroyAndRemove(final GameActor actor){
-        //Gdx.app.log("-", "destroying " + actor.getConfig().get().toString());
+        //Gdx.app.log("-", "destroying " + actor.getActorConfigOptional().get().toString());
         Events.get().unregister(actor);
         destroyAndRemove(actor, Optional.fromNullable(actor.getBody()));
         //Gdx.app.log("-", "destroyed " + actor.getClass().getName());

@@ -9,8 +9,6 @@ import com.google.common.base.Optional;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.BossBulletConfig;
-import com.nrg.kelly.config.actors.EnemyBossConfig;
-import com.nrg.kelly.config.actors.EnemyConfig;
 import com.nrg.kelly.physics.Box2dFactory;
 
 
@@ -50,7 +48,7 @@ public class EnemyBulletActor extends EnemyActor implements RayCastCallback {
         final ActorState actorState = this.getActorState();
         if(actorState.equals(ActorState.HIT_BY_ARMOUR)||
                 actorState.equals(ActorState.FALLING)) {
-            for(ActorConfig actorConfig : this.getConfig().asSet()) {
+            for(ActorConfig actorConfig : this.getActorConfigOptional().asSet()) {
                 this.applyCollisionImpulse(collisionParams);
                 if (!isWithinBounds(actorConfig)) {
                     Box2dFactory.destroyAndRemove(this);

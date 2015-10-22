@@ -4,15 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.math.Vector2;
 import com.google.common.eventbus.Subscribe;
 import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
+import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.config.buttons.PlayButtonConfig;
 import com.nrg.kelly.events.Events;
 import com.nrg.kelly.events.game.PostBuildGameModuleEvent;
@@ -46,6 +45,8 @@ public class PlayButtonActor extends GameActor{
         final String play = getDefaultAtlasConfig().getAtlas();
         final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(play));
         setDefaultAnimation(new Animation(playButtonConfig.getFrameRate(), defaultAtlas.getRegions()));
+        final PositionConfig position = config.getPosition();
+        updateTextureBounds(cameraConfig, new Vector2(position.getX(), position.getY()));
     }
 
     @Subscribe

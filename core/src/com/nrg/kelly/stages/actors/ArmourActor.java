@@ -41,7 +41,7 @@ public class ArmourActor extends GameActor{
         super.act(delta);
         this.getBody().setLinearVelocity(linearVelocity);
         final Body body = this.getBody();
-        for(ActorConfig actorConfig : this.getConfig().asSet()) {
+        for(ActorConfig actorConfig : this.getActorConfigOptional().asSet()) {
             if (pickedUp || !(body.getPosition().x + actorConfig.getWidth() / 2 > 0)) {
                     Box2dFactory.destroyAndRemove(this);
             }

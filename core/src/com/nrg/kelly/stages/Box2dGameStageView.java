@@ -50,7 +50,7 @@ public class Box2dGameStageView {
     }
 
     private void setupPlayButtonTouchPoint(PlayButtonActor playButtonActor) {
-        final ActorConfig actorConfig = playButtonActor.getConfig().get();
+        final ActorConfig actorConfig = playButtonActor.getActorConfigOptional().get();
         final float playButtonX = actorConfig.getPosition().getX();
         final float playButtonY = actorConfig.getPosition().getY();
         final float width = actorConfig.getWidth();

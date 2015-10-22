@@ -182,7 +182,7 @@ public class BossActor extends EnemyActor {
     private void maybeFireWeapon() {
 
         final Body body = this.getBody();
-        for (final ActorConfig actorConfig : this.getConfig().asSet()) {
+        for (final ActorConfig actorConfig : this.getActorConfigOptional().asSet()) {
             if(!this.getForcedLinearVelocity().isPresent()) {
                 holdPositionWhenInView(body);
             }

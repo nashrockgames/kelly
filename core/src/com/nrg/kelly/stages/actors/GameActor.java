@@ -19,7 +19,7 @@ import java.util.List;
 
 public abstract class GameActor extends Actor {
 
-    protected Optional<ActorConfig> config;
+    protected Optional<ActorConfig> actorConfigOptional;
     private Body body;
     protected float stateTime;
     private Animation defaultAnimation;
@@ -153,8 +153,8 @@ public abstract class GameActor extends Actor {
         this.defaultAtlasConfig = defaultAtlasConfig;
     }
 
-    public GameActor(ActorConfig config, CameraConfig cameraConfig) {
-        this.config = Optional.fromNullable(config);
+    public GameActor(ActorConfig actorConfigOptional, CameraConfig cameraConfig) {
+        this.actorConfigOptional = Optional.fromNullable(actorConfigOptional);
         this.cameraConfig = cameraConfig;
     }
 
@@ -191,12 +191,12 @@ public abstract class GameActor extends Actor {
     }
 
     protected void maybeUpdateTextureBounds() {
-        if (this.getConfig().isPresent()) {
+        if (this.getActorConfigOptional().isPresent()) {
             final Body body = this.getBody();
             if (body != null) {
                 final Object userData = body.getUserData();
                 if (userData instanceof GameActor) {
-                    updateTextureBounds(this.cameraConfig);
+                    updateTextureBounds(this.cameraConfig, body.getPosition());
                 }
             }
         }
@@ -260,18 +260,17 @@ public abstract class GameActor extends Actor {
         }
     }
 
-    protected void updateTextureBounds(CameraConfig cameraConfig) {
+    protected void updateTextureBounds(CameraConfig cameraConfig, Vector2 newPosition) {
 
         final Rectangle textureBounds = this.getTextureBounds();
         final float worldToScreenScale = cameraConfig.getWorldToScreenScale();
         final float bodyWidth = getWidth();
         final float bodyHeight = getHeight();
-        final Vector2 position = getBody().getPosition();
-        final float xRatio = (position.x - bodyWidth) / cameraConfig.getViewportWidth();
+        final float xRatio = (newPosition.x - bodyWidth) / cameraConfig.getViewportWidth();
         final float screenX = Gdx.graphics.getWidth() * xRatio;
 
         textureBounds.x = screenX;
-        textureBounds.y = transformToScreen(position.y - bodyHeight / 2, worldToScreenScale);
+        textureBounds.y = transformToScreen(newPosition.y - bodyHeight / 2, worldToScreenScale);
         textureBounds.width = transformToScreen(bodyWidth, worldToScreenScale);
         textureBounds.height = transformToScreen(bodyHeight, worldToScreenScale);
     }
@@ -296,8 +295,8 @@ public abstract class GameActor extends Actor {
         this.textureBounds = textureBounds;
     }
 
-    public Optional<ActorConfig> getConfig() {
-        return config;
+    public Optional<ActorConfig> getActorConfigOptional() {
+        return actorConfigOptional;
     }
 
     public void drawFirstFrame(Batch batch) {

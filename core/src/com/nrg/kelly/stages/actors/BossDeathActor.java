@@ -42,7 +42,7 @@ public class BossDeathActor extends GameActor {
     public void act(float delta) {
 
         super.act(delta);
-        for(ActorConfig actorConfig : this.getConfig().asSet()) {
+        for(ActorConfig actorConfig : this.getActorConfigOptional().asSet()) {
             if(!impulseApplied){
                 final HitVectorConfig hitVectorConfig = actorConfig.getHitVectorConfig();
                 final float hitVelocityX = hitVectorConfig.getHitVelocityX();
