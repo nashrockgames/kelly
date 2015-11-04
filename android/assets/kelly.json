@@ -49,7 +49,28 @@
             "y":1.0
           }}],
       "position":{
-        "x":15.0,
+        "x":8.0,
+        "y":6.0
+      },
+      "frameRate" : 0.125,
+      "height": 2.0,
+      "width": 2.0
+    },
+    "highScoreButton":{
+      "animations":[
+        {
+          "name":"default",
+          "atlas":"high-score.atlas",
+          "imageOffset":{
+            "x":0,
+            "y":0
+          },
+          "imageScale":{
+            "x":1.0,
+            "y":1.0
+          }}],
+      "position":{
+        "x":13.0,
         "y":6.0
       },
       "frameRate" : 0.125,

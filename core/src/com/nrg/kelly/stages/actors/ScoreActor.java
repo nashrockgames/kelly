@@ -44,7 +44,6 @@ public class ScoreActor extends Actor {
 
     @Subscribe
     public void postConstruct(PostCreateGameEvent postCreateGameEvent){
-
         final int graphicsWidth = Gdx.graphics.getWidth();
         final int graphicsHeight = Gdx.graphics.getHeight();
         final float x = graphicsWidth - (graphicsWidth * margin);
@@ -57,9 +56,6 @@ public class ScoreActor extends Actor {
         setHeight(mediumFontConfig.getHeight());
         score = 0;
         multiplier = 5;
-
-
-
     }
 
 

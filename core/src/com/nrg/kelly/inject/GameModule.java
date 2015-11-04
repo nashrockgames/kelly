@@ -8,6 +8,7 @@ import com.nrg.kelly.GameStateManagerImpl;
 import com.nrg.kelly.config.GameConfig;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.actors.RunnerConfig;
+import com.nrg.kelly.config.buttons.HighScoreButtonConfig;
 import com.nrg.kelly.config.buttons.PlayButtonConfig;
 import com.nrg.kelly.config.levels.LevelsConfig;
 import com.nrg.kelly.physics.Box2dFactory;
@@ -63,6 +64,12 @@ public class GameModule {
     @Provides
     PlayButtonConfig providePlayButtonConfig(GameConfig gameConfig){
         return gameConfig.getActors().getPlayButton();
+    }
+
+
+    @Provides
+    HighScoreButtonConfig provideHighScoreButtonConfig(GameConfig gameConfig){
+        return gameConfig.getActors().getHighScoreButton();
     }
 
     @Provides

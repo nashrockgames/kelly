@@ -37,6 +37,7 @@ import com.nrg.kelly.stages.actors.EnemyActor;
 import com.nrg.kelly.stages.actors.EnemyBombActor;
 import com.nrg.kelly.stages.actors.EnemyBulletActor;
 import com.nrg.kelly.stages.actors.GameActor;
+import com.nrg.kelly.stages.actors.HighScoreButtonActor;
 import com.nrg.kelly.stages.actors.PlayButtonActor;
 import com.nrg.kelly.stages.actors.RunnerActor;
 import com.nrg.kelly.stages.actors.ScoreActor;
@@ -65,6 +66,9 @@ public class GameStageView extends Stage {
 
     @Inject
     PlayButtonActor playButtonActor;
+
+    @Inject
+    HighScoreButtonActor highScoreButtonActor;
 
     @Inject
     GameStageContactListener gameStageContactListener;
@@ -199,6 +203,9 @@ public class GameStageView extends Stage {
         Events.get().register(playButtonActor);
         this.addActor(playButtonActor);
 
+        Events.get().register(highScoreButtonActor);
+        this.addActor(highScoreButtonActor);
+
         this.gameStateManager.setGameState(GameState.PAUSED);
         actorFactory.reset();
     }
@@ -216,6 +223,7 @@ public class GameStageView extends Stage {
         this.gameStageController.setReduceEnemySpawnDelayPercentage(gameConfig.getReduceEnemySpawnDelayPercentage());
         this.gameStageController.setSpawnBossOnEnemyCount(gameConfig.getSpawnBossOnEnemyCount());
         this.addActor(playButtonActor);
+        this.addActor(highScoreButtonActor);
         this.gameStateManager.setGameState(GameState.PAUSED);
         this.gameStateManager.setBossState(BossState.NONE);
         Box2dFactory.getWorld().setContactListener(this.gameStageContactListener);
@@ -258,6 +266,7 @@ public class GameStageView extends Stage {
         this.gameStageTouchListener.init(this.playButtonActor);
         addBackgroundActors();
         this.addActor(playButtonActor);
+        this.addActor(highScoreButtonActor);
         final Application.ApplicationType type = Gdx.app.getType();
         if(type.equals(Application.ApplicationType.Desktop)) {
             Gdx.input.setInputProcessor(this);

@@ -10,6 +10,7 @@ import com.nrg.kelly.GameState;
 import com.nrg.kelly.GameStateManager;
 import com.nrg.kelly.config.CameraConfig;
 import com.nrg.kelly.config.GameConfig;
+import com.nrg.kelly.config.actors.ActorConfig;
 import com.nrg.kelly.config.actors.AtlasConfig;
 import com.nrg.kelly.config.actors.PositionConfig;
 import com.nrg.kelly.config.buttons.PlayButtonConfig;
@@ -45,8 +46,11 @@ public class PlayButtonActor extends GameActor{
         final String play = getDefaultAtlasConfig().getAtlas();
         final TextureAtlas defaultAtlas = new TextureAtlas(Gdx.files.internal(play));
         setDefaultAnimation(new Animation(playButtonConfig.getFrameRate(), defaultAtlas.getRegions()));
-        final PositionConfig position = config.getPosition();
-        updateTextureBounds(cameraConfig, new Vector2(position.getX(), position.getY()));
+        for(ActorConfig actorConfig : this.actorConfigOptional.asSet()){
+            final PositionConfig position = actorConfig.getPosition();
+            updateTextureBounds(cameraConfig, new Vector2(position.getX(), position.getY()));
+        }
+
     }
 
     @Subscribe

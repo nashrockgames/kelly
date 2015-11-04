@@ -98,6 +98,10 @@ clean resources/raw/buttons/play
 split resources/raw/buttons/sheets/play *.png 128 128 resources/raw/buttons/play
 pack resources/raw/buttons/play android/assets play
 
+clean resources/raw/buttons/high-score
+split resources/raw/buttons/sheets/high-score *.png 128 128 resources/raw/buttons/high-score
+pack resources/raw/buttons/high-score android/assets high-score
+
 #Objects
 clean resources/raw/actors/objects/frames/get-armour
 split resources/raw/actors/objects/sheets/get-armour *.png 64 128 resources/raw/actors/objects/frames/get-armour

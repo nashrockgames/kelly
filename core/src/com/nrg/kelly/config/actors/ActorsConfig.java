@@ -1,5 +1,6 @@
 package com.nrg.kelly.config.actors;
 
+import com.nrg.kelly.config.buttons.HighScoreButtonConfig;
 import com.nrg.kelly.config.buttons.PlayButtonConfig;
 
 /**
@@ -17,9 +18,19 @@ public class ActorsConfig {
 
     private PlayButtonConfig playButton;
 
+    private HighScoreButtonConfig highScoreButton;
+
     private ArmourConfig armour;
 
     private GunConfig gun;
+
+    public HighScoreButtonConfig getHighScoreButton() {
+        return highScoreButton;
+    }
+
+    public void setHighScoreButton(HighScoreButtonConfig highScoreButton) {
+        this.highScoreButton = highScoreButton;
+    }
 
     public GunConfig getGun() {
         return gun;

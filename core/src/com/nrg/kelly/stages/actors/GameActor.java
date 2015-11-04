@@ -28,7 +28,7 @@ public abstract class GameActor extends Actor {
     private Optional<Vector2> forcedTransform = Optional.absent();
     private float forcedTransformAngle = 0f;
     private Optional<Vector2> forcedPositionVector = Optional.absent();
-    private CameraConfig cameraConfig;
+    protected CameraConfig cameraConfig;
     private Optional<Float> textureRotation = Optional.absent();
     private Float currentTextureRotation = 0f;
     private Float currentBodyRotation = 0f;
@@ -88,10 +88,12 @@ public abstract class GameActor extends Actor {
             final TextureRegion region =
                     getDefaultAnimation().getKeyFrame(stateTime, true);
             final AtlasConfig defaultAtlasConfig = getDefaultAtlasConfig();
-            final ImageOffsetConfig imageOffsetConfig = defaultAtlasConfig.getImageOffset();
+            //final ImageOffsetConfig imageOffsetConfig = defaultAtlasConfig.getImageOffset();
             final ImageScaleConfig imageScaleConfig = defaultAtlasConfig.getImageScale();
-            final float x = (Gdx.graphics.getWidth() / 2 + imageOffsetConfig.getX()) - (region.getRegionWidth() / 2);
-            final float y = (Gdx.graphics.getHeight() / 2 + imageOffsetConfig.getY()) - (region.getRegionHeight() / 2);
+
+
+            final float x = this.getTextureBounds().getX();//(Gdx.graphics.getWidth() / 2 + imageOffsetConfig.getX()) - (region.getRegionWidth() / 2);
+            final float y = this.getTextureBounds().getY();//(Gdx.graphics.getHeight() / 2 + imageOffsetConfig.getY()) - (region.getRegionHeight() / 2);
             final float width = region.getRegionWidth() * imageScaleConfig.getX();
             final float height = region.getRegionHeight() * imageScaleConfig.getY();
             batch.draw(region, x, y, width, height);
