@@ -48,6 +48,7 @@ project(":android") {
     configurations { natives }
     dependencies {
         compile project(":core")
+        compile "com.google.android.gms:play-services:4.4.52"
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
